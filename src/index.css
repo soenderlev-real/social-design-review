@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 16px;
+  }
+
+  body {
+    font-family: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    background-color: #e8e8e8;
+    color: #22223e;
+    letter-spacing: -0.02em;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1.2;
+    font-weight: 400;
+  }
+
+  a { transition-duration: 0.15s; }
+
+  input, textarea, select {
+    font-family: inherit;
+    letter-spacing: inherit;
+  }
+
+  input::placeholder, textarea::placeholder {
+    color: #9c9cb4;
+  }
+
+  button { cursor: pointer; font-family: inherit; }
+}
+
+@layer utilities {
+  .animate-fade-in { animation: fadeIn 0.3s ease-out; }
+  .animate-slide-up { animation: slideUp 0.4s ease-out; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.ai-prose p { margin-bottom: 0.75rem; }
+.ai-prose ul { list-style: disc; padding-left: 1.5rem; margin-bottom: 0.75rem; }
+.ai-prose li { margin-bottom: 0.25rem; }
+.ai-prose strong { font-weight: 700; }
+.ai-prose h4 { font-weight: 700; margin-top: 1rem; margin-bottom: 0.5rem; }
