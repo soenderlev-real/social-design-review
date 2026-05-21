@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Globe, Key, FileText, ArrowRight, ExternalLink, AlertCircle, Check, Upload, X, ImageIcon, FileText as FileTextIcon, Loader2, Search, Lightbulb } from 'lucide-react';
+import { Globe, Key, FileText, ArrowRight, ExternalLink, AlertCircle, Check, Upload, X, ImageIcon, FileText as FileTextIcon, Loader2, Search, Lightbulb, Bot, Download, MessageSquare, BarChart3 } from 'lucide-react';
 import { PROVIDERS } from '../providers';
 import { processFiles, IMAGE_TYPES, PDF_TYPE, MAX_IMAGES, MAX_PDFS } from '../utils/fileProcessing';
 
@@ -138,6 +138,53 @@ export default function LandingView({ onStart }) {
               className="w-full border-2 border-dark"
             />
           </div>
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="border-b-2 border-dark bg-white">
+        <div className="max-w-5xl mx-auto px-6 py-16">
+          <h2 className="text-2xl font-normal text-dark mb-10">What you get</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0 border-2 border-dark">
+
+            <div className="p-6 border-b-2 border-r-0 sm:border-r-2 border-dark">
+              <Search size={18} className="mb-3 text-dark" />
+              <h3 className="font-bold text-sm text-dark mb-2">Platform Review</h3>
+              <p className="text-xs text-muted leading-relaxed">Analyse any live social platform across all 13 framework dimensions. Each dimension gets a score (1–5), an assessment of strengths and dark patterns, concrete recommendations, and a European perspective.</p>
+            </div>
+
+            <div className="p-6 border-b-2 border-r-0 lg:border-r-2 border-dark">
+              <Lightbulb size={18} className="mb-3 text-dark" />
+              <h3 className="font-bold text-sm text-dark mb-2">Design Workshop</h3>
+              <p className="text-xs text-muted leading-relaxed">Describe a new platform idea and get per-dimension design guidance — what to consider before coding, what patterns to implement, what anti-patterns to avoid, and alignment with European values.</p>
+            </div>
+
+            <div className="p-6 border-b-2 border-r-0 sm:border-r-2 lg:border-r-0 border-dark">
+              <Upload size={18} className="mb-3 text-dark" />
+              <h3 className="font-bold text-sm text-dark mb-2">File Uploads</h3>
+              <p className="text-xs text-muted leading-relaxed">Upload screenshots, wireframes, pitch decks, concept docs, or policy PDFs. Images are sent directly to vision-capable models. PDFs are parsed in your browser — nothing is ever uploaded to a server.</p>
+            </div>
+
+            <div className="p-6 border-b-2 sm:border-b-0 border-r-0 lg:border-r-2 border-dark">
+              <Bot size={18} className="mb-3 text-dark" />
+              <h3 className="font-bold text-sm text-dark mb-2">Agent .md Export</h3>
+              <p className="text-xs text-muted leading-relaxed">Export results as a coding agent instruction file — ready to drop into Claude Code (<code className="bg-lighter px-1">CLAUDE.md</code>), Cursor (<code className="bg-lighter px-1">.cursorrules</code>), Windsurf, or Lovable. Contains binary ALWAYS/NEVER directives, a Core Constitution, Default States, and Hard Refusals — not prose, but instructions an agent can act on.</p>
+            </div>
+
+            <div className="p-6 border-b-2 sm:border-b-0 border-r-0 sm:border-r-2 lg:border-r-2 border-dark">
+              <BarChart3 size={18} className="mb-3 text-dark" />
+              <h3 className="font-bold text-sm text-dark mb-2">Radar Chart & Report</h3>
+              <p className="text-xs text-muted leading-relaxed">Review results include a full radar chart overview of all 13 dimensions. Export the complete report as a Markdown file — scores, findings, dark patterns, recommendations, and European perspectives all in one document.</p>
+            </div>
+
+            <div className="p-6">
+              <MessageSquare size={18} className="mb-3 text-dark" />
+              <h3 className="font-bold text-sm text-dark mb-2">AI Chat Panel</h3>
+              <p className="text-xs text-muted leading-relaxed">After a review, chat directly with the AI about the results. Dig into specific dimensions, ask follow-up questions, or explore what a higher score would require — with full context of the analysis already loaded.</p>
+            </div>
+
+          </div>
+          <p className="text-xs text-muted mt-6">Bring your own API key — Anthropic, OpenAI, Mistral, Groq, Together.ai, or run fully locally and free with Ollama. Your key never leaves your browser.</p>
         </div>
       </section>
 
@@ -492,8 +539,8 @@ export default function LandingView({ onStart }) {
         </form>
 
         <p className="mt-8 text-xs text-muted text-center leading-relaxed">
-          Reviews 10 dimensions across the Social Design Framework —<br/>
-          Social Object · Intent · Identity · Conversations · Sharing · Presence · Relationships · Reputation · Groups · Agency
+          13 dimensions across the Social Design Framework —<br/>
+          Social Object · Platform Intent · Identity · Conversations · Sharing · Presence · Relationships · Reputation · Groups · Agency · Enable · Grow · Protect
         </p>
       </section>
     </div>
