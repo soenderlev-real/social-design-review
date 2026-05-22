@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Globe, Key, FileText, ArrowRight, ExternalLink, AlertCircle, Check, Upload, X, ImageIcon, FileText as FileTextIcon, Loader2, Search, Lightbulb, Bot, Download, MessageSquare, BarChart3 } from 'lucide-react';
+import { Globe, Key, FileText, ArrowRight, ExternalLink, AlertCircle, Check, Upload, X, ImageIcon, FileText as FileTextIcon, Loader2, Search, Lightbulb, Bot, Download, MessageSquare, BarChart3, GitFork } from 'lucide-react';
 import { PROVIDERS } from '../providers';
 import { processFiles, IMAGE_TYPES, PDF_TYPE, MAX_IMAGES, MAX_PDFS } from '../utils/fileProcessing';
 
@@ -144,47 +144,65 @@ export default function LandingView({ onStart }) {
       {/* Features */}
       <section className="border-b-2 border-dark bg-white">
         <div className="max-w-5xl mx-auto px-6 py-16">
-          <h2 className="text-2xl font-normal text-dark mb-10">What you get</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0 border-2 border-dark">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border-2 border-dark">
 
-            <div className="p-6 border-b-2 border-r-0 sm:border-r-2 border-dark">
+            <div className="p-6 border-b-2 sm:border-r-2 border-dark">
               <Search size={18} className="mb-3 text-dark" />
               <h3 className="font-bold text-sm text-dark mb-2">Platform Review</h3>
-              <p className="text-xs text-muted leading-relaxed">Analyse any live social platform across all 13 framework dimensions. Each dimension gets a score (1–5), an assessment of strengths and dark patterns, concrete recommendations, and a European perspective.</p>
+              <p className="text-xs text-muted leading-relaxed">Analyse any live social platform across all 13 framework dimensions. Each dimension gets a score (1–5), strengths, dark patterns detected, concrete recommendations, and a European perspective.</p>
             </div>
 
-            <div className="p-6 border-b-2 border-r-0 lg:border-r-2 border-dark">
+            <div className="p-6 border-b-2 lg:border-r-2 border-dark">
               <Lightbulb size={18} className="mb-3 text-dark" />
               <h3 className="font-bold text-sm text-dark mb-2">Design Workshop</h3>
-              <p className="text-xs text-muted leading-relaxed">Describe a new platform idea and get per-dimension design guidance — what to consider before coding, what patterns to implement, what anti-patterns to avoid, and alignment with European values.</p>
+              <p className="text-xs text-muted leading-relaxed">Describe a new platform idea and get per-dimension design guidance — what to consider before coding, patterns to implement, anti-patterns to avoid, and alignment with European values.</p>
             </div>
 
-            <div className="p-6 border-b-2 border-r-0 sm:border-r-2 lg:border-r-0 border-dark">
+            <div className="p-6 border-b-2 sm:border-r-2 border-dark">
               <Upload size={18} className="mb-3 text-dark" />
               <h3 className="font-bold text-sm text-dark mb-2">File Uploads</h3>
-              <p className="text-xs text-muted leading-relaxed">Upload screenshots, wireframes, pitch decks, concept docs, or policy PDFs. Images are sent directly to vision-capable models. PDFs are parsed in your browser — nothing is ever uploaded to a server.</p>
+              <p className="text-xs text-muted leading-relaxed">Upload screenshots, wireframes, pitch decks, or policy PDFs. Images go directly to vision-capable models. PDFs are parsed entirely in your browser — nothing is ever sent to a server.</p>
             </div>
 
-            <div className="p-6 border-b-2 sm:border-b-0 border-r-0 lg:border-r-2 border-dark">
+            <div className="p-6 border-b-2 border-dark">
               <Bot size={18} className="mb-3 text-dark" />
               <h3 className="font-bold text-sm text-dark mb-2">Agent .md Export</h3>
-              <p className="text-xs text-muted leading-relaxed">Export results as a coding agent instruction file — ready to drop into Claude Code (<code className="bg-lighter px-1">CLAUDE.md</code>), Cursor (<code className="bg-lighter px-1">.cursorrules</code>), Windsurf, or Lovable. Contains binary ALWAYS/NEVER directives, a Core Constitution, Default States, and Hard Refusals — not prose, but instructions an agent can act on.</p>
+              <p className="text-xs text-muted leading-relaxed">Export results as a coding agent instruction file — ready to drop into Claude Code (CLAUDE.md), Cursor (.cursorrules), Windsurf, or Lovable. Binary ALWAYS/NEVER directives, a Core Constitution, Default States, and Hard Refusals.</p>
             </div>
 
-            <div className="p-6 border-b-2 sm:border-b-0 border-r-0 sm:border-r-2 lg:border-r-2 border-dark">
+            <div className="p-6 border-b-2 sm:border-r-2 lg:border-b-0 border-dark">
               <BarChart3 size={18} className="mb-3 text-dark" />
               <h3 className="font-bold text-sm text-dark mb-2">Radar Chart & Report</h3>
-              <p className="text-xs text-muted leading-relaxed">Review results include a full radar chart overview of all 13 dimensions. Export the complete report as a Markdown file — scores, findings, dark patterns, recommendations, and European perspectives all in one document.</p>
+              <p className="text-xs text-muted leading-relaxed">Review results include a full radar chart across all 13 dimensions. Export the complete report as Markdown — scores, findings, dark patterns, recommendations, and European perspectives in one document.</p>
             </div>
 
-            <div className="p-6">
+            <div className="p-6 border-b-2 lg:border-r-2 lg:border-b-0 border-dark">
               <MessageSquare size={18} className="mb-3 text-dark" />
               <h3 className="font-bold text-sm text-dark mb-2">AI Chat Panel</h3>
-              <p className="text-xs text-muted leading-relaxed">After a review, chat directly with the AI about the results. Dig into specific dimensions, ask follow-up questions, or explore what a higher score would require — with full context of the analysis already loaded.</p>
+              <p className="text-xs text-muted leading-relaxed">After a review, chat with the AI about the results. Dig into specific dimensions, ask follow-up questions, or explore what a higher score would require — with full context of the analysis already loaded.</p>
+            </div>
+
+            <div className="p-6 border-b-2 sm:border-b-0 sm:border-r-2 border-dark">
+              <Key size={18} className="mb-3 text-dark" />
+              <h3 className="font-bold text-sm text-dark mb-2">Bring Your Own API</h3>
+              <p className="text-xs text-muted leading-relaxed">Your API key lives only in your browser and calls your chosen provider directly — Anthropic, OpenAI, Mistral, Groq, or Together.ai. Or run fully free and private with Ollama on your own machine. No subscription, no lock-in.</p>
+            </div>
+
+            <div className="p-6 border-dark">
+              <GitFork size={18} className="mb-3 text-dark" />
+              <h3 className="font-bold text-sm text-dark mb-2">Get Involved</h3>
+              <p className="text-xs text-muted leading-relaxed mb-3">Fork and contribute — add framework dimensions, support new providers, or adapt the tool for your own research and community.</p>
+              <a
+                href="https://github.com/soenderlev-real/social-design-review"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs flex items-center gap-1 underline underline-offset-2 text-darker hover:text-dark"
+              >
+                github.com/soenderlev-real/social-design-review <ExternalLink size={10} />
+              </a>
             </div>
 
           </div>
-          <p className="text-xs text-muted mt-6">Bring your own API key — Anthropic, OpenAI, Mistral, Groq, Together.ai, or run fully locally and free with Ollama. Your key never leaves your browser.</p>
         </div>
       </section>
 
