@@ -121,21 +121,40 @@ export default function LandingView({ onStart }) {
         <div className="max-w-5xl mx-auto px-6 py-16 grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           <div>
             <h2 className="text-2xl font-normal text-dark mb-6">The Social Design Framework</h2>
-            <p className="text-sm text-darker mb-4 leading-relaxed">
-              The Social Design Framework is a practical lens for designing and evaluating social platforms around genuine human connection rather than pure engagement metrics. It emerged from the <a href="https://rebuild.net" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-dark">Rebuild.net</a> European social platforms sprint.
+            <p className="text-sm text-darker mb-6 leading-relaxed">
+              A practical lens for designing and evaluating social platforms around genuine human connection rather than pure engagement metrics. It emerged from the <a href="https://rebuild.net" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-dark">Rebuild.net</a> European social platforms sprint.
             </p>
             <p className="text-sm text-darker mb-4 leading-relaxed">
-              At its centre sits the <strong>Social Object</strong> — the shared thing that brings people together. Around it, <strong>Platform Intent</strong> and <strong>Experience Intent</strong> define alignment between business logic and user value. Eight core dimensions describe how a platform enables meaningful social life.
+              At its centre sits the <strong>Social Object</strong> — the shared thing that brings people together. Around it, <strong>Platform Intent</strong> and <strong>Experience Intent</strong> define the alignment between business logic and user value.
             </p>
-            <p className="text-sm text-darker leading-relaxed">
-              The outer layer assesses three holistic qualities: <strong>Enable</strong> (conditions for healthy participation), <strong>Grow</strong> (sustainable value without extraction), and <strong>Protect</strong> (the immune system against threats).
+
+            <div className="space-y-2 mb-6">
+              {[
+                { name: 'Identity', desc: 'How the platform lets people present themselves — authentically, selectively, or anonymously — and who controls that representation.' },
+                { name: 'Conversations', desc: 'The structures that shape how people talk: threading, reach, moderation, and whether dialogue can go somewhere meaningful.' },
+                { name: 'Sharing', desc: 'What gets shared, with whom, and on whose terms — including defaults around re-sharing, attribution, and visibility.' },
+                { name: 'Presence', desc: 'Whether people can be seen as online, active, or available — and how much control they have over their own visibility.' },
+                { name: 'Relationships', desc: 'How connections form, what they mean, and whether the platform fosters genuine ties or inflates shallow ones.' },
+                { name: 'Reputation', desc: 'How standing is built and displayed — scores, follower counts, badges — and whether these systems serve users or exploit them.' },
+                { name: 'Groups', desc: 'How communities form, govern themselves, and protect their culture as they grow.' },
+                { name: 'Agency', desc: 'The degree to which users can understand, shape, and override what the platform does — including its algorithms and defaults.' },
+              ].map(({ name, desc }) => (
+                <div key={name} className="flex gap-3 text-xs">
+                  <span className="font-bold text-dark flex-shrink-0 w-24">{name}</span>
+                  <span className="text-muted leading-relaxed">{desc}</span>
+                </div>
+              ))}
+            </div>
+
+            <p className="text-xs text-muted leading-relaxed">
+              The outer ring assesses three holistic qualities: <strong className="text-darker">Enable</strong> (conditions for healthy participation), <strong className="text-darker">Grow</strong> (sustainable value without extraction), and <strong className="text-darker">Protect</strong> (the immune system against threats to safety and trust).
             </p>
           </div>
-          <div>
+          <div className="lg:sticky lg:top-20">
             <img
               src="/framework.jpg"
               alt="Social Design Framework diagram"
-              className="w-full border-2 border-dark"
+              className="w-full"
             />
           </div>
         </div>
