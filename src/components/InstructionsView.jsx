@@ -122,7 +122,57 @@ function Section({ number, title, subtitle, accent = 'bg-dark', children }) {
   );
 }
 
+const UNLOCK_KEY = 'sdr_instructions_unlocked';
+const PASSWORD = 'rebuildrebuild';
+
+function PasswordGate({ onUnlock }) {
+  const [value, setValue] = useState('');
+  const [error, setError] = useState(false);
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (value === PASSWORD) {
+      sessionStorage.setItem(UNLOCK_KEY, '1');
+      onUnlock();
+    } else {
+      setError(true);
+    }
+  }
+
+  return (
+    <section className="min-h-[70vh] flex items-center justify-center px-6">
+      <form onSubmit={handleSubmit} className="w-full max-w-xs border-2 border-dark bg-white p-8">
+        <Icons.Lock size={18} className="text-dark mb-4" />
+        <h1 className="font-bold text-dark text-lg mb-1">Instructions</h1>
+        <p className="text-xs text-muted mb-6">This reference page is password protected.</p>
+        <input
+          type="password"
+          value={value}
+          onChange={e => { setValue(e.target.value); setError(false); }}
+          placeholder="Password"
+          autoFocus
+          className="w-full px-4 py-3 border-2 border-dark bg-light text-dark placeholder-muted focus:outline-none focus:bg-white transition-colors text-sm mb-3"
+        />
+        {error && <p className="text-xs text-rb-red mb-3">Incorrect password.</p>}
+        <button type="submit" className="w-full bg-dark text-light border-2 border-dark py-3 font-bold text-sm hover:bg-darker transition-colors">
+          Unlock
+        </button>
+      </form>
+    </section>
+  );
+}
+
 export default function InstructionsView() {
+  const [unlocked, setUnlocked] = useState(() => sessionStorage.getItem(UNLOCK_KEY) === '1');
+
+  if (!unlocked) {
+    return <PasswordGate onUnlock={() => setUnlocked(true)} />;
+  }
+
+  return <InstructionsContent />;
+}
+
+function InstructionsContent() {
   const socialObj = CONCEPTS.find(c => c.id === 'social-object');
   const intentObj = CONCEPTS.find(c => c.id === 'platform-intent');
   const coreConcepts = CONCEPTS.filter(c =>
@@ -213,10 +263,6 @@ export default function InstructionsView() {
               ))}
             </div>
           </Section>
-
-          <div className="mt-10 p-5 border-2 border-rb-orange bg-rb-orange-tint text-sm text-dark leading-relaxed">
-            <strong>Note</strong> — the Analysis prompt's own text says &ldquo;13 core design dimensions plus 3 meta-dimensions&rdquo; (16 total), but <code className="bg-white border border-dark px-1 py-0.5 text-xs">CONCEPTS</code> above currently defines 10 core + 3 meta = 13. Worth a look if the dimension count should match.
-          </div>
         </div>
       </section>
     </div>
