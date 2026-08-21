@@ -1,8 +1,10 @@
 import { AnthropicProvider } from './anthropic';
 import { OpenAIProvider } from './openai';
+import { GeminiProvider } from './gemini';
 import { MistralProvider } from './mistral';
 import { GroqProvider } from './groq';
 import { TogetherProvider } from './together';
+import { LLMBaseProvider } from './llmbase';
 import { OllamaProvider } from './ollama';
 
 export const PROVIDERS = [
@@ -27,6 +29,16 @@ export const PROVIDERS = [
     docs: 'https://platform.openai.com/api-keys',
   },
   {
+    id: 'gemini',
+    name: 'Google (Gemini)',
+    description: 'Gemini 2.5 Pro - strong multimodal reasoning',
+    category: 'cloud',
+    supportsVision: true,
+    keyPlaceholder: 'AIza...',
+    constructor: GeminiProvider,
+    docs: 'https://aistudio.google.com/apikey',
+  },
+  {
     id: 'mistral',
     name: 'Mistral AI',
     description: 'European alternative · vision via Pixtral',
@@ -45,6 +57,16 @@ export const PROVIDERS = [
     keyPlaceholder: 'your-together-key',
     constructor: TogetherProvider,
     docs: 'https://www.together.ai',
+  },
+  {
+    id: 'llmbase',
+    name: 'LLMBase',
+    description: 'EU-hosted, GDPR-compliant · 40+ models incl. GPT, Claude, Gemini',
+    category: 'cloud',
+    supportsVision: true,
+    keyPlaceholder: 'your-llmbase-key',
+    constructor: LLMBaseProvider,
+    docs: 'https://llmbase.ai/docs/inference/chat-completions/',
   },
   {
     id: 'ollama',

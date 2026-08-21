@@ -78,9 +78,11 @@ npm run build
 |----------|-------|
 | **Anthropic** | Claude — best for nuance and reasoning |
 | **OpenAI** | GPT-4o — widely trusted, very capable |
+| **Google** | Gemini 2.5 Pro — strong multimodal reasoning |
 | **Mistral** | European provider, fast |
 | **Groq** | Ultra-fast inference, excellent value |
 | **Together.ai** | Open-source models, flexible |
+| **LLMBase** | EU-hosted, GDPR-compliant — 40+ models incl. GPT, Claude, Gemini |
 
 ### Local & private
 | Provider | Notes |
