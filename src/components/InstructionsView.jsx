@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import * as Icons from 'lucide-react';
-import { ChevronDown, ChevronUp, AlertTriangle, HelpCircle, FileCode } from 'lucide-react';
+import { ChevronDown, ChevronUp, AlertTriangle, CheckCircle2, HelpCircle, FileCode } from 'lucide-react';
 import { CONCEPTS, ANALYSIS_SYSTEM_PROMPT, DESIGN_SYSTEM_PROMPT } from '../data/framework';
 
 const META_STYLE = {
@@ -86,18 +86,28 @@ function DimensionRow({ concept, index }) {
                 ))}
               </ul>
             </div>
-            <div className="p-4 bg-light border-2 border-dark">
-              <h5 className="text-xs font-bold uppercase tracking-widest text-muted mb-3 flex items-center gap-2">
-                <HelpCircle size={12} /> Key Questions
+            <div className="p-4 bg-rb-green-tint border-2 border-rb-green">
+              <h5 className="text-xs font-bold uppercase tracking-widest text-rb-green-shade mb-3 flex items-center gap-2">
+                <CheckCircle2 size={12} /> Light Patterns Recommended
               </h5>
-              <ul className="space-y-1">
-                {concept.keyQuestions.map((q, i) => (
-                  <li key={i} className="text-sm text-darker flex gap-2">
-                    <span className="font-bold text-dark flex-shrink-0">{i + 1}.</span> {q}
-                  </li>
+              <ul className="space-y-2">
+                {concept.lightPatterns.map((p, i) => (
+                  <li key={i} className="text-sm text-darker leading-relaxed">{p}</li>
                 ))}
               </ul>
             </div>
+          </div>
+          <div className="mt-6 p-4 bg-light border-2 border-dark">
+            <h5 className="text-xs font-bold uppercase tracking-widest text-muted mb-3 flex items-center gap-2">
+              <HelpCircle size={12} /> Key Questions
+            </h5>
+            <ul className="space-y-1">
+              {concept.keyQuestions.map((q, i) => (
+                <li key={i} className="text-sm text-darker flex gap-2">
+                  <span className="font-bold text-dark flex-shrink-0">{i + 1}.</span> {q}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       )}
@@ -248,7 +258,7 @@ function InstructionsContent() {
       {/* Dimensions */}
       <section className="bg-white">
         <div className="max-w-5xl mx-auto px-6 py-16">
-          <Section number="3" title="Core Dimensions" subtitle="Each dimension's promptContext, darkPatterns, and keyQuestions from framework.js" accent="bg-rb-orange">
+          <Section number="3" title="Core Dimensions" subtitle="Each dimension's promptContext, darkPatterns, lightPatterns, and keyQuestions from framework.js" accent="bg-rb-orange">
             <div className="space-y-0">
               {allDimensions.map((concept, i) => (
                 <DimensionRow key={concept.id} concept={concept} index={i + 1} />

@@ -34,6 +34,11 @@ export const CONCEPTS = [
       "Object capture — locking user-created objects inside the platform with no export",
       "Object substitution — gradually shifting focus from user content to ads/platform content",
     ],
+    lightPatterns: [
+      "Object depth — invest the social object with enough structure (provenance, versioning, context) to carry real meaning, not just a status ping",
+      "Object portability — full export of user-created objects in open formats, on demand, no friction",
+      "Object fidelity — keep platform and ad content structurally separate from, and never crowding out, the object at the center of the experience",
+    ],
     keyQuestions: [
       "What specific thing brings people together on this platform?",
       "Is the object something users create or merely consume?",
@@ -60,6 +65,14 @@ Key test: is the platform's design language rooted in finitude (helping users ac
       "AI-native dark patterns — hyper-personalised per-user nudges in the model, more dangerous than one-size social-era manipulation",
       "Engagement-as-proxy — using time spent, clicks, and returns as success metrics when they measure capture, not value",
     ],
+    lightPatterns: [
+      "Utility metrics — optimise and report on task completion and satisfaction, not time-on-platform",
+      "Intent contract — publish the business model in plain language; changes that break it require re-consent, not silent rollout",
+      "Earned visibility — keep paid-boost features additive, never a paywall for what was free and expected",
+      "Data minimalism — collect only what the service requires; publish a running account of what's collected and why",
+      "Explainable personalisation — every AI-driven nudge is inspectable and toggleable by the user it targets",
+      "Completability metric — track and publish whether users leave satisfied, not just how long they stayed",
+    ],
     keyQuestions: [
       "Can you explain the business model in one sentence that also describes something genuinely good for users?",
       "Are key metrics proxies for user value, or for engagement that proxies for revenue?",
@@ -83,6 +96,13 @@ Critical lens — SpatialUI and contextual integrity: danah boyd and Alice Marwi
       "Identity lock-in — making identity data non-portable, raising switching costs",
       "Compulsory disclosure — requiring more personal info than the social object requires",
       "AI-amplified profiling — using generative models to infer sensitive attributes from innocuous identity signals",
+    ],
+    lightPatterns: [
+      "SpatialUI identities — support distinct, context-bound personas (work, family, hobby) natively, not as a workaround",
+      "Profiling transparency — a visible, plain-language log of every inferred attribute, with one-click deletion",
+      "Identity portability — export identity and reputation data in an interoperable format",
+      "Minimal-disclosure onboarding — signup asks only what the social object needs; everything else is opt-in later",
+      "Inference consent gate — require an explicit, specific opt-in before running cross-context inference",
     ],
     keyQuestions: [
       "What is the minimum identity information needed for the social object to function?",
@@ -111,6 +131,14 @@ Generative AI lens: AI-generated content at scale changes conversation design fu
       "Frictionless amplification — one-click reactions and reposts with no ReflectiveFriction before the action",
       "AI content laundering — no governance for AI-generated posts, synthetic personas, or automated engagement",
     ],
+    lightPatterns: [
+      "ReflectiveFriction on reply — a brief pause or preview before a heated reply posts",
+      "Calm notifications — batched, user-scheduled digests by default; real-time push is opt-in",
+      "Depth-first threading — reward formats that support sustained dialogue over one-line dunks",
+      "Provenance labelling — visible confidence/consensus signals so fringe claims aren't visually equal to established ones",
+      "ReflectiveFriction on reshare — a context-preserving share step in place of a one-click repost",
+      "AI provenance labelling — unspoofable labels on AI-generated posts and bots, plus rate limits on synthetic engagement",
+    ],
     keyQuestions: [
       "What kinds of conversation is this platform designed to enable?",
       "How does the conversation architecture handle disagreement — does it escalate or deliberate?",
@@ -138,6 +166,14 @@ Also assess LegibleCuration: does the user understand why content is being surfa
       "No SaveForLater — conflating capture (seeing something) with consumption and sharing (acting on it now)",
       "Opaque amplification — users cannot see why content is being surfaced or what the ranking logic rewards",
     ],
+    lightPatterns: [
+      "Context-preserving share — resharing keeps the original framing and thread attached",
+      "Calibrated amplification — down-weight, don't ban, content whose reach is driven disproportionately by outrage",
+      "Creator-value split — a direct mechanism (tips, revenue share, licensing) for creators to capture value",
+      "SaveForLater — a first-class read-later queue, separate from posting and sharing",
+      "LegibleCuration — a \"why am I seeing this\" explainer on every algorithmically surfaced post",
+      "Attribution-locked sharing — original author and context ride along automatically and can't be stripped",
+    ],
     keyQuestions: [
       "What is the default audience for shared content?",
       "Is content flow algorithmic-push or user-pull? Is LegibleCuration in place?",
@@ -163,6 +199,14 @@ Apply the ConstraintTimeLocking and DifferentiatedTimeExperiences principles: do
       "Presence as social coercion — opt-out presence defaults that are socially costly to disable",
       "Incompatibility with finitude — presence architecture designed for constant availability, incompatible with time-budgeted or differentiated-tempo use",
     ],
+    lightPatterns: [
+      "Presence as opt-in — online, typing, and read-receipt indicators default off, enabled per-conversation",
+      "No-guilt read state — reading a message never signals the sender unless the user chooses to send that signal",
+      "Location minimalism — no location signal without an explicit, scoped, revocable grant",
+      "FOMO-free digest — \"what you missed\" is a calm, on-demand summary, not a push-driven loop",
+      "Low-cost invisibility — going offline costs nothing socially — no \"last seen 3 days ago\" shaming",
+      "DifferentiatedTimeExperiences — presence design explicitly supports both a quick check-in mode and a fully offline mode",
+    ],
     keyQuestions: [
       "What presence signals does the platform provide, and who do they serve?",
       "Can users fully control their own presence visibility with low social cost?",
@@ -184,6 +228,12 @@ Apply the ConstraintTimeLocking and DifferentiatedTimeExperiences principles: do
       "Social lock-in — making the social graph non-portable (high switching costs)",
       "Manufactured connections — suggesting connections based on surveillance data, not genuine affinity",
     ],
+    lightPatterns: [
+      "Reciprocity by default — new connection types default to mutual confirmation; one-way \"follow\" is a separate, deliberate feature",
+      "Consent-first import — contact import is opt-in, one contact at a time, never a bulk silent scan",
+      "Graph portability — the full connection graph exports in an open format on request",
+      "Affinity-based suggestions — connection suggestions are explainable, not derived from undisclosed surveillance",
+    ],
     keyQuestions: [
       "Are connections reciprocal or asymmetric? What power dynamics does this create?",
       "Can users categorise connections and control what each group sees?",
@@ -204,6 +254,12 @@ Apply the ConstraintTimeLocking and DifferentiatedTimeExperiences principles: do
       "Social proof manipulation — allowing reputation signals to be purchased or botted",
       "Permanent record — all reputation history permanently visible with no path to redemption",
     ],
+    lightPatterns: [
+      "Muted metrics — like and follower counts hidden by default, visible only to the account owner unless they choose otherwise",
+      "New-voice boosting — deliberate discovery slots for newer contributors, not just accumulated-reputation leaders",
+      "Verifiable reputation — signals that are structurally resistant to purchase or botting",
+      "Reputation decay & redemption — old missteps fade in weight over time, with a visible path to rebuild standing",
+    ],
     keyQuestions: [
       "What does the reputation system actually measure?",
       "Is reputation contextual or a single collapsed score?",
@@ -223,6 +279,12 @@ Apply the ConstraintTimeLocking and DifferentiatedTimeExperiences principles: do
       "Governance void — providing group creation without governance tools",
       "Platform override — unilaterally changing group rules without community consent",
       "Growth-at-all-costs — pushing groups to grow beyond their healthy size",
+    ],
+    lightPatterns: [
+      "Bridging prompts — occasional, opt-in surfacing of adjacent groups to counter homogeneity",
+      "Governance starter kit — every new group gets built-in tools for roles, voting, and norm-setting",
+      "Community consent for rule changes — platform policy changes affecting a group require notice and, where feasible, a group-level override",
+      "Healthy-size nudges — tools that help large groups split or sub-structure rather than being pushed to grow indefinitely",
     ],
     keyQuestions: [
       "What governance tools exist within groups?",
@@ -258,6 +320,16 @@ Agentic AI governance: as platforms integrate AI agents, Agency must extend to: 
       "ConstraintTimeLocking sabotage — time budgets available only as deeply buried opt-in settings",
       "Agentic overreach — AI agents acting without human-in-the-loop checkpoints or consequence-gating",
     ],
+    lightPatterns: [
+      "Real controls — every visible setting demonstrably changes behaviour; no cosmetic toggles",
+      "One-step exit — account deletion and full data export as easy to find and use as sign-up",
+      "LegibleCuration — a persistent, one-click view of why the feed looks the way it does, plus a chronological option",
+      "Stable defaults — changes to defaults are rare, explained, and reversible",
+      "Consent minimalism — one clear, layered consent flow; no dark-pattern nudging toward \"accept all\"",
+      "EndDesign — genuine \"you're caught up\" states that stop the feed and release the user",
+      "User-held ConstraintTimeLocking — time budgets are default-on and user-authored, not a buried opt-in",
+      "Agentic guardrails — any consequential AI-agent action requires human-in-the-loop confirmation, an audit trail, and easy undo",
+    ],
     keyQuestions: [
       "Can users choose between algorithmic and chronological feeds? Is LegibleCuration in place?",
       "How transparent is the algorithmic logic — can users understand and override it?",
@@ -283,6 +355,12 @@ Holistic finitude assessment: does the platform, taken as a whole, re-introduce 
       "Poor onboarding — newcomers don't understand norms",
       "Fragmented coordination — concepts work against each other",
     ],
+    lightPatterns: [
+      "Published governance — rules, enforcement, and appeals are public and consistently applied",
+      "Wellbeing-aligned incentives — internal incentives tied to user-reported satisfaction, not raw engagement",
+      "Norm-setting onboarding — the first-run experience actively teaches community norms",
+      "Coordinated design review — dimensions are reviewed together for one coherent experience, not shipped in isolation",
+    ],
     keyQuestions: [
       "Do the foundational design choices align with democratic values?",
       "Are the platform's rules clear and fairly enforced?",
@@ -303,6 +381,12 @@ Holistic finitude assessment: does the platform, taken as a whole, re-introduce 
       "Network lock-in — switching costs trap users despite poor service",
       "Algorithmic enshittification — quality degrades to push premium features",
     ],
+    lightPatterns: [
+      "Shared-value growth — a visible mechanism where platform growth measurably benefits existing users, not just the platform",
+      "Quality floor — a committed, monitored quality bar that doesn't erode with scale",
+      "Low-friction exit — switching costs kept low; interoperability treated as a trust-building retention strategy, not lock-in",
+      "Anti-enshittification commitment — public metrics tracking whether core features degrade to push premium tiers",
+    ],
     keyQuestions: [
       "Does growth create value for users and community, or just for the platform?",
       "Is the business model sustainable without becoming exploitative?",
@@ -322,6 +406,12 @@ Holistic finitude assessment: does the platform, taken as a whole, re-introduce 
       "Disproportionate moderation — rules applied unfairly to marginalised groups",
       "Surveillance creep — expanding data collection justified by safety",
       "Captured governance — safety rules designed to benefit the platform, not users",
+    ],
+    lightPatterns: [
+      "Measured safety — published, audited effectiveness data for safety features, not just their existence",
+      "Equitable moderation — outcomes tracked and audited for disparate impact across groups",
+      "Purpose-limited data — safety-justified data collection is scoped, time-limited, and separately audited",
+      "User-accountable safety — a community advisory mechanism with real influence over safety policy",
     ],
     keyQuestions: [
       "Are safety mechanisms fair and transparent?",
@@ -382,7 +472,7 @@ For each concept you review, provide:
 2. **Assessment** (2-3 paragraphs): A balanced evaluation — strengths and weaknesses in context.
 3. **Score** (1-5): 1 = actively harmful, 2 = problematic, 3 = adequate, 4 = good, 5 = exemplary
 4. **Dark patterns detected**: List any dark patterns you observe (or "None detected")
-5. **Recommendations** (3-5 bullet points): Specific, actionable suggestions — use the finitude principle vocabulary where relevant
+5. **Recommendations** (3-5 bullet points): Specific, actionable suggestions — anchor each one in the dimension's provided light patterns where they counter a detected dark pattern, and use the finitude principle vocabulary otherwise
 6. **European perspective**: One paragraph on how this dimension could better align with European values of participation, commons, and democratic empowerment`;
 
 export function buildConceptPrompt(concept, platformUrl, platformDescription, siteContent, fileContext = '') {
@@ -406,6 +496,9 @@ ${concept.promptContext}
 
 ## Known dark patterns to watch for:
 ${concept.darkPatterns.map(p => `- ${p}`).join('\n')}
+
+## Light patterns to recommend where relevant:
+${concept.lightPatterns.map(p => `- ${p}`).join('\n')}
 ${siteSection}${fileSection}
 ## Platform context provided by the user:
 ${platformDescription || 'No additional description provided. Use your knowledge of this platform.'}
@@ -419,7 +512,9 @@ You MUST respond using EXACTLY these six section headers, in this order. Do not 
 ### Recommendations
 ### European Perspective
 
-Base your analysis on the actual fetched page content where available. Reference specific elements you can see — navigation items, features mentioned, headings, calls to action, signup flows, visible policies. Combine this with your broader knowledge of the platform. Be specific and concrete.`;
+Base your analysis on the actual fetched page content where available. Reference specific elements you can see — navigation items, features mentioned, headings, calls to action, signup flows, visible policies. Combine this with your broader knowledge of the platform. Be specific and concrete.
+
+For Recommendations specifically: where a light pattern listed above directly counters a dark pattern you detected, name it and describe the concrete change it implies. Only reach beyond the listed light patterns when none of them fit what you observed.`;
 }
 
 // ─── Design mode ────────────────────────────────────────────────────────────
@@ -462,7 +557,7 @@ Design guidance should account for where social platforms are heading. Generativ
 
 For each dimension, provide:
 1. **Design Considerations** (3-5 bullet points): Key questions and decisions the team must resolve
-2. **Suggestions** (3-5 bullet points): Concrete design choices that serve users well — reference real examples, name relevant finitude principles
+2. **Suggestions** (3-5 bullet points): Concrete design choices that serve users well — adapt the dimension's provided light patterns to this concept, reference real examples, name relevant finitude principles
 3. **Watch Out For** (2-4 bullet points): Dark patterns and traps this type of platform is most likely to fall into
 4. **European Perspective**: One paragraph on how this dimension can be designed to embody European values of participation, the commons, and democratic empowerment`;
 
@@ -484,6 +579,9 @@ ${concept.promptContext}
 ## Known dark patterns to design against:
 ${concept.darkPatterns.map(p => `- ${p}`).join('\n')}
 
+## Light patterns to design toward:
+${concept.lightPatterns.map(p => `- ${p}`).join('\n')}
+
 You MUST respond using EXACTLY these four section headers, in this order. Do not rename them, do not skip them:
 
 ### Design Considerations
@@ -491,5 +589,7 @@ You MUST respond using EXACTLY these four section headers, in this order. Do not
 ### Watch Out For
 ### European Perspective
 
-Be specific and concrete. Reference real platform examples (good and bad) where helpful. Tailor your guidance directly to the platform concept described above — and to any uploaded materials if provided.`;
+Be specific and concrete. Reference real platform examples (good and bad) where helpful. Tailor your guidance directly to the platform concept described above — and to any uploaded materials if provided.
+
+For Suggestions specifically: adapt the light patterns above to this concept rather than restating them generically — only introduce a pattern beyond that list if none of them fit.`;
 }
