@@ -1,0 +1,29 @@
+{
+  "projectId": "1e33e7b2-bdc7-43fd-adbf-a4d36c13d02e",
+  "shape": "package",
+  "pkg": "social-design-review",
+  "globalName": "SocialDesignReview",
+  "cssEntry": "dist/assets/index-DVcW8TpB.css",
+  "extraFonts": [".design-sync/fonts-src/space-mono.css"],
+  "readmeHeader": ".design-sync/conventions.md",
+  "componentSrcMap": {
+    "App": null,
+    "LandingView": null,
+    "ReviewDashboard": null,
+    "InstructionsView": null,
+    "ChatPanel": null
+  },
+  "dtsPropsFor": {
+    "ConceptCard": "concept: { id: string; title: string; icon: string; shortDesc: string; promptContext: string; darkPatterns: string[]; lightPatterns: string[]; keyQuestions: string[] };\nresult?: { status: 'idle' | 'pending' | 'done' | 'error'; score?: number; strengths?: string; assessment?: string; darkPatterns?: string; recommendations?: string; europeanPerspective?: string; considerations?: string; suggestions?: string; watchOutFor?: string; error?: string };\nisExpanded: boolean;\nonToggle: () => void;\nmode?: 'review' | 'design';",
+    "Header": "onLogoClick: () => void;\nonInstructionsClick: () => void;\nshowBack: boolean;",
+    "RadialFramework": "results: Record<string, { status: 'idle' | 'pending' | 'done' | 'error'; [key: string]: unknown }>;\nexpandedIds: Set<string>;\nonToggle: (id: string) => void;\nmode?: 'review' | 'design';",
+    "ScoreRadar": "concepts: Array<{ id: string; title: string }>;\nscores: Record<string, number>;"
+  },
+  "libOverrides": {
+    "source-kit.mjs": "synth-entry mode used `export * from` which never forwards `export default` — every component in this repo is a default export, so the runtime bundle exported nothing. Fork makes the synthesized entry also emit `export { default as <Name> } from` per file."
+  },
+  "overrides": {
+    "RadialFramework": { "cardMode": "column" },
+    "Header": { "cardMode": "column" }
+  }
+}
