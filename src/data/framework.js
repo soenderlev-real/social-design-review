@@ -103,6 +103,7 @@ Critical lens — SpatialUI and contextual integrity: danah boyd and Alice Marwi
       "Identity portability — export identity and reputation data in an interoperable format",
       "Minimal-disclosure onboarding — signup asks only what the social object needs; everything else is opt-in later",
       "Inference consent gate — require an explicit, specific opt-in before running cross-context inference",
+      "Persona profiling — show users the actual inferred segment or persona the algorithm has built of them, not just a raw log of attributes (Bright Patterns)",
     ],
     keyQuestions: [
       "What is the minimum identity information needed for the social object to function?",
@@ -138,6 +139,8 @@ Generative AI lens: AI-generated content at scale changes conversation design fu
       "Provenance labelling — visible confidence/consensus signals so fringe claims aren't visually equal to established ones",
       "ReflectiveFriction on reshare — a context-preserving share step in place of a one-click repost",
       "AI provenance labelling — unspoofable labels on AI-generated posts and bots, plus rate limits on synthetic engagement",
+      "Prebunking (inoculation) — proactively expose users to a weakened example of a common manipulation tactic before they meet it live, building resistance (inoculation theory, McGuire 1964; used by WHO/UN anti-misinformation campaigns)",
+      "Lateral-reading affordances — a one-click way to check a source's credibility elsewhere before trusting it, rather than asking users to judge a claim in isolation (Wineburg et al., 2022)",
     ],
     keyQuestions: [
       "What kinds of conversation is this platform designed to enable?",
@@ -173,6 +176,7 @@ Also assess LegibleCuration: does the user understand why content is being surfa
       "SaveForLater — a first-class read-later queue, separate from posting and sharing",
       "LegibleCuration — a \"why am I seeing this\" explainer on every algorithmically surfaced post",
       "Attribution-locked sharing — original author and context ride along automatically and can't be stripped",
+      "Outside my bubble — a deliberate, opt-in surfacing of perspectives adjacent to a user's usual feed, distinct from blanket amplification throttling (Bright Patterns)",
     ],
     keyQuestions: [
       "What is the default audience for shared content?",
@@ -221,24 +225,29 @@ Apply the ConstraintTimeLocking and DifferentiatedTimeExperiences principles: do
     icon: "Users",
     dimension: null,
     shortDesc: "How users connect, associate, and form social graphs",
-    promptContext: `Relationship design determines the social graph structure: friending, following, degrees of separation, reciprocity. Assess: Are connections reciprocal (mutual) or asymmetric (follow)? Can users categorise connections and control visibility per group? How are new connections discovered — algorithms, shared activity, or existing networks? What is the social cost of disconnecting? Are relationship metrics (follower counts) publicly visible? Can the social graph be exported? Does the design produce genuine community or celebrity hierarchies?`,
+    promptContext: `Relationship design determines the social graph structure: friending, following, degrees of separation, reciprocity. Assess: Are connections reciprocal (mutual) or asymmetric (follow)? Can users categorise connections and control visibility per group? How are new connections discovered — algorithms, shared activity, or existing networks? What is the social cost of disconnecting? Are relationship metrics (follower counts) publicly visible? Can the social graph be exported? Does the design produce genuine community or celebrity hierarchies?
+
+Apply the bridging vs. bonding distinction (Putnam's social capital theory, used by New Public's Civic Signals framework): bonding capital reinforces ties within an already-similar group; bridging capital connects people across difference. Discovery and connection mechanisms that only ever suggest more of the same — same interests, same views, same demographic — build bonding capital exclusively and compound homogeneity over time. Assess whether the platform's connection model does anything to build bridging capital, or whether it is structurally bonding-only.`,
     darkPatterns: [
       "Asymmetric power — follow/follower structures producing celebrity hierarchies and parasocial dynamics",
       "Contact harvesting — aggressively importing address books with dark consent patterns",
       "Social lock-in — making the social graph non-portable (high switching costs)",
       "Manufactured connections — suggesting connections based on surveillance data, not genuine affinity",
+      "Bonding-only design — discovery and connection mechanisms that only ever reinforce existing homogeneous ties, with no mechanism for bridging across difference",
     ],
     lightPatterns: [
       "Reciprocity by default — new connection types default to mutual confirmation; one-way \"follow\" is a separate, deliberate feature",
       "Consent-first import — contact import is opt-in, one contact at a time, never a bulk silent scan",
       "Graph portability — the full connection graph exports in an open format on request",
       "Affinity-based suggestions — connection suggestions are explainable, not derived from undisclosed surveillance",
+      "Bridging by design — discovery features that deliberately surface cross-group ties alongside homophilous ones, building bridging capital rather than bonding capital alone (Putnam; New Public's Civic Signals)",
     ],
     keyQuestions: [
       "Are connections reciprocal or asymmetric? What power dynamics does this create?",
       "Can users categorise connections and control what each group sees?",
       "Can the relationship graph be exported?",
       "Does the platform produce genuine community or celebrity hierarchies?",
+      "Does the connection model build bridging capital (cross-group ties), or only bonding capital (reinforcing existing in-groups)?",
     ],
   },
   {
@@ -309,7 +318,9 @@ Assess against the full finitude principle vocabulary:
 - **DifferentiatedTimeExperiences**: does the platform support distinct temporal modes — a quick daily check-in, a slower weekly deep engagement — or is all use the same texture?
 - **Completability**: does the platform measure and optimise for users finishing their goals and leaving satisfied?
 
-Agentic AI governance: as platforms integrate AI agents, Agency must extend to: human-in-the-loop checkpoints before consequential actions, consequence-gating (review/confirm before irreversible actions), trust calibration (can the user build an accurate model of what the AI handles well vs. not), audit trails, and delegation UI (explicit scoping of what the agent is authorised to do).`,
+Agentic AI governance: as platforms integrate AI agents, Agency must extend to: human-in-the-loop checkpoints before consequential actions, consequence-gating (review/confirm before irreversible actions), trust calibration (can the user build an accurate model of what the AI handles well vs. not), audit trails, and delegation UI (explicit scoping of what the agent is authorised to do).
+
+External accountability: does the platform publish periodic algorithmic risk assessments — the kind of systemic-risk-assessment obligation the EU Digital Services Act places on very large platforms (Art. 34/35) — or is oversight purely internal and self-reported? Published, external accountability is a distinct mechanism from user-facing transparency UI; a platform can have one without the other.`,
     darkPatterns: [
       "Illusory control — settings that appear to give control but are ineffective or quietly undermined",
       "Roach motel — easy to join, deliberately difficult to delete or export",
@@ -319,6 +330,7 @@ Agentic AI governance: as platforms integrate AI agents, Agency must extend to: 
       "No EndDesign — the platform is engineered for infinite continuation with no genuine endings",
       "ConstraintTimeLocking sabotage — time budgets available only as deeply buried opt-in settings",
       "Agentic overreach — AI agents acting without human-in-the-loop checkpoints or consequence-gating",
+      "Unaudited algorithmic risk — no external or published assessment of the ranking or recommendation system's societal risks",
     ],
     lightPatterns: [
       "Real controls — every visible setting demonstrably changes behaviour; no cosmetic toggles",
@@ -329,6 +341,8 @@ Agentic AI governance: as platforms integrate AI agents, Agency must extend to: 
       "EndDesign — genuine \"you're caught up\" states that stop the feed and release the user",
       "User-held ConstraintTimeLocking — time budgets are default-on and user-authored, not a buried opt-in",
       "Agentic guardrails — any consequential AI-agent action requires human-in-the-loop confirmation, an audit trail, and easy undo",
+      "Nutrition Label — a standardised, at-a-glance disclosure of what a feature or algorithm optimises for and what data it uses, styled like a food nutrition label rather than a buried policy page (Bright Patterns)",
+      "Published risk assessment — a periodic, public assessment of the systemic risks the ranking system poses, not just internal review (cf. EU DSA Art. 34/35)",
     ],
     keyQuestions: [
       "Can users choose between algorithmic and chronological feeds? Is LegibleCuration in place?",
@@ -338,6 +352,7 @@ Agentic AI governance: as platforms integrate AI agents, Agency must extend to: 
       "Can users author their own ConstraintTimeLocking? Do they hold the key?",
       "Do users have genuine participatory input into platform governance?",
       "If AI agents are present: is there human-in-the-loop oversight, consequence-gating, and an audit trail?",
+      "Does the platform publish external, periodic algorithmic risk assessments, or is oversight purely internal?",
     ],
   },
   {
@@ -400,24 +415,32 @@ Holistic finitude assessment: does the platform, taken as a whole, re-introduce 
     icon: "ShieldCheck",
     dimension: null, // meta-dimension
     shortDesc: "Is the platform's immune system strong, fair, and adaptive?",
-    promptContext: `Protect describes the platform's immune system: the mechanisms that identify and respond to threats. Assess holistically: Does the platform defend against internal threats (toxicity, abuse, manipulation) and external threats (data breaches, regulatory capture)? How do the Agency, Reputation, Conversations, and Groups concepts work together to enable both safety and freedom? Is moderation fair and transparent? Can the community contribute to safety? Does the system adapt and learn? What are the tradeoffs between protection and openness, and how are they balanced? Does protection serve users or just the platform?`,
+    promptContext: `Protect describes the platform's immune system: the mechanisms that identify and respond to threats. Assess holistically: Does the platform defend against internal threats (toxicity, abuse, manipulation) and external threats (data breaches, regulatory capture)? How do the Agency, Reputation, Conversations, and Groups concepts work together to enable both safety and freedom? Is moderation fair and transparent? Can the community contribute to safety? Does the system adapt and learn? What are the tradeoffs between protection and openness, and how are they balanced? Does protection serve users or just the platform?
+
+Apply procedural justice theory (Tyler's model, applied to platforms by the Yale Justice Collaboratory): most moderation today is deterrence-based — a rule is broken, an escalating punishment follows, end of interaction. Procedural justice names four things that determine whether people accept an enforcement outcome as legitimate regardless of whether they agree with it: Voice (a genuine, accessible path to be heard or appeal before the decision is final), Neutrality (consistent, rule-based application regardless of who is involved), Respect (dignified communication in warnings and removals, not purely punitive notices), and Trustworthiness (a clear, specific, legible rationale for the action, not a generic policy citation). Assess whether the platform's enforcement system embodies these, or is purely punitive.`,
     darkPatterns: [
       "Security theatre — visible but ineffective safety measures",
       "Disproportionate moderation — rules applied unfairly to marginalised groups",
       "Surveillance creep — expanding data collection justified by safety",
       "Captured governance — safety rules designed to benefit the platform, not users",
+      "Deterrence-only enforcement — punishment-first moderation with no voice, explanation, or path to appeal",
     ],
     lightPatterns: [
       "Measured safety — published, audited effectiveness data for safety features, not just their existence",
       "Equitable moderation — outcomes tracked and audited for disparate impact across groups",
       "Purpose-limited data — safety-justified data collection is scoped, time-limited, and separately audited",
       "User-accountable safety — a community advisory mechanism with real influence over safety policy",
+      "Voice — a genuine, accessible appeal or reconsideration path before an enforcement decision is treated as final (procedural justice)",
+      "Neutral enforcement — consistent, rule-based decisions applied the same way regardless of who is involved",
+      "Respectful enforcement — dignified, specific communication in warnings and removals, not a form-letter punishment notice",
+      "Trustworthy rationale — a clear, specific explanation of why an action was taken, not a generic policy citation",
     ],
     keyQuestions: [
       "Are safety mechanisms fair and transparent?",
       "Does moderation protect vulnerable users or silence them?",
       "Is the community able to contribute to safety?",
       "Are the tradeoffs between safety and freedom clearly acknowledged?",
+      "Does the enforcement system offer voice, neutrality, respect, and a trustworthy rationale (procedural justice), or is it purely punitive?",
     ],
   },
 ];
@@ -448,7 +471,7 @@ When reviewing a platform, assess it against these constructive design principle
 - **ConstraintTimeLocking** — time budgets enforced as design defaults, not opt-in settings. Ethical hinge: the user must author and hold the key to their own constraints. A platform-imposed lock is paternalism; a user-authored lock is sovereignty.
 - **DifferentiatedTimeExperiences** — re-introduces editorial cadence: the daily 5-min, the weekly 15-min deep, the monthly synthesis. Different tempos afford different cognitive modes (System 1 skim vs System 2 deliberation). Inverts the feed's collapse of all rhythms into one continuous now.
 - **LegibleCuration** — the user can see, and ideally author, the ranking: why this content, why now, in what order. Without this, explorative and time-bounded interfaces can still be optimised against the user underneath.
-- **ReflectiveFriction** — a deliberate pause at the point of action before posting, reacting, or resharing. Creates cognitive space before amplification. Not about blocking action, but restoring the "do I want to do this?" decision point.
+- **ReflectiveFriction** — a deliberate pause at the point of action before posting, reacting, or resharing. Creates cognitive space before amplification. Not about blocking action, but restoring the "do I want to do this?" decision point. Grounded in "data friction" (Bates, 2017) and the nudge/boost intervention literature (Kozyreva et al., 2022).
 - **Completability** — the interface measures whether you finished your task and left satisfied, not whether you stayed. A graceful exit is a feature, not a failure.
 
 ## Dark patterns in the AI era
@@ -538,7 +561,7 @@ Apply the following design principles as a vocabulary throughout your guidance. 
 - **ConstraintTimeLocking** — time budgets as design defaults, not opt-in settings. Critical ethical hinge: the user must author and hold the key. A user-authored constraint is sovereignty; a platform-imposed constraint is paternalism.
 - **DifferentiatedTimeExperiences** — design distinct temporal modes: the daily 5-minute skim, the weekly 15-minute deep read, the monthly synthesis. Different tempos afford different cognitive modes. Re-introduce editorial cadence as interaction design.
 - **LegibleCuration** — make ranking visible and user-autherable. Why this content, why now, in what order? Without this, all other finitude principles can be undermined by an opaque recommender underneath.
-- **ReflectiveFriction** — install a deliberate pause at the point of action before posting, reacting, or resharing. Restore the "do I want to do this?" decision point before amplification.
+- **ReflectiveFriction** — install a deliberate pause at the point of action before posting, reacting, or resharing. Restore the "do I want to do this?" decision point before amplification. Grounded in "data friction" (Bates, 2017) and the nudge/boost intervention literature (Kozyreva et al., 2022).
 - **Completability** — design for users to finish and leave satisfied. Measure success by graceful exits, not time spent.
 
 ## The attention economy trap
