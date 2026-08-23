@@ -243,7 +243,8 @@ export default function LandingView({ onStart }) {
       </section>
 
       {/* Form */}
-      <section className="max-w-5xl mx-auto px-6 py-16">
+      <section className="bg-white">
+        <div className="max-w-5xl mx-auto px-6 py-16">
         <form onSubmit={handleSubmit} className="space-y-0">
 
           {/* Step 1 — Mode selector */}
@@ -596,6 +597,7 @@ export default function LandingView({ onStart }) {
           13 dimensions across the Social Design Framework —<br/>
           Social Object · Platform Intent · Identity · Conversations · Sharing · Presence · Relationships · Reputation · Groups · Agency · Enable · Grow · Protect
         </p>
+        </div>
       </section>
 
       {lightboxOpen && (
