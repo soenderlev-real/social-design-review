@@ -170,10 +170,6 @@ export default function LandingView({ onStart }) {
             <p className="text-xs text-muted leading-relaxed">
               The outer ring assesses three holistic qualities: <strong className="text-darker">Enable</strong> (conditions for healthy participation), <strong className="text-darker">Grow</strong> (sustainable value without extraction), and <strong className="text-darker">Protect</strong> (the immune system against threats to safety and trust).
             </p>
-
-            <p className="text-sm text-darker leading-relaxed mt-8 pt-6 border-t-2 border-dark">
-              <strong className="text-dark">Social Design Review</strong> is an AI-powered analysis of social platforms through this lens — built for European platform founders, designers and researchers.
-            </p>
           </div>
         </div>
       </section>
@@ -181,6 +177,9 @@ export default function LandingView({ onStart }) {
       {/* Features */}
       <section className="border-b-2 border-dark bg-white">
         <div className="max-w-5xl mx-auto px-6 py-16">
+          <p className="text-base text-darker leading-relaxed max-w-2xl mb-10">
+            <strong className="text-dark">Social Design Review</strong> is an AI-powered analysis of social platforms through this lens — built for European platform founders, designers and researchers.
+          </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border-2 border-dark">
 
             <div className="p-6 border-b-2 sm:border-r-2 border-dark">
