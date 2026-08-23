@@ -243,7 +243,7 @@ export default function LandingView({ onStart }) {
       </section>
 
       {/* Form */}
-      <section className="max-w-3xl mx-auto px-6 py-16">
+      <section className="max-w-5xl mx-auto px-6 py-16">
         <form onSubmit={handleSubmit} className="space-y-0">
 
           {/* Step 1 — Mode selector */}
