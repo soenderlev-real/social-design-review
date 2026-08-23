@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Globe, Key, FileText, ArrowRight, ExternalLink, AlertCircle, Check, Upload, X, ImageIcon, FileText as FileTextIcon, Loader2, Search, Lightbulb, Bot, Download, MessageSquare, BarChart3, GitFork, Maximize2 } from 'lucide-react';
+import { Globe, Key, FileText, ArrowRight, ExternalLink, AlertCircle, Check, Upload, X, ImageIcon, FileText as FileTextIcon, Loader2, Search, Lightbulb, Bot, Download, MessageSquare, BarChart3, GitFork, Maximize2, Presentation, Users, Smile, BookOpen, ArrowUpRight } from 'lucide-react';
 import { PROVIDERS } from '../providers';
 import { processFiles, IMAGE_TYPES, PDF_TYPE, MAX_IMAGES, MAX_PDFS } from '../utils/fileProcessing';
 import Lightbox from './Lightbox';
@@ -7,7 +7,34 @@ import Lightbox from './Lightbox';
 const FRAMEWORK_ALT =
   'Social Design Framework diagram — Social Object at the centre, surrounded by Platform Intent and Experience Intent, the eight core dimensions (Conversations, Agency, Reputation, Presence, Relationships, Sharing, Identity, Groups), and the Enable, Grow and Protect meta-dimensions';
 
-export default function LandingView({ onStart }) {
+const RESOURCES = [
+  {
+    icon: Presentation,
+    title: 'Social Design Framework presentation',
+    desc: 'The full deck — the framework explained slide by slide, ready to present to a team or a class.',
+    href: 'https://claude.ai/code/artifact/8049b9af-09a1-4af7-b7f1-541d4e81bc6f',
+  },
+  {
+    icon: Users,
+    title: 'Workshop Kit — Helsinki',
+    desc: 'Run the framework as a workshop: the session structure, exercises and materials used in Helsinki.',
+    href: 'https://claude.ai/code/artifact/1f8a2687-1589-4c53-8e70-08b5d4b37a64',
+  },
+  {
+    icon: Smile,
+    title: 'Workshop Kit — Helsinki, for kids',
+    desc: 'The same platform-design workshop, adapted for children — simpler language, hands-on exercises.',
+    href: 'https://claude.ai/code/artifact/a544e152-b418-4226-92a8-384d9adc97ba',
+  },
+  {
+    icon: BookOpen,
+    title: 'Go to the library',
+    desc: 'Get smart on social design — the theory and literature behind every dimension of the framework.',
+    internal: 'reading-list',
+  },
+];
+
+export default function LandingView({ onStart, onReadingList }) {
   const [mode, setMode] = useState('review'); // 'review' | 'design'
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [provider, setProvider] = useState('anthropic');
@@ -597,6 +624,49 @@ export default function LandingView({ onStart }) {
           13 dimensions across the Social Design Framework —<br/>
           Social Object · Platform Intent · Identity · Conversations · Sharing · Presence · Relationships · Reputation · Groups · Agency · Enable · Grow · Protect
         </p>
+        </div>
+      </section>
+
+      {/* Learn more & workshop kits */}
+      <section className="bg-light border-t-2 border-dark">
+        <div className="max-w-5xl mx-auto px-6 py-16">
+          <h2 className="text-2xl font-normal text-dark mb-2">Learn more and workshop kits</h2>
+          <p className="text-sm text-darker mb-10 max-w-xl leading-relaxed">
+            Take the framework down off the screen and work with it — present it, run it as a workshop, or read your way into the theory behind it.
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-0">
+            {RESOURCES.map(({ icon: Icon, title, desc, href, internal }, i) => {
+              const inner = (
+                <>
+                  <div className="flex items-start justify-between gap-3 mb-3">
+                    <Icon size={18} className="text-dark flex-shrink-0" />
+                    {internal
+                      ? <ArrowRight size={13} className="text-muted flex-shrink-0 transition-transform group-hover:translate-x-1" />
+                      : <ArrowUpRight size={13} className="text-muted flex-shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />}
+                  </div>
+                  <div className="font-bold text-sm text-dark mb-2 group-hover:underline underline-offset-4">{title}</div>
+                  <p className="text-xs text-muted leading-relaxed">{desc}</p>
+                </>
+              );
+
+              const cls =
+                'group block text-left p-6 border-2 border-dark bg-white hover:bg-lighter transition-colors ' +
+                // collapse shared borders into single 2px rules
+                (i % 2 === 1 ? 'sm:border-l-0 ' : '') +
+                (i >= 2 ? 'border-t-0 ' : '');
+
+              return internal ? (
+                <button key={title} type="button" onClick={onReadingList} className={cls + 'w-full'}>
+                  {inner}
+                </button>
+              ) : (
+                <a key={title} href={href} target="_blank" rel="noopener noreferrer" className={cls}>
+                  {inner}
+                </a>
+              );
+            })}
+          </div>
         </div>
       </section>
 

@@ -60,7 +60,7 @@ export default function App() {
         showBack={view !== 'landing'}
       />
       <main className="flex-1">
-        {view === 'landing' && <LandingView onStart={handleStartReview} />}
+        {view === 'landing' && <LandingView onStart={handleStartReview} onReadingList={handleShowReadingList} />}
         {view === 'instructions' && <InstructionsView />}
         {view === 'reading-list' && <ReadingListView />}
         {view === 'review' && (
