@@ -90,14 +90,15 @@ export default function Lightbox({ src, alt, caption, onClose }) {
         </div>
       </div>
 
-      {/* Image stage — the artwork is drawn for a light ground (its separator
-          rings are white), so it sits on a light plate rather than the scrim. */}
+      {/* Image stage — the artwork stays transparent here, so the dark scrim
+          shows through its gaps. Deliberate: it reads as one piece with the
+          overlay rather than a pasted-on plate. */}
       <div className="flex-1 min-h-0 flex items-center justify-center p-4 sm:p-8 overflow-auto">
         <img
           src={src}
           alt={alt}
           onClick={e => e.stopPropagation()}
-          className="max-w-full max-h-full object-contain bg-light border-2 border-light"
+          className="max-w-full max-h-full object-contain"
         />
       </div>
     </div>
