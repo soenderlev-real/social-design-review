@@ -113,22 +113,27 @@ export default function LandingView({ onStart }) {
         {/* Explicit grid placement so the diagram sits in the right column on
             desktop but directly under the intro on mobile — otherwise it lands
             below the whole dimension list, several screens down on a phone. */}
-        <div className="max-w-5xl mx-auto px-6 py-16 grid grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-10 lg:items-start">
+        <div className="max-w-5xl mx-auto px-6 py-16 grid grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-6 lg:items-start">
+          {/* Title + lede */}
           <div className="lg:col-start-1 lg:row-start-1">
             <p className="text-sm text-muted mb-4 uppercase tracking-widest">A Rebuild.net Tool</p>
             <h1 className="text-3xl md:text-4xl font-normal text-dark mb-6 leading-tight">
               The Social Design Framework
             </h1>
-            <p className="text-sm text-darker mb-6 leading-relaxed">
+            <p className="text-sm text-darker leading-relaxed">
               A practical lens for designing and evaluating social platforms around genuine human connection rather than pure engagement metrics. It emerged from the <a href="https://rebuild.net" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-dark">Rebuild.net</a> European social platforms sprint.
             </p>
+          </div>
+
+          {/* Social Object — its own row so the diagram can align to it */}
+          <div className="lg:col-start-1 lg:row-start-2">
             <p className="text-sm text-darker leading-relaxed">
               At its centre sits the <strong>Social Object</strong> — the shared thing that brings people together. Around it, <strong>Platform Intent</strong> and <strong>Experience Intent</strong> define the alignment between business logic and user value.
             </p>
           </div>
 
-          {/* Diagram */}
-          <div className="lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:sticky lg:top-20">
+          {/* Diagram — starts level with the Social Object text */}
+          <div className="lg:col-start-2 lg:row-start-2 lg:row-span-2 lg:sticky lg:top-20">
             <button
               type="button"
               onClick={() => setLightboxOpen(true)}
@@ -143,8 +148,7 @@ export default function LandingView({ onStart }) {
           </div>
 
           {/* Dimensions */}
-          <div className="lg:col-start-1 lg:row-start-2">
-
+          <div className="lg:col-start-1 lg:row-start-3">
             <div className="space-y-2 mb-6">
               {[
                 { name: 'Identity', desc: 'How the platform lets people present themselves — authentically, selectively, or anonymously — and who controls that representation.' },
