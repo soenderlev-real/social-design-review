@@ -108,30 +108,42 @@ export default function LandingView({ onStart }) {
   return (
     <div className="animate-fade-in">
 
-      {/* Hero */}
+      {/* Framework — leads the page: the model first, the tool second */}
       <section className="bg-light border-b-2 border-dark">
-        <div className="max-w-5xl mx-auto px-6 py-20">
-          <p className="text-sm text-muted mb-4 uppercase tracking-widest">A Rebuild.net Tool</p>
-          <h1 className="text-5xl md:text-6xl font-normal text-dark mb-6 leading-tight">
-            Social Design<br />Review
-          </h1>
-          <p className="text-base text-darker max-w-xl leading-relaxed">
-            AI-powered analysis of social platforms through the lens of the Social Design Framework — built for European platform founders, designers and researchers.
-          </p>
-        </div>
-      </section>
-
-      {/* Framework description + diagram */}
-      <section className="border-b-2 border-dark">
-        <div className="max-w-5xl mx-auto px-6 py-16 grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-          <div>
-            <h2 className="text-2xl font-normal text-dark mb-6">The Social Design Framework</h2>
+        {/* Explicit grid placement so the diagram sits in the right column on
+            desktop but directly under the intro on mobile — otherwise it lands
+            below the whole dimension list, several screens down on a phone. */}
+        <div className="max-w-5xl mx-auto px-6 py-16 grid grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-10 lg:items-start">
+          <div className="lg:col-start-1 lg:row-start-1">
+            <p className="text-sm text-muted mb-4 uppercase tracking-widest">A Rebuild.net Tool</p>
+            <h1 className="text-3xl md:text-4xl font-normal text-dark mb-6 leading-tight">
+              The Social Design Framework
+            </h1>
             <p className="text-sm text-darker mb-6 leading-relaxed">
               A practical lens for designing and evaluating social platforms around genuine human connection rather than pure engagement metrics. It emerged from the <a href="https://rebuild.net" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-dark">Rebuild.net</a> European social platforms sprint.
             </p>
-            <p className="text-sm text-darker mb-4 leading-relaxed">
+            <p className="text-sm text-darker leading-relaxed">
               At its centre sits the <strong>Social Object</strong> — the shared thing that brings people together. Around it, <strong>Platform Intent</strong> and <strong>Experience Intent</strong> define the alignment between business logic and user value.
             </p>
+          </div>
+
+          {/* Diagram */}
+          <div className="lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:sticky lg:top-20">
+            <button
+              type="button"
+              onClick={() => setLightboxOpen(true)}
+              aria-label="Enlarge the Social Design Framework diagram"
+              className="group relative block w-full cursor-zoom-in"
+            >
+              <img src="/framework.png" alt={FRAMEWORK_ALT} className="w-full" />
+              <span className="absolute bottom-0 right-0 flex items-center gap-1.5 border-2 border-dark bg-light px-2 py-1 text-xs text-dark opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+                <Maximize2 size={11} /> Enlarge
+              </span>
+            </button>
+          </div>
+
+          {/* Dimensions */}
+          <div className="lg:col-start-1 lg:row-start-2">
 
             <div className="space-y-2 mb-6">
               {[
@@ -154,19 +166,10 @@ export default function LandingView({ onStart }) {
             <p className="text-xs text-muted leading-relaxed">
               The outer ring assesses three holistic qualities: <strong className="text-darker">Enable</strong> (conditions for healthy participation), <strong className="text-darker">Grow</strong> (sustainable value without extraction), and <strong className="text-darker">Protect</strong> (the immune system against threats to safety and trust).
             </p>
-          </div>
-          <div className="lg:sticky lg:top-20">
-            <button
-              type="button"
-              onClick={() => setLightboxOpen(true)}
-              aria-label="Enlarge the Social Design Framework diagram"
-              className="group relative block w-full cursor-zoom-in"
-            >
-              <img src="/framework.png" alt={FRAMEWORK_ALT} className="w-full" />
-              <span className="absolute bottom-0 right-0 flex items-center gap-1.5 border-2 border-dark bg-light px-2 py-1 text-xs text-dark opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
-                <Maximize2 size={11} /> Enlarge
-              </span>
-            </button>
+
+            <p className="text-sm text-darker leading-relaxed mt-8 pt-6 border-t-2 border-dark">
+              <strong className="text-dark">Social Design Review</strong> is an AI-powered analysis of social platforms through this lens — built for European platform founders, designers and researchers.
+            </p>
           </div>
         </div>
       </section>
