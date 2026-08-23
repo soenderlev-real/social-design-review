@@ -248,7 +248,7 @@ export default function LandingView({ onStart }) {
 
           {/* Step 1 — Mode selector */}
           <div className="border-2 border-dark bg-white mb-0">
-            <div className="border-b-2 border-dark px-6 py-4 flex items-center gap-3">
+            <div className="px-6 pt-5 pb-4 flex items-center gap-3">
               <span className="w-7 h-7 bg-dark text-light flex items-center justify-center text-sm font-bold flex-shrink-0">1</span>
               <div>
                 <h2 className="text-base font-bold text-dark">Choose what you want to do</h2>
@@ -283,7 +283,7 @@ export default function LandingView({ onStart }) {
 
           {/* Step 2 — Platform input */}
           <div className="border-2 border-t-0 border-dark bg-white mb-0">
-            <div className="border-b-2 border-dark px-6 py-4 flex items-center gap-3">
+            <div className="px-6 pt-5 pb-4 flex items-center gap-3">
               <span className="w-7 h-7 bg-dark text-light flex items-center justify-center text-sm font-bold flex-shrink-0">2</span>
               <div>
                 {mode === 'review' ? (
@@ -332,7 +332,7 @@ export default function LandingView({ onStart }) {
 
           {/* Step 3 — File upload */}
           <div className="border-2 border-t-0 border-dark bg-white mb-0">
-            <div className="border-b-2 border-dark px-6 py-4 flex items-center gap-3">
+            <div className="px-6 pt-5 pb-4 flex items-center gap-3">
               <span className="w-7 h-7 bg-dark text-light flex items-center justify-center text-sm font-bold flex-shrink-0">3</span>
               <div>
                 <h2 className="text-base font-bold text-dark">
@@ -422,7 +422,7 @@ export default function LandingView({ onStart }) {
 
           {/* Step 4 — LLM chooser */}
           <div className="border-2 border-t-0 border-dark bg-white mb-0">
-            <div className="border-b-2 border-dark px-6 py-4 flex items-center gap-3">
+            <div className="px-6 pt-5 pb-4 flex items-center gap-3">
               <span className="w-7 h-7 bg-dark text-light flex items-center justify-center text-sm font-bold flex-shrink-0">4</span>
               <div>
                 <h2 className="text-base font-bold text-dark">Choose your LLM</h2>
