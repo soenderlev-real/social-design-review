@@ -1,10 +1,15 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Globe, Key, FileText, ArrowRight, ExternalLink, AlertCircle, Check, Upload, X, ImageIcon, FileText as FileTextIcon, Loader2, Search, Lightbulb, Bot, Download, MessageSquare, BarChart3, GitFork } from 'lucide-react';
+import { Globe, Key, FileText, ArrowRight, ExternalLink, AlertCircle, Check, Upload, X, ImageIcon, FileText as FileTextIcon, Loader2, Search, Lightbulb, Bot, Download, MessageSquare, BarChart3, GitFork, Maximize2 } from 'lucide-react';
 import { PROVIDERS } from '../providers';
 import { processFiles, IMAGE_TYPES, PDF_TYPE, MAX_IMAGES, MAX_PDFS } from '../utils/fileProcessing';
+import Lightbox from './Lightbox';
+
+const FRAMEWORK_ALT =
+  'Social Design Framework diagram — Social Object at the centre, surrounded by Platform Intent and Experience Intent, the eight core dimensions (Conversations, Agency, Reputation, Presence, Relationships, Sharing, Identity, Groups), and the Enable, Grow and Protect meta-dimensions';
 
 export default function LandingView({ onStart }) {
   const [mode, setMode] = useState('review'); // 'review' | 'design'
+  const [lightboxOpen, setLightboxOpen] = useState(false);
   const [provider, setProvider] = useState('anthropic');
   const [url, setUrl] = useState('');
   const [apiKey, setApiKey] = useState('');
@@ -151,11 +156,17 @@ export default function LandingView({ onStart }) {
             </p>
           </div>
           <div className="lg:sticky lg:top-20">
-            <img
-              src="/framework.png"
-              alt="Social Design Framework diagram — Social Object at the centre, surrounded by Platform Intent and Experience Intent, the eight core dimensions (Conversations, Agency, Reputation, Presence, Relationships, Sharing, Identity, Groups), and the Enable, Grow and Protect meta-dimensions"
-              className="w-full"
-            />
+            <button
+              type="button"
+              onClick={() => setLightboxOpen(true)}
+              aria-label="Enlarge the Social Design Framework diagram"
+              className="group relative block w-full cursor-zoom-in"
+            >
+              <img src="/framework.png" alt={FRAMEWORK_ALT} className="w-full" />
+              <span className="absolute bottom-0 right-0 flex items-center gap-1.5 border-2 border-dark bg-light px-2 py-1 text-xs text-dark opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+                <Maximize2 size={11} /> Enlarge
+              </span>
+            </button>
           </div>
         </div>
       </section>
@@ -580,6 +591,15 @@ export default function LandingView({ onStart }) {
           Social Object · Platform Intent · Identity · Conversations · Sharing · Presence · Relationships · Reputation · Groups · Agency · Enable · Grow · Protect
         </p>
       </section>
+
+      {lightboxOpen && (
+        <Lightbox
+          src="/framework.png"
+          alt={FRAMEWORK_ALT}
+          caption="The Social Design Framework"
+          onClose={() => setLightboxOpen(false)}
+        />
+      )}
     </div>
   );
 }
