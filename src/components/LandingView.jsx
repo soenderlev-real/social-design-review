@@ -152,8 +152,8 @@ export default function LandingView({ onStart }) {
           </div>
           <div className="lg:sticky lg:top-20">
             <img
-              src="/framework.jpg"
-              alt="Social Design Framework diagram"
+              src="/framework.png"
+              alt="Social Design Framework diagram — Social Object at the centre, surrounded by Platform Intent and Experience Intent, the eight core dimensions (Conversations, Agency, Reputation, Presence, Relationships, Sharing, Identity, Groups), and the Enable, Grow and Protect meta-dimensions"
               className="w-full"
             />
           </div>
