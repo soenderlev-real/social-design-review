@@ -1,6 +1,6 @@
 import { ArrowLeft } from 'lucide-react';
 
-export default function Header({ onLogoClick, onInstructionsClick, showBack }) {
+export default function Header({ onLogoClick, onInstructionsClick, onReadingListClick, showBack }) {
   return (
     <header className="bg-light border-b-2 border-dark sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
@@ -35,6 +35,12 @@ export default function Header({ onLogoClick, onInstructionsClick, showBack }) {
             className="hover:underline underline-offset-4"
           >
             Instructions
+          </button>
+          <button
+            onClick={onReadingListClick}
+            className="hover:underline underline-offset-4"
+          >
+            Reading List
           </button>
           <a
             href="https://www.rebuild.net/tools/"

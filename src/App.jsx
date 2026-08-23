@@ -2,14 +2,17 @@ import { useState, useEffect } from 'react';
 import LandingView from './components/LandingView';
 import ReviewDashboard from './components/ReviewDashboard';
 import InstructionsView from './components/InstructionsView';
+import ReadingListView from './components/ReadingListView';
 import Header from './components/Header';
 
 function viewFromHash() {
-  return window.location.hash === '#instructions' ? 'instructions' : 'landing';
+  if (window.location.hash === '#instructions') return 'instructions';
+  if (window.location.hash === '#reading-list') return 'reading-list';
+  return 'landing';
 }
 
 export default function App() {
-  const [view, setView] = useState(viewFromHash); // 'landing' | 'review' | 'instructions'
+  const [view, setView] = useState(viewFromHash); // 'landing' | 'review' | 'instructions' | 'reading-list'
   const [config, setConfig] = useState({
     mode: 'review',
     providerId: '',
@@ -43,12 +46,23 @@ export default function App() {
     window.location.hash = 'instructions';
   }
 
+  function handleShowReadingList() {
+    setView('reading-list');
+    window.location.hash = 'reading-list';
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
-      <Header onLogoClick={handleBackToLanding} onInstructionsClick={handleShowInstructions} showBack={view !== 'landing'} />
+      <Header
+        onLogoClick={handleBackToLanding}
+        onInstructionsClick={handleShowInstructions}
+        onReadingListClick={handleShowReadingList}
+        showBack={view !== 'landing'}
+      />
       <main className="flex-1">
         {view === 'landing' && <LandingView onStart={handleStartReview} />}
         {view === 'instructions' && <InstructionsView />}
+        {view === 'reading-list' && <ReadingListView />}
         {view === 'review' && (
           <ReviewDashboard
             mode={config.mode}
