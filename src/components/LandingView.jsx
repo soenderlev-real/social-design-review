@@ -175,7 +175,7 @@ export default function LandingView({ onStart }) {
       </section>
 
       {/* Features */}
-      <section className="border-b-2 border-dark bg-white">
+      <section className="bg-white">
         <div className="max-w-5xl mx-auto px-6 py-16">
           <p className="text-base text-darker leading-relaxed max-w-2xl mb-10">
             <strong className="text-dark">Social Design Review</strong> is an AI-powered analysis of social platforms through this lens — built for European platform founders, designers and researchers.
