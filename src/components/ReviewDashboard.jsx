@@ -4,8 +4,9 @@ import { analyzeAll, designAll } from '../utils/analyzeWithAI';
 import ConceptCard from './ConceptCard';
 import ScoreRadar from './ScoreRadar';
 import RadialFramework from './RadialFramework';
-import { Loader2, Download, RotateCcw, ChevronsDownUp, ChevronsUpDown, Bot } from 'lucide-react';
+import { Loader2, Download, RotateCcw, ChevronsDownUp, ChevronsUpDown, Bot, Rocket } from 'lucide-react';
 import ChatPanel from './ChatPanel';
+import { buildLovableUrl } from '../utils/lovable';
 
 export default function ReviewDashboard({ mode = 'review', providerId, apiKey, platformUrl, platformDescription, ollamaConfig, processedFiles = [], onBack }) {
   const isDesignMode = mode === 'design';
@@ -190,6 +191,11 @@ export default function ReviewDashboard({ mode = 'review', providerId, apiKey, p
     URL.revokeObjectURL(blobUrl);
   }
 
+  function handlePrototypeInLovable() {
+    const { url } = buildLovableUrl(platformDescription, CONCEPTS, results);
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+
   const platformLabel = isDesignMode
     ? (platformDescription ? platformDescription.slice(0, 80) + (platformDescription.length > 80 ? '…' : '') : 'Platform Concept')
     : platformUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
@@ -250,6 +256,16 @@ export default function ReviewDashboard({ mode = 'review', providerId, apiKey, p
                 className="flex items-center gap-2 px-4 py-2 border-2 border-dark text-dark hover:bg-dark hover:text-light transition-colors text-sm font-bold"
               >
                 <RotateCcw size={14} /> Re-run
+              </button>
+            )}
+            {isDesignMode && (
+              <button
+                onClick={handlePrototypeInLovable}
+                disabled={completedCount === 0}
+                title="Open Lovable with this workshop as a build brief — you pick the workspace there"
+                className="flex items-center gap-2 px-4 py-2 border-2 border-dark text-dark hover:bg-dark hover:text-light disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-sm font-bold"
+              >
+                <Rocket size={14} /> Prototype
               </button>
             )}
             <button
