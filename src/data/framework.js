@@ -598,6 +598,18 @@ Design guidance should account for where social platforms are heading. Generativ
 
 If the platform being designed operates in or serves the EU, note that the AI Act (Article 5) prohibits certain AI practices outright — manipulative or deceptive techniques that materially distort behaviour, exploitation of vulnerabilities, and social scoring. Personalisation and recommendation features should be designed to stay well clear of this line from the start, not retrofitted to comply later.
 
+## From principle to interface
+Design guidance that stops at the level of values is easy to agree with and hard to build. Every dimension must also land as something concrete on a screen — so translate the principles into interface: the actual screens, components, states and copy a team could put into a wireframe this week.
+
+What "interface level" means here:
+- **Screens and components** — name the specific UI element that carries this dimension (a composer, a feed card, a settings pane, an onboarding step, a group header), and what belongs in it.
+- **Information hierarchy** — what is primary, what is secondary, what is deliberately de-emphasised or removed. What a user sees first, and what they have to go looking for. Placement is a value judgement: a control buried three menus deep is a different design from the same control in the primary nav.
+- **States** — the empty state, the first-run state, the loading state, the error state, and (critically for this framework) the *end* state. Most extraction patterns hide in states nobody designed.
+- **Interaction and friction** — what a tap/click does, what confirms, what is reversible, and where a deliberate pause belongs (ReflectiveFriction is a UI decision before it is a philosophy).
+- **Microcopy** — the actual words on the button, the label, the empty state. In this framework copy often *is* the design: "You're all caught up" is EndDesign; "3 people are typing" is presence pressure.
+
+Ground each interface suggestion in the dimension's principles rather than generic UI advice — the test is whether a reader could tell *which* framework dimension the interface came from. Prefer concrete over abstract: "a chronological/algorithmic toggle in the feed header, not in Settings" beats "make ranking transparent."
+
 ## When generating design guidance, consider:
 - What are the key design decisions this team must resolve in this dimension?
 - Which finitude principles apply, and how specifically?
@@ -606,12 +618,14 @@ If the platform being designed operates in or serves the EU, note that the AI Ac
 - Where does AI (generative or agentic) change the design problem in this dimension?
 - What does the European values frame demand here — participation, the commons, data sovereignty?
 - Does the design meet DSA transparency and control requirements from the outset — Art. 25 (dark patterns), Art. 27/38 (recommender transparency and a genuine non-profiling option), Art. 28 (protection of minors)?
+- What does this dimension look like as an actual interface — which screen, which component, which state, which words?
 
 For each dimension, provide:
 1. **Design Considerations** (3-5 bullet points): Key questions and decisions the team must resolve
 2. **Suggestions** (3-5 bullet points): Concrete design choices that serve users well — adapt the dimension's provided light patterns to this concept, reference real examples, name relevant finitude principles
-3. **Watch Out For** (2-4 bullet points): Dark patterns and traps this type of platform is most likely to fall into — name the EDPB category (Overloading/Skipping/Stirring/Obstructing/Fickle/Left in the Dark) where it applies
-4. **European Perspective**: One paragraph on how this dimension can be designed to embody European values of participation, the commons, and democratic empowerment`;
+3. **Interface Patterns** (3-5 bullet points): The UI-level translation — specific screens, components, states, interactions and microcopy that implement the suggestions above. Name the element and where it sits, not just the intent. Include at least one concrete piece of microcopy or one named state where it carries the design.
+4. **Watch Out For** (2-4 bullet points): Dark patterns and traps this type of platform is most likely to fall into — name the EDPB category (Overloading/Skipping/Stirring/Obstructing/Fickle/Left in the Dark) where it applies
+5. **European Perspective**: One paragraph on how this dimension can be designed to embody European values of participation, the commons, and democratic empowerment`;
 
 export function buildDesignPrompt(concept, platformDescription, fileContext = '') {
   const fileSection = fileContext
@@ -634,14 +648,17 @@ ${concept.darkPatterns.map(p => `- ${p}`).join('\n')}
 ## Light patterns to design toward:
 ${concept.lightPatterns.map(p => `- ${p}`).join('\n')}
 
-You MUST respond using EXACTLY these four section headers, in this order. Do not rename them, do not skip them:
+You MUST respond using EXACTLY these five section headers, in this order. Do not rename them, do not skip them:
 
 ### Design Considerations
 ### Suggestions
+### Interface Patterns
 ### Watch Out For
 ### European Perspective
 
 Be specific and concrete. Reference real platform examples (good and bad) where helpful. Tailor your guidance directly to the platform concept described above — and to any uploaded materials if provided.
 
-For Suggestions specifically: adapt the light patterns above to this concept rather than restating them generically — only introduce a pattern beyond that list if none of them fit.`;
+For Suggestions specifically: adapt the light patterns above to this concept rather than restating them generically — only introduce a pattern beyond that list if none of them fit.
+
+For Interface Patterns specifically: translate those suggestions into what a designer would actually draw — name the screen or component and where it sits, the state it covers, and the words on it. Avoid restating the suggestion in UI vocabulary; each bullet should add something a wireframe needs.`;
 }

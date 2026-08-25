@@ -89,6 +89,7 @@ export default function ReviewDashboard({ mode = 'review', providerId, apiKey, p
         if (isDesignMode) {
           if (r.considerations) md += `### Design Considerations\n${r.considerations}\n\n`;
           if (r.suggestions) md += `### Suggestions\n${r.suggestions}\n\n`;
+          if (r.interfacePatterns) md += `### Interface Patterns\n${r.interfacePatterns}\n\n`;
           if (r.watchOutFor) md += `### Watch Out For\n${r.watchOutFor}\n\n`;
           if (r.europeanPerspective) md += `### European Perspective\n${r.europeanPerspective}\n\n`;
         } else {
@@ -152,9 +153,10 @@ export default function ReviewDashboard({ mode = 'review', providerId, apiKey, p
       md += `### ${i + 1}. ${c.title}\n*${c.shortDesc}*\n\n`;
       if (r?.status === 'done') {
         if (isDesignMode) {
-          if (r.suggestions)     md += `**ALWAYS:**\n${r.suggestions}\n\n`;
-          if (r.watchOutFor)     md += `**NEVER:**\n${r.watchOutFor}\n\n`;
-          if (r.considerations)  md += `**Resolve before coding:**\n${r.considerations}\n\n`;
+          if (r.suggestions)       md += `**ALWAYS:**\n${r.suggestions}\n\n`;
+          if (r.interfacePatterns) md += `**BUILD (UI):**\n${r.interfacePatterns}\n\n`;
+          if (r.watchOutFor)       md += `**NEVER:**\n${r.watchOutFor}\n\n`;
+          if (r.considerations)    md += `**Resolve before coding:**\n${r.considerations}\n\n`;
         } else {
           const scoreLabel = { 1: 'Harmful', 2: 'Problematic', 3: 'Adequate', 4: 'Good', 5: 'Exemplary' };
           if (r.score) md += `**Review score:** ${r.score}/5 — ${scoreLabel[r.score] || ''}\n\n`;

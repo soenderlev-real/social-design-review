@@ -123,6 +123,8 @@ export function parseDesignResponse(text) {
 
     if (header.includes('design consideration') || (header.includes('consideration') && !header.includes('watch'))) {
       sections.considerations = body;
+    } else if (header.includes('interface') || header.includes('ui pattern')) {
+      sections.interfacePatterns = body;
     } else if (header.includes('suggestion') || header.includes('recommendation') || header.includes('approach')) {
       sections.suggestions = body;
     } else if (header.includes('watch out') || header.includes('pitfall') || header.includes('avoid') || header.includes('dark pattern')) {

@@ -10,7 +10,10 @@ const META_STYLE = {
 };
 
 function bold(s) {
-  return s.replace(/\*\*(.+?)\*\*/g, '<strong class="text-dark">$1</strong>');
+  // **bold** first, so the remaining single asterisks are unambiguously italics
+  return s
+    .replace(/\*\*(.+?)\*\*/g, '<strong class="text-dark">$1</strong>')
+    .replace(/\*([^*\n]+?)\*/g, '<em>$1</em>');
 }
 
 /** Renders the raw system-prompt template literals — headings, bullets, paragraphs. */
@@ -244,9 +247,9 @@ function InstructionsContent() {
               {renderPrompt(DESIGN_SYSTEM_PROMPT)}
             </div>
             <div className="mt-4 p-4 bg-light border-2 border-dark">
-              <h5 className="text-xs font-bold uppercase tracking-widest text-muted mb-3">Required output — four fixed sections, in order</h5>
+              <h5 className="text-xs font-bold uppercase tracking-widest text-muted mb-3">Required output — five fixed sections, in order</h5>
               <div className="flex flex-wrap gap-2">
-                {['Design Considerations', 'Suggestions', 'Watch Out For', 'European Perspective'].map(h => (
+                {['Design Considerations', 'Suggestions', 'Interface Patterns', 'Watch Out For', 'European Perspective'].map(h => (
                   <span key={h} className="px-2 py-1 text-xs border border-dark bg-white text-darker">{h}</span>
                 ))}
               </div>

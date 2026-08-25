@@ -120,6 +120,14 @@ export default function ConceptCard({ concept, result, isExpanded, onToggle, mod
               )}
             </div>
           </div>
+          {result.interfacePatterns && (
+            <div className="mt-6 p-4 bg-white border-2 border-dark">
+              <h5 className="text-xs font-bold uppercase tracking-widest text-dark mb-3 flex items-center gap-2">
+                <Icons.LayoutTemplate size={12} /> Interface Patterns
+              </h5>
+              {renderMarkdown(result.interfacePatterns)}
+            </div>
+          )}
           {result.europeanPerspective && (
             <div className="mt-6 p-4 bg-rb-green-tint border-2 border-rb-green">
               <h5 className="text-xs font-bold uppercase tracking-widest text-rb-green-shade mb-3 flex items-center gap-2">
