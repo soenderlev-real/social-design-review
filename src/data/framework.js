@@ -491,6 +491,14 @@ Beyond the dark patterns named per dimension, the European Data Protection Board
 - **Fickle** — an inconsistent interface — controls scattered, wording that shifts across screens, settings that are hard to compare because they're never presented the same way twice.
 - **Left in the Dark** — ambiguous or conflicting information about what actually happens to a user's data, content, or visibility.
 
+## Locating patterns in the interface
+A dark pattern is never abstract — it lives somewhere specific: on a screen, in a control's placement, in a state nobody designed, in the words on a button. A review that names "illusory control" without saying where it lives is hard to act on and hard to verify. So for each dimension, tie the finding to the interface:
+
+- **Where it lives** — the specific screen, component, control, flow step or state that carries the pattern (a signup flow, a consent dialog, a feed header, a settings pane buried three levels deep, an infinite scroll with no terminus). Placement is itself the finding: the same control in the primary nav versus in a submenu is two different designs.
+- **The evidence** — where page content was fetched, quote or name what you actually saw: navigation labels, button copy, headings, the wording of a consent prompt, what the signup flow asks for. Ground the claim in observable elements rather than assumption. Where you are reasoning from general knowledge of the platform rather than the fetched page, say so plainly.
+- **The interface fix** — what the corrected screen looks like: which element moves, which state gets designed, which words change. "Surface the chronological toggle in the feed header" is actionable; "make ranking transparent" is not.
+- **Microcopy** — the actual words often *are* the pattern. "You're all caught up" is EndDesign; "3 people are typing" is presence pressure; "Are you sure you want to lose your progress?" is a cancellation trap.
+
 ## When assessing a platform, you consider:
 - Does the design empower users or extract from them?
 - Are incentive structures aligned with user wellbeing, or with engagement metrics that proxy attention for revenue?
@@ -510,7 +518,8 @@ For each concept you review, provide:
 3. **Score** (1-5): 1 = actively harmful, 2 = problematic, 3 = adequate, 4 = good, 5 = exemplary
 4. **Dark patterns detected**: List any dark patterns you observe, naming the EDPB category (Overloading/Skipping/Stirring/Obstructing/Fickle/Left in the Dark) where it applies (or "None detected")
 5. **Recommendations** (3-5 bullet points): Specific, actionable suggestions — anchor each one in the dimension's provided light patterns where they counter a detected dark pattern, and use the finitude principle vocabulary otherwise
-6. **European perspective**: One paragraph on how this dimension could better align with European values of participation, commons, and democratic empowerment`;
+6. **Interface Notes** (2-4 bullet points): Where this dimension lives in the actual interface — the screen, control, flow step or state carrying the behaviour, what you observed there (quoting real page content where you have it, and saying when you are instead reasoning from general knowledge), and what the corrected screen would look like. Name elements and copy, not intentions.
+7. **European perspective**: One paragraph on how this dimension could better align with European values of participation, commons, and democratic empowerment`;
 
 export function buildConceptPrompt(concept, platformUrl, platformDescription, siteContent, fileContext = '') {
   let siteSection = '';
@@ -540,18 +549,21 @@ ${siteSection}${fileSection}
 ## Platform context provided by the user:
 ${platformDescription || 'No additional description provided. Use your knowledge of this platform.'}
 
-You MUST respond using EXACTLY these six section headers, in this order. Do not rename them, do not skip them:
+You MUST respond using EXACTLY these seven section headers, in this order. Do not rename them, do not skip them:
 
 ### Strengths
 ### Assessment
 ### Score: [write only a single digit 1, 2, 3, 4, or 5]
 ### Dark Patterns Detected
 ### Recommendations
+### Interface Notes
 ### European Perspective
 
 Base your analysis on the actual fetched page content where available. Reference specific elements you can see — navigation items, features mentioned, headings, calls to action, signup flows, visible policies. Combine this with your broader knowledge of the platform. Be specific and concrete.
 
-For Recommendations specifically: where a light pattern listed above directly counters a dark pattern you detected, name it and describe the concrete change it implies. Only reach beyond the listed light patterns when none of them fit what you observed.`;
+For Recommendations specifically: where a light pattern listed above directly counters a dark pattern you detected, name it and describe the concrete change it implies. Only reach beyond the listed light patterns when none of them fit what you observed.
+
+For Interface Notes specifically: point at the interface, not the intent — name the screen, control or state, cite what the fetched page actually shows where you have it, and be explicit when a claim rests on general knowledge of the platform instead. If the page content was not available for this dimension, say what you would need to look at to check it.`;
 }
 
 // ─── Design mode ────────────────────────────────────────────────────────────

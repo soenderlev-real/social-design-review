@@ -228,9 +228,9 @@ function InstructionsContent() {
               {renderPrompt(ANALYSIS_SYSTEM_PROMPT)}
             </div>
             <div className="mt-4 p-4 bg-light border-2 border-dark">
-              <h5 className="text-xs font-bold uppercase tracking-widest text-muted mb-3">Required output — six fixed sections, in order</h5>
+              <h5 className="text-xs font-bold uppercase tracking-widest text-muted mb-3">Required output — seven fixed sections, in order</h5>
               <div className="flex flex-wrap gap-2">
-                {['Strengths', 'Assessment', 'Score (1–5)', 'Dark Patterns Detected', 'Recommendations', 'European Perspective'].map(h => (
+                {['Strengths', 'Assessment', 'Score (1–5)', 'Dark Patterns Detected', 'Recommendations', 'Interface Notes', 'European Perspective'].map(h => (
                   <span key={h} className="px-2 py-1 text-xs border border-dark bg-white text-darker">{h}</span>
                 ))}
               </div>

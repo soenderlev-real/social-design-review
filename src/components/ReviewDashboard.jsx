@@ -98,6 +98,7 @@ export default function ReviewDashboard({ mode = 'review', providerId, apiKey, p
           if (r.assessment) md += `### Assessment\n${r.assessment}\n\n`;
           if (r.darkPatterns) md += `### Dark Patterns Detected\n${r.darkPatterns}\n\n`;
           if (r.recommendations) md += `### Recommendations\n${r.recommendations}\n\n`;
+          if (r.interfacePatterns) md += `### Interface Notes\n${r.interfacePatterns}\n\n`;
           if (r.europeanPerspective) md += `### European Perspective\n${r.europeanPerspective}\n\n`;
         }
       } else if (r?.status === 'error') {
@@ -160,9 +161,10 @@ export default function ReviewDashboard({ mode = 'review', providerId, apiKey, p
         } else {
           const scoreLabel = { 1: 'Harmful', 2: 'Problematic', 3: 'Adequate', 4: 'Good', 5: 'Exemplary' };
           if (r.score) md += `**Review score:** ${r.score}/5 — ${scoreLabel[r.score] || ''}\n\n`;
-          if (r.recommendations) md += `**FIX / IMPLEMENT:**\n${r.recommendations}\n\n`;
-          if (r.darkPatterns)    md += `**REMOVE / NEVER ADD:**\n${r.darkPatterns}\n\n`;
-          if (r.strengths)       md += `**KEEP (do not break):**\n${r.strengths}\n\n`;
+          if (r.recommendations)   md += `**FIX / IMPLEMENT:**\n${r.recommendations}\n\n`;
+          if (r.interfacePatterns) md += `**WHERE IT LIVES (UI):**\n${r.interfacePatterns}\n\n`;
+          if (r.darkPatterns)      md += `**REMOVE / NEVER ADD:**\n${r.darkPatterns}\n\n`;
+          if (r.strengths)         md += `**KEEP (do not break):**\n${r.strengths}\n\n`;
         }
       } else {
         md += `*Not yet analysed — re-run to populate.*\n\n`;

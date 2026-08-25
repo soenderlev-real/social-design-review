@@ -84,6 +84,8 @@ export function parseAnalysisResponse(text) {
       sections.assessment = body;
     } else if (header.includes('dark pattern') || header.includes('antipattern') || header.includes('concerns')) {
       sections.darkPatterns = body;
+    } else if (header.includes('interface') || header.includes('ui pattern') || header.includes('ui note')) {
+      sections.interfacePatterns = body;
     } else if (header.includes('recommendation') || header.includes('suggestion') || header.includes('improvement')) {
       sections.recommendations = body;
     } else if (header.includes('european') || header.includes('europe') || header.includes('perspective')) {
