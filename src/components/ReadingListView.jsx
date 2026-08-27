@@ -24,12 +24,12 @@ function Entry({ entry }) {
   return (
     <div className="border-2 border-dark -mt-[2px] first:mt-0 bg-white p-4 sm:p-5">
       <div className="flex flex-wrap items-baseline gap-x-2">
-        {entry.authors && <span className="font-bold text-dark text-sm">{entry.authors}</span>}
-        {entry.year && <span className="text-muted text-sm">({entry.year})</span>}
+        {entry.authors && <span className="text-dark text-sm">{entry.authors}</span>}
+        {entry.year && <span className="text-darker text-sm">({entry.year})</span>}
       </div>
       <div className="text-sm text-darker italic leading-snug mt-1">{entry.work}</div>
-      {entry.source && <div className="text-xs text-muted mt-1">{entry.source}</div>}
-      {entry.note && <p className="text-xs text-muted leading-relaxed mt-2">{entry.note}</p>}
+      {entry.source && <div className="text-xs text-darker mt-1">{entry.source}</div>}
+      {entry.note && <p className="text-xs text-darker leading-relaxed mt-2">{entry.note}</p>}
       <EntryLinks links={entry.links} />
     </div>
   );
@@ -40,15 +40,15 @@ function Section({ section }) {
     <div className="mt-12" id={section.id}>
       <div className="flex items-start gap-4 mb-4">
         {section.number && (
-          <div className="flex-shrink-0 w-8 h-8 bg-dark text-white flex items-center justify-center font-bold text-sm border-2 border-dark">
+          <div className="flex-shrink-0 w-8 h-8 bg-dark text-white flex items-center justify-center text-sm border-2 border-dark">
             {section.number}
           </div>
         )}
         <div>
-          <h3 className="text-lg font-bold text-dark">{section.title}</h3>
-          <p className="text-xs text-muted mt-0.5">{section.subtitle}</p>
+          <h3 className="text-lg text-dark">{section.title}</h3>
+          <p className="text-xs text-darker mt-0.5">{section.subtitle}</p>
           {section.seeAlsoIntro && (
-            <p className="text-xs text-muted italic mt-1">{section.seeAlsoIntro}</p>
+            <p className="text-xs text-darker italic mt-1">{section.seeAlsoIntro}</p>
           )}
         </div>
       </div>
@@ -57,7 +57,7 @@ function Section({ section }) {
         <div className="border-2 border-dark bg-white p-4 sm:p-5 space-y-3">
           {section.prose.map((p) => (
             <p key={p.label} className="text-sm text-darker leading-relaxed">
-              <span className="font-bold text-dark">{p.label}</span> — {p.text}
+              <span className="text-dark">{p.label}</span> — {p.text}
             </p>
           ))}
         </div>
@@ -70,7 +70,7 @@ function Section({ section }) {
       )}
 
       {section.seeAlso && (
-        <p className="text-xs text-muted italic mt-2">See also: {section.seeAlso}</p>
+        <p className="text-xs text-darker italic mt-2">See also: {section.seeAlso}</p>
       )}
     </div>
   );
@@ -81,12 +81,12 @@ export default function ReadingListView() {
     <div className="animate-fade-in">
 
       {/* Hero */}
-      <section className="bg-light border-b-2 border-dark">
+      <section className="bg-white border-b-2 border-dark">
         <div className="max-w-5xl mx-auto px-6 py-16">
-          <p className="text-sm text-muted mb-4 uppercase tracking-widest flex items-center gap-2">
+          <p className="text-xs text-darker mb-4 uppercase tracking-widest flex items-center gap-2">
             <BookOpen size={14} /> Theory &amp; literature
           </p>
-          <h1 className="text-4xl md:text-5xl font-normal text-dark mb-6 leading-tight">
+          <h1 className="text-4xl md:text-5xl text-dark mb-6 leading-tight">
             Reading List for<br />Social Design Platforms
           </h1>
           <p className="text-base text-darker max-w-xl leading-relaxed">
@@ -102,7 +102,7 @@ export default function ReadingListView() {
             <Section key={section.id} section={section} />
           ))}
 
-          <p className="text-xs text-muted leading-relaxed mt-16 pt-8 border-t-2 border-dark">
+          <p className="text-xs text-darker leading-relaxed mt-16 pt-8 border-t-2 border-dark">
             {BIBLIOGRAPHY_NOTE}
           </p>
         </div>

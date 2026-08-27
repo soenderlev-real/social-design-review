@@ -76,7 +76,7 @@ export default function App() {
           />
         )}
       </main>
-      <footer className="border-t border-gray-200 py-6 text-center text-sm text-gray-400">
+      <footer className="border-t-2 border-lighter py-8 text-center text-sm text-darker">
         Social Design Framework &middot; Rebuild.net Sprint 2025&ndash;2026 &middot; Designing for empowerment
       </footer>
     </div>

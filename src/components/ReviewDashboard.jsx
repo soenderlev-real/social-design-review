@@ -204,14 +204,14 @@ export default function ReviewDashboard({ mode = 'review', providerId, apiKey, p
     <div className="animate-fade-in">
 
       {/* Summary bar */}
-      <div className="border-b-2 border-dark bg-light sticky top-14 z-40">
+      <div className="border-b-2 border-dark bg-white sticky top-14 z-40">
         <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col lg:flex-row lg:items-center gap-4">
           {/* Platform name */}
           <div className="flex-1 min-w-0">
-            {isDesignMode && <p className="text-xs font-bold uppercase tracking-widest text-muted mb-0.5">Design Workshop</p>}
-            <h2 className="text-xl font-bold text-dark truncate">{platformLabel}</h2>
+            {isDesignMode && <p className="text-xs uppercase tracking-widest text-darker mb-0.5">Design Workshop</p>}
+            <h2 className="text-xl text-dark truncate">{platformLabel}</h2>
             {!isDesignMode && platformDescription && (
-              <p className="text-xs text-muted truncate mt-0.5">{platformDescription}</p>
+              <p className="text-xs text-darker truncate mt-0.5">{platformDescription}</p>
             )}
           </div>
 
@@ -219,20 +219,20 @@ export default function ReviewDashboard({ mode = 'review', providerId, apiKey, p
           <div className="flex items-center gap-6">
             {!isDesignMode && (
               <div className="text-center">
-                <div className="text-3xl font-bold text-dark">{avgScore || '—'}</div>
-                <div className="text-xs text-muted uppercase tracking-widest">Avg Score</div>
+                <div className="text-3xl text-dark">{avgScore || '—'}</div>
+                <div className="text-xs text-darker uppercase tracking-widest">Avg Score</div>
               </div>
             )}
             <div className="text-center">
-              <div className="text-3xl font-bold text-dark">
-                {completedCount}<span className="text-muted">/{CONCEPTS.length}</span>
+              <div className="text-3xl text-dark">
+                {completedCount}<span className="text-darker">/{CONCEPTS.length}</span>
               </div>
-              <div className="text-xs text-muted uppercase tracking-widest">{isDesignMode ? 'Mapped' : 'Analysed'}</div>
+              <div className="text-xs text-darker uppercase tracking-widest">{isDesignMode ? 'Mapped' : 'Analysed'}</div>
             </div>
             {errorCount > 0 && (
               <div className="text-center">
-                <div className="text-3xl font-bold text-rb-red">{errorCount}</div>
-                <div className="text-xs text-muted uppercase tracking-widest">Errors</div>
+                <div className="text-3xl text-rb-red">{errorCount}</div>
+                <div className="text-xs text-darker uppercase tracking-widest">Errors</div>
               </div>
             )}
           </div>
@@ -242,7 +242,7 @@ export default function ReviewDashboard({ mode = 'review', providerId, apiKey, p
             {!isRunning && completedCount > 0 && (
               <button
                 onClick={allExpanded ? handleCollapseAll : handleExpandAll}
-                className="flex items-center gap-2 px-4 py-2 border-2 border-dark text-dark hover:bg-dark hover:text-light transition-colors text-sm font-bold"
+                className="flex items-center gap-2 px-4 py-2 border-2 border-dark text-dark hover:bg-dark hover:text-white transition-colors text-sm uppercase tracking-wide"
               >
                 {allExpanded
                   ? <><ChevronsDownUp size={14} /> Collapse all</>
@@ -253,7 +253,7 @@ export default function ReviewDashboard({ mode = 'review', providerId, apiKey, p
             {!isRunning && (
               <button
                 onClick={startAnalysis}
-                className="flex items-center gap-2 px-4 py-2 border-2 border-dark text-dark hover:bg-dark hover:text-light transition-colors text-sm font-bold"
+                className="flex items-center gap-2 px-4 py-2 border-2 border-dark text-dark hover:bg-dark hover:text-white transition-colors text-sm uppercase tracking-wide"
               >
                 <RotateCcw size={14} /> Re-run
               </button>
@@ -263,7 +263,7 @@ export default function ReviewDashboard({ mode = 'review', providerId, apiKey, p
                 onClick={handlePrototypeInLovable}
                 disabled={completedCount === 0}
                 title="Open Lovable with this workshop as a build brief — you pick the workspace there"
-                className="flex items-center gap-2 px-4 py-2 border-2 border-dark text-dark hover:bg-dark hover:text-light disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-sm font-bold"
+                className="flex items-center gap-2 px-4 py-2 border-2 border-dark text-dark hover:bg-dark hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-sm uppercase tracking-wide"
               >
                 <Rocket size={14} /> Prototype
               </button>
@@ -272,7 +272,7 @@ export default function ReviewDashboard({ mode = 'review', providerId, apiKey, p
               onClick={handleExportAgentMarkdown}
               disabled={completedCount === 0}
               title="Export as coding agent instructions (CLAUDE.md / Cursor / Windsurf / Lovable)"
-              className="flex items-center gap-2 px-4 py-2 border-2 border-dark text-dark hover:bg-dark hover:text-light disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-sm font-bold"
+              className="flex items-center gap-2 px-4 py-2 border-2 border-dark text-dark hover:bg-dark hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-sm uppercase tracking-wide"
             >
               <Bot size={14} /> Agent .md
             </button>
@@ -280,7 +280,7 @@ export default function ReviewDashboard({ mode = 'review', providerId, apiKey, p
               onClick={handleExportMarkdown}
               disabled={completedCount === 0}
               title="Export full report as Markdown"
-              className="flex items-center gap-2 px-4 py-2 bg-dark text-light border-2 border-dark hover:bg-darker disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-sm font-bold"
+              className="flex items-center gap-2 px-4 py-2 bg-dark text-white border-2 border-dark hover:bg-darker disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-sm uppercase tracking-wide"
             >
               <Download size={14} /> Export
             </button>
@@ -291,8 +291,8 @@ export default function ReviewDashboard({ mode = 'review', providerId, apiKey, p
         {isRunning && (
           <div className="border-t-2 border-dark px-6 py-3">
             <div className="flex items-center gap-3 mb-2">
-              <Loader2 size={14} className="animate-spin text-muted" />
-              <span className="text-xs text-muted">
+              <Loader2 size={14} className="animate-spin text-darker" />
+              <span className="text-xs text-darker">
                 {statusMsg || `Analysing ${CONCEPTS[progress]?.title || '...'}` }
               </span>
             </div>
@@ -310,7 +310,7 @@ export default function ReviewDashboard({ mode = 'review', providerId, apiKey, p
         {/* Radar chart — review mode only */}
         {!isDesignMode && completedCount >= 3 && (
           <div className="border-2 border-dark bg-white p-6 mb-10">
-            <h3 className="text-xs font-bold uppercase tracking-widest text-muted mb-6">Framework Overview</h3>
+            <h3 className="text-xs uppercase tracking-widest text-darker mb-6">Framework Overview</h3>
             <ScoreRadar concepts={CONCEPTS} scores={scores} />
           </div>
         )}

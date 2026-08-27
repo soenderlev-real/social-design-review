@@ -4,7 +4,7 @@ import * as Icons from 'lucide-react';
 const SCORE_STYLES = {
   1: { bg: 'bg-rb-red-tint border-rb-red', text: 'text-rb-red', label: 'Harmful' },
   2: { bg: 'bg-rb-orange-tint border-rb-orange', text: 'text-rb-orange', label: 'Problematic' },
-  3: { bg: 'bg-lighter border-muted', text: 'text-darker', label: 'Adequate' },
+  3: { bg: 'bg-lighter border-darker', text: 'text-darker', label: 'Adequate' },
   4: { bg: 'bg-rb-green-tint border-rb-green', text: 'text-rb-green-shade', label: 'Good' },
   5: { bg: 'bg-rb-green-tint border-rb-green', text: 'text-rb-green-shade', label: 'Exemplary' },
 };
@@ -12,7 +12,7 @@ const SCORE_STYLES = {
 function ScoreBadge({ score }) {
   const s = SCORE_STYLES[score] || SCORE_STYLES[3];
   return (
-    <span className={`inline-flex items-center gap-1.5 px-3 py-1 border-2 text-xs font-bold ${s.bg} ${s.text}`}>
+    <span className={`inline-flex items-center gap-1.5 px-3 py-1 border-2 text-xs uppercase tracking-wide ${s.bg} ${s.text}`}>
       {score}/5 · {s.label}
     </span>
   );
@@ -73,23 +73,23 @@ export default function ConceptCard({ concept, result, isExpanded, onToggle, mod
           <Icon size={16} className="text-dark" />
         </div>
         <div className="flex-1 min-w-0">
-          <h4 className="font-bold text-dark text-sm">{concept.title}</h4>
-          <p className="text-xs text-muted truncate">{concept.shortDesc}</p>
+          <h4 className="text-dark text-sm tracking-wide">{concept.title}</h4>
+          <p className="text-xs text-darker truncate mt-0.5">{concept.shortDesc}</p>
         </div>
         <div className="flex items-center gap-3 flex-shrink-0">
           {status === 'pending' && <Loader2 size={16} className="animate-spin text-muted" />}
           {status === 'done' && !isDesignMode && <ScoreBadge score={result.score} />}
           {status === 'done' && isDesignMode && (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 border-2 border-rb-blue bg-rb-blue-tint text-rb-blue-shade text-xs font-bold">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 border-2 border-rb-blue bg-rb-blue-tint text-rb-blue-shade text-xs uppercase tracking-wide">
               <Lightbulb size={11} /> Mapped
             </span>
           )}
           {status === 'error' && (
-            <span className="inline-flex items-center gap-1 text-rb-red text-xs font-bold border-2 border-rb-red px-2 py-1">
+            <span className="inline-flex items-center gap-1 text-rb-red text-xs uppercase tracking-wide border-2 border-rb-red px-2 py-1">
               <AlertTriangle size={12} /> Error
             </span>
           )}
-          {isExpanded ? <ChevronUp size={16} className="text-muted" /> : <ChevronDown size={16} className="text-muted" />}
+          {isExpanded ? <ChevronUp size={16} className="text-darker" /> : <ChevronDown size={16} className="text-darker" />}
         </div>
       </button>
 
@@ -98,7 +98,7 @@ export default function ConceptCard({ concept, result, isExpanded, onToggle, mod
         <div className="border-t-2 border-dark px-5 pb-6 pt-5 animate-fade-in">
           {result.considerations && (
             <div className="mb-6 p-4 bg-rb-blue-tint border-2 border-rb-blue">
-              <h5 className="text-xs font-bold uppercase tracking-widest text-rb-blue-shade mb-3 flex items-center gap-2">
+              <h5 className="text-xs uppercase tracking-widest text-rb-blue-shade mb-3 flex items-center gap-2">
                 <Pencil size={12} /> Design Considerations
               </h5>
               {renderMarkdown(result.considerations)}
@@ -106,13 +106,13 @@ export default function ConceptCard({ concept, result, isExpanded, onToggle, mod
           )}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
             <div>
-              <h5 className="text-xs font-bold uppercase tracking-widest text-muted mb-3">Suggestions</h5>
+              <h5 className="text-xs uppercase tracking-widest text-darker mb-3">Suggestions</h5>
               {renderMarkdown(result.suggestions)}
             </div>
             <div>
               {result.watchOutFor && (
                 <>
-                  <h5 className="text-xs font-bold uppercase tracking-widest text-rb-orange mb-3 flex items-center gap-2">
+                  <h5 className="text-xs uppercase tracking-widest text-rb-orange-shade mb-3 flex items-center gap-2">
                     <ShieldAlert size={12} /> Watch Out For
                   </h5>
                   {renderMarkdown(result.watchOutFor)}
@@ -122,7 +122,7 @@ export default function ConceptCard({ concept, result, isExpanded, onToggle, mod
           </div>
           {result.interfacePatterns && (
             <div className="mt-6 p-4 bg-white border-2 border-dark">
-              <h5 className="text-xs font-bold uppercase tracking-widest text-dark mb-3 flex items-center gap-2">
+              <h5 className="text-xs uppercase tracking-widest text-dark mb-3 flex items-center gap-2">
                 <Icons.LayoutTemplate size={12} /> Interface Patterns
               </h5>
               {renderMarkdown(result.interfacePatterns)}
@@ -130,18 +130,18 @@ export default function ConceptCard({ concept, result, isExpanded, onToggle, mod
           )}
           {result.europeanPerspective && (
             <div className="mt-6 p-4 bg-rb-green-tint border-2 border-rb-green">
-              <h5 className="text-xs font-bold uppercase tracking-widest text-rb-green-shade mb-3 flex items-center gap-2">
+              <h5 className="text-xs uppercase tracking-widest text-rb-green-shade mb-3 flex items-center gap-2">
                 <Flag size={12} /> European Perspective
               </h5>
               {renderMarkdown(result.europeanPerspective)}
             </div>
           )}
           <div className="mt-4 p-4 bg-light border-2 border-dark">
-            <h5 className="text-xs font-bold uppercase tracking-widest text-muted mb-3">Key Questions for Your Team</h5>
+            <h5 className="text-xs uppercase tracking-widest text-darker mb-3">Key Questions for Your Team</h5>
             <ul className="space-y-1">
               {concept.keyQuestions.map((q, i) => (
                 <li key={i} className="text-sm text-darker flex gap-2">
-                  <span className="font-bold text-dark flex-shrink-0">{i + 1}.</span> {q}
+                  <span className="text-dark flex-shrink-0">{i + 1}.</span> {q}
                 </li>
               ))}
             </ul>
@@ -155,7 +155,7 @@ export default function ConceptCard({ concept, result, isExpanded, onToggle, mod
 
           {result.strengths && (
             <div className="mb-6 p-4 bg-rb-green-tint border-2 border-rb-green">
-              <h5 className="text-xs font-bold uppercase tracking-widest text-rb-green-shade mb-3 flex items-center gap-2">
+              <h5 className="text-xs uppercase tracking-widest text-rb-green-shade mb-3 flex items-center gap-2">
                 <CheckCircle2 size={12} /> Strengths
               </h5>
               {renderMarkdown(result.strengths)}
@@ -164,18 +164,18 @@ export default function ConceptCard({ concept, result, isExpanded, onToggle, mod
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div>
-              <h5 className="text-xs font-bold uppercase tracking-widest text-muted mb-3">Assessment</h5>
+              <h5 className="text-xs uppercase tracking-widest text-darker mb-3">Assessment</h5>
               {renderMarkdown(result.assessment)}
             </div>
             <div>
-              <h5 className="text-xs font-bold uppercase tracking-widest text-muted mb-3">Recommendations</h5>
+              <h5 className="text-xs uppercase tracking-widest text-darker mb-3">Recommendations</h5>
               {renderMarkdown(result.recommendations)}
             </div>
           </div>
 
           {result.darkPatterns && (
             <div className="mt-6 p-4 bg-rb-red-tint border-2 border-rb-red">
-              <h5 className="text-xs font-bold uppercase tracking-widest text-rb-red mb-3 flex items-center gap-2">
+              <h5 className="text-xs uppercase tracking-widest text-rb-red mb-3 flex items-center gap-2">
                 <AlertTriangle size={12} /> Dark Patterns Detected
               </h5>
               {renderMarkdown(result.darkPatterns)}
@@ -184,7 +184,7 @@ export default function ConceptCard({ concept, result, isExpanded, onToggle, mod
 
           {result.interfacePatterns && (
             <div className="mt-4 p-4 bg-white border-2 border-dark">
-              <h5 className="text-xs font-bold uppercase tracking-widest text-dark mb-3 flex items-center gap-2">
+              <h5 className="text-xs uppercase tracking-widest text-dark mb-3 flex items-center gap-2">
                 <Icons.LayoutTemplate size={12} /> Interface Notes
               </h5>
               {renderMarkdown(result.interfacePatterns)}
@@ -193,7 +193,7 @@ export default function ConceptCard({ concept, result, isExpanded, onToggle, mod
 
           {result.europeanPerspective && (
             <div className="mt-4 p-4 bg-rb-green-tint border-2 border-rb-green">
-              <h5 className="text-xs font-bold uppercase tracking-widest text-rb-green-shade mb-3 flex items-center gap-2">
+              <h5 className="text-xs uppercase tracking-widest text-rb-green-shade mb-3 flex items-center gap-2">
                 <Icons.Flag size={12} /> European Perspective
               </h5>
               {renderMarkdown(result.europeanPerspective)}
@@ -201,11 +201,11 @@ export default function ConceptCard({ concept, result, isExpanded, onToggle, mod
           )}
 
           <div className="mt-4 p-4 bg-light border-2 border-dark">
-            <h5 className="text-xs font-bold uppercase tracking-widest text-muted mb-3">Key Questions for Your Team</h5>
+            <h5 className="text-xs uppercase tracking-widest text-darker mb-3">Key Questions for Your Team</h5>
             <ul className="space-y-1">
               {concept.keyQuestions.map((q, i) => (
                 <li key={i} className="text-sm text-darker flex gap-2">
-                  <span className="font-bold text-dark flex-shrink-0">{i + 1}.</span> {q}
+                  <span className="text-dark flex-shrink-0">{i + 1}.</span> {q}
                 </li>
               ))}
             </ul>
@@ -222,7 +222,7 @@ export default function ConceptCard({ concept, result, isExpanded, onToggle, mod
 
       {/* Expanded: pending */}
       {isExpanded && status === 'pending' && (
-        <div className="border-t-2 border-dark px-5 py-10 text-center text-muted text-sm">
+        <div className="border-t-2 border-dark px-5 py-10 text-center text-darker text-sm">
           <Loader2 size={20} className="animate-spin mx-auto mb-2" />
           Analysing...
         </div>
