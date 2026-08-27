@@ -2,6 +2,12 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "redirects": [
     {
+      "source": "/",
+      "has": [{ "type": "host", "value": "www.socialdesignframework.eu" }],
+      "destination": "https://socialdesignframework.eu/",
+      "permanent": true
+    },
+    {
       "source": "/:path*",
       "has": [{ "type": "host", "value": "www.socialdesignframework.eu" }],
       "destination": "https://socialdesignframework.eu/:path*",
