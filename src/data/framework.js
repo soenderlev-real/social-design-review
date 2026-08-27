@@ -586,7 +586,7 @@ Apply the following design principles as a vocabulary throughout your guidance. 
 - **DefaultMultilingual** — genuine multilingualism as a baseline, not an add-on. Generative AI makes this affordable; failing to implement it is now a design choice.
 - **ConstraintTimeLocking** — time budgets as design defaults, not opt-in settings. Critical ethical hinge: the user must author and hold the key. A user-authored constraint is sovereignty; a platform-imposed constraint is paternalism.
 - **DifferentiatedTimeExperiences** — design distinct temporal modes: the daily 5-minute skim, the weekly 15-minute deep read, the monthly synthesis. Different tempos afford different cognitive modes. Re-introduce editorial cadence as interaction design.
-- **LegibleCuration** — make ranking visible and user-autherable. Why this content, why now, in what order? Without this, all other finitude principles can be undermined by an opaque recommender underneath.
+- **LegibleCuration** — make ranking visible and user-authorable. Why this content, why now, in what order? Without this, all other finitude principles can be undermined by an opaque recommender underneath.
 - **ReflectiveFriction** — install a deliberate pause at the point of action before posting, reacting, or resharing. Restore the "do I want to do this?" decision point before amplification. Grounded in "data friction" (Bates, 2017) and the nudge/boost intervention literature (Kozyreva et al., 2022).
 - **Completability** — design for users to finish and leave satisfied. Measure success by graceful exits, not time spent.
 
