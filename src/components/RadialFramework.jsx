@@ -28,7 +28,7 @@ export default function RadialFramework({ results, expandedIds, onToggle, mode =
       </Section>
 
       {/* 2. Platform Intent */}
-      <Section number="2" title="Platform Intent & Experience Intent" subtitle="Alignment between business logic and user value" accent="bg-rb-blue">
+      <Section number="2" title="Platform Intent & Experience Intent" subtitle="Alignment between business logic and user value" accent="bg-rb-blue-shade">
         {intentObj && (
           <ConceptCard
             concept={intentObj}
@@ -41,7 +41,7 @@ export default function RadialFramework({ results, expandedIds, onToggle, mode =
       </Section>
 
       {/* 3. Core Concepts — stacked full-width */}
-      <Section number="3" title="Core Concepts" subtitle="The individual design dimensions of the platform" accent="bg-rb-orange">
+      <Section number="3" title="Core Concepts" subtitle="The individual design dimensions of the platform" accent="bg-rb-orange-shade">
         <div className="space-y-0">
           {coreConcepts.map((concept, i) => (
             <div key={concept.id} className={i > 0 ? 'border-t-0' : ''}>
@@ -58,7 +58,7 @@ export default function RadialFramework({ results, expandedIds, onToggle, mode =
       </Section>
 
       {/* 4. Enable / Grow / Protect — stacked full-width */}
-      <Section number="4" title="Enable, Grow & Protect" subtitle="Holistic assessment across the three foundational dimensions" accent="bg-rb-green" last>
+      <Section number="4" title="Enable, Grow & Protect" subtitle="Holistic assessment across the three foundational dimensions" accent="bg-rb-green-shade" last>
         <div className="space-y-0">
           {metaDimensions.map((concept, i) => (
             <div key={concept.id} className={i > 0 ? 'border-t-0' : ''}>
@@ -81,12 +81,12 @@ function Section({ number, title, subtitle, accent, children, last }) {
   return (
     <div className={`mt-12 ${last ? '' : 'mb-0'}`}>
       <div className="flex items-start gap-4 mb-4">
-        <div className={`flex-shrink-0 w-8 h-8 ${accent} text-white flex items-center justify-center font-bold text-sm border-2 border-dark`}>
+        <div className={`flex-shrink-0 w-8 h-8 ${accent} text-white flex items-center justify-center text-sm border-2 border-dark`}>
           {number}
         </div>
         <div>
-          <h3 className="text-lg font-bold text-dark">{title}</h3>
-          <p className="text-xs text-muted mt-0.5">{subtitle}</p>
+          <h3 className="text-lg text-dark">{title}</h3>
+          <p className="text-xs text-darker mt-0.5">{subtitle}</p>
         </div>
       </div>
       {children}

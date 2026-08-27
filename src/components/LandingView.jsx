@@ -136,15 +136,15 @@ export default function LandingView({ onStart, onReadingList }) {
     <div className="animate-fade-in">
 
       {/* Framework — leads the page: the model first, the tool second */}
-      <section className="bg-light border-b-2 border-dark">
+      <section className="bg-white border-b-2 border-dark">
         {/* Explicit grid placement so the diagram sits in the right column on
             desktop but directly under the intro on mobile — otherwise it lands
             below the whole dimension list, several screens down on a phone. */}
         <div className="max-w-5xl mx-auto px-6 py-16 grid grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-6 lg:items-start">
           {/* Title + lede */}
           <div className="lg:col-start-1 lg:row-start-1">
-            <p className="text-sm text-muted mb-4 uppercase tracking-widest">A Rebuild.net Tool</p>
-            <h1 className="text-3xl md:text-4xl font-normal text-dark mb-6 leading-tight">
+            <p className="text-xs text-darker mb-4 uppercase tracking-widest">A Rebuild.net Tool</p>
+            <h1 className="text-3xl md:text-4xl text-dark mb-6 leading-tight">
               The Social Design Framework
             </h1>
             <p className="text-sm text-darker leading-relaxed">
@@ -188,14 +188,14 @@ export default function LandingView({ onStart, onReadingList }) {
                 { name: 'Agency', desc: 'The degree to which users can understand, shape, and override what the platform does — including its algorithms and defaults.' },
               ].map(({ name, desc }) => (
                 <div key={name} className="flex gap-3 text-xs">
-                  <span className="font-bold text-dark flex-shrink-0 w-24">{name}</span>
-                  <span className="text-muted leading-relaxed">{desc}</span>
+                  <span className="text-dark flex-shrink-0 w-24">{name}</span>
+                  <span className="text-darker leading-relaxed">{desc}</span>
                 </div>
               ))}
             </div>
 
-            <p className="text-xs text-muted leading-relaxed">
-              The outer ring assesses three holistic qualities: <strong className="text-darker">Enable</strong> (conditions for healthy participation), <strong className="text-darker">Grow</strong> (sustainable value without extraction), and <strong className="text-darker">Protect</strong> (the immune system against threats to safety and trust).
+            <p className="text-xs text-darker leading-relaxed">
+              The outer ring assesses three holistic qualities: <strong className="text-dark">Enable</strong> (conditions for healthy participation), <strong className="text-dark">Grow</strong> (sustainable value without extraction), and <strong className="text-dark">Protect</strong> (the immune system against threats to safety and trust).
             </p>
           </div>
         </div>
@@ -205,56 +205,56 @@ export default function LandingView({ onStart, onReadingList }) {
       <section className="bg-white">
         <div className="max-w-5xl mx-auto px-6 py-16">
           <p className="text-base text-darker leading-relaxed max-w-2xl mb-10">
-            <strong className="text-dark">Social Design Review</strong> is an AI-powered analysis of social platforms through this lens — built for European platform founders, designers and researchers.
+            Social Design Review is an AI-powered analysis of social platforms through this lens — built for European platform founders, designers and researchers.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border-2 border-dark">
 
             <div className="p-6 border-b-2 sm:border-r-2 border-dark">
               <Search size={18} className="mb-3 text-dark" />
-              <h3 className="font-bold text-sm text-dark mb-2">Platform Review</h3>
-              <p className="text-xs text-muted leading-relaxed">Analyse any live social platform across all 13 framework dimensions. Each dimension gets a score (1–5), strengths, dark patterns detected, concrete recommendations, and a European perspective.</p>
+              <h3 className="text-sm uppercase tracking-wide text-dark mb-2">Platform Review</h3>
+              <p className="text-xs text-darker leading-relaxed">Analyse any live social platform across all 13 framework dimensions. Each dimension gets a score (1–5), strengths, dark patterns detected, concrete recommendations, and a European perspective.</p>
             </div>
 
             <div className="p-6 border-b-2 lg:border-r-2 border-dark">
               <Lightbulb size={18} className="mb-3 text-dark" />
-              <h3 className="font-bold text-sm text-dark mb-2">Design Workshop</h3>
-              <p className="text-xs text-muted leading-relaxed">Describe a new platform idea and get per-dimension design guidance — what to consider before coding, patterns to implement, anti-patterns to avoid, and alignment with European values.</p>
+              <h3 className="text-sm uppercase tracking-wide text-dark mb-2">Design Workshop</h3>
+              <p className="text-xs text-darker leading-relaxed">Describe a new platform idea and get per-dimension design guidance — what to consider before coding, patterns to implement, anti-patterns to avoid, and alignment with European values.</p>
             </div>
 
             <div className="p-6 border-b-2 sm:border-r-2 border-dark">
               <Upload size={18} className="mb-3 text-dark" />
-              <h3 className="font-bold text-sm text-dark mb-2">File Uploads</h3>
-              <p className="text-xs text-muted leading-relaxed">Upload screenshots, wireframes, pitch decks, or policy PDFs. Images go directly to vision-capable models. PDFs are parsed entirely in your browser — nothing is ever sent to a server.</p>
+              <h3 className="text-sm uppercase tracking-wide text-dark mb-2">File Uploads</h3>
+              <p className="text-xs text-darker leading-relaxed">Upload screenshots, wireframes, pitch decks, or policy PDFs. Images go directly to vision-capable models. PDFs are parsed entirely in your browser — nothing is ever sent to a server.</p>
             </div>
 
             <div className="p-6 border-b-2 border-dark">
               <Bot size={18} className="mb-3 text-dark" />
-              <h3 className="font-bold text-sm text-dark mb-2">Agent .md Export</h3>
-              <p className="text-xs text-muted leading-relaxed">Export results as a coding agent instruction file — ready to drop into Claude Code (CLAUDE.md), Cursor (.cursorrules), Windsurf, or Lovable. Binary ALWAYS/NEVER directives, a Core Constitution, Default States, and Hard Refusals.</p>
+              <h3 className="text-sm uppercase tracking-wide text-dark mb-2">Agent .md Export</h3>
+              <p className="text-xs text-darker leading-relaxed">Export results as a coding agent instruction file — ready to drop into Claude Code (CLAUDE.md), Cursor (.cursorrules), Windsurf, or Lovable. Binary ALWAYS/NEVER directives, a Core Constitution, Default States, and Hard Refusals.</p>
             </div>
 
             <div className="p-6 border-b-2 sm:border-r-2 lg:border-b-0 border-dark">
               <BarChart3 size={18} className="mb-3 text-dark" />
-              <h3 className="font-bold text-sm text-dark mb-2">Radar Chart & Report</h3>
-              <p className="text-xs text-muted leading-relaxed">Review results include a full radar chart across all 13 dimensions. Export the complete report as Markdown — scores, findings, dark patterns, recommendations, and European perspectives in one document.</p>
+              <h3 className="text-sm uppercase tracking-wide text-dark mb-2">Radar Chart & Report</h3>
+              <p className="text-xs text-darker leading-relaxed">Review results include a full radar chart across all 13 dimensions. Export the complete report as Markdown — scores, findings, dark patterns, recommendations, and European perspectives in one document.</p>
             </div>
 
             <div className="p-6 border-b-2 lg:border-r-2 lg:border-b-0 border-dark">
               <MessageSquare size={18} className="mb-3 text-dark" />
-              <h3 className="font-bold text-sm text-dark mb-2">AI Chat Panel</h3>
-              <p className="text-xs text-muted leading-relaxed">After a review, chat with the AI about the results. Dig into specific dimensions, ask follow-up questions, or explore what a higher score would require — with full context of the analysis already loaded.</p>
+              <h3 className="text-sm uppercase tracking-wide text-dark mb-2">AI Chat Panel</h3>
+              <p className="text-xs text-darker leading-relaxed">After a review, chat with the AI about the results. Dig into specific dimensions, ask follow-up questions, or explore what a higher score would require — with full context of the analysis already loaded.</p>
             </div>
 
             <div className="p-6 border-b-2 sm:border-b-0 sm:border-r-2 border-dark">
               <Key size={18} className="mb-3 text-dark" />
-              <h3 className="font-bold text-sm text-dark mb-2">Bring Your Own API</h3>
-              <p className="text-xs text-muted leading-relaxed">Your API key lives only in your browser and calls your chosen provider directly — Anthropic, OpenAI, Mistral, Groq, or Together.ai. Or run fully free and private with Ollama on your own machine. No subscription, no lock-in.</p>
+              <h3 className="text-sm uppercase tracking-wide text-dark mb-2">Bring Your Own API</h3>
+              <p className="text-xs text-darker leading-relaxed">Your API key lives only in your browser and calls your chosen provider directly — Anthropic, OpenAI, Mistral, Groq, or Together.ai. Or run fully free and private with Ollama on your own machine. No subscription, no lock-in.</p>
             </div>
 
             <div className="p-6 border-dark">
               <GitFork size={18} className="mb-3 text-dark" />
-              <h3 className="font-bold text-sm text-dark mb-2">Get Involved</h3>
-              <p className="text-xs text-muted leading-relaxed mb-3">Fork and contribute — add framework dimensions, support new providers, or adapt the tool for your own research and community.</p>
+              <h3 className="text-sm uppercase tracking-wide text-dark mb-2">Get Involved</h3>
+              <p className="text-xs text-darker leading-relaxed mb-3">Fork and contribute — add framework dimensions, support new providers, or adapt the tool for your own research and community.</p>
               <a
                 href="https://github.com/soenderlev-real/social-design-review"
                 target="_blank"
@@ -277,32 +277,32 @@ export default function LandingView({ onStart, onReadingList }) {
           {/* Step 1 — Mode selector */}
           <div className="border-2 border-dark bg-white mb-0">
             <div className="px-6 pt-5 pb-4 flex items-center gap-3">
-              <span className="w-7 h-7 bg-dark text-light flex items-center justify-center text-sm font-bold flex-shrink-0">1</span>
+              <span className="w-7 h-7 bg-dark text-white flex items-center justify-center text-sm flex-shrink-0">1</span>
               <div>
-                <h2 className="text-base font-bold text-dark">Choose what you want to do</h2>
-                <p className="text-xs text-muted">Review an existing platform or get design guidance for a new idea</p>
+                <h2 className="text-base text-dark">Choose what you want to do</h2>
+                <p className="text-xs text-darker">Review an existing platform or get design guidance for a new idea</p>
               </div>
             </div>
             <div className="px-6 py-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
               <button
                 type="button"
                 onClick={() => { setMode('review'); setError(''); }}
-                className={`p-5 border-2 text-left transition-colors ${mode === 'review' ? 'border-dark bg-dark text-light' : 'border-dark bg-light hover:bg-lighter text-dark'}`}
+                className={`p-5 border-2 text-left transition-colors ${mode === 'review' ? 'border-dark bg-dark text-light' : 'border-dark bg-white hover:bg-rb-blue-tint text-dark'}`}
               >
                 <Search size={18} className="mb-3" />
-                <div className="font-bold text-sm mb-1">Review a platform</div>
-                <div className={`text-xs leading-relaxed ${mode === 'review' ? 'text-lighter' : 'text-muted'}`}>
+                <div className="text-sm uppercase tracking-wide mb-1">Review a platform</div>
+                <div className={`text-xs leading-relaxed ${mode === 'review' ? 'text-lighter' : 'text-darker'}`}>
                   Analyse an existing social platform through all 13 framework dimensions and get a scored review.
                 </div>
               </button>
               <button
                 type="button"
                 onClick={() => { setMode('design'); setError(''); }}
-                className={`p-5 border-2 text-left transition-colors ${mode === 'design' ? 'border-dark bg-dark text-light' : 'border-dark bg-light hover:bg-lighter text-dark'}`}
+                className={`p-5 border-2 text-left transition-colors ${mode === 'design' ? 'border-dark bg-dark text-light' : 'border-dark bg-white hover:bg-rb-blue-tint text-dark'}`}
               >
                 <Lightbulb size={18} className="mb-3" />
-                <div className="font-bold text-sm mb-1">Design a new platform</div>
-                <div className={`text-xs leading-relaxed ${mode === 'design' ? 'text-lighter' : 'text-muted'}`}>
+                <div className="text-sm uppercase tracking-wide mb-1">Design a new platform</div>
+                <div className={`text-xs leading-relaxed ${mode === 'design' ? 'text-lighter' : 'text-darker'}`}>
                   Describe your platform idea and get concrete design suggestions for each framework dimension.
                 </div>
               </button>
@@ -312,34 +312,34 @@ export default function LandingView({ onStart, onReadingList }) {
           {/* Step 2 — Platform input */}
           <div className="border-2 border-t-0 border-dark bg-white mb-0">
             <div className="px-6 pt-5 pb-4 flex items-center gap-3">
-              <span className="w-7 h-7 bg-dark text-light flex items-center justify-center text-sm font-bold flex-shrink-0">2</span>
+              <span className="w-7 h-7 bg-dark text-white flex items-center justify-center text-sm flex-shrink-0">2</span>
               <div>
                 {mode === 'review' ? (
-                  <><h2 className="text-base font-bold text-dark">Review a social platform</h2>
-                  <p className="text-xs text-muted">Enter the platform you want to analyse</p></>
+                  <><h2 className="text-base text-dark">Review a social platform</h2>
+                  <p className="text-xs text-darker">Enter the platform you want to analyse</p></>
                 ) : (
-                  <><h2 className="text-base font-bold text-dark">Describe your platform idea</h2>
-                  <p className="text-xs text-muted">The more detail you provide, the more tailored the guidance</p></>
+                  <><h2 className="text-base text-dark">Describe your platform idea</h2>
+                  <p className="text-xs text-darker">The more detail you provide, the more tailored the guidance</p></>
                 )}
               </div>
             </div>
             <div className="px-6 py-6 space-y-5">
               {mode === 'review' && (
                 <div>
-                  <label className="text-xs font-bold uppercase tracking-widest text-muted mb-2 block">Platform URL</label>
+                  <label className="text-xs uppercase tracking-widest text-darker mb-2 block">Platform URL</label>
                   <input
                     type="url"
                     value={url}
                     onChange={e => setUrl(e.target.value)}
                     placeholder="https://example-social-platform.com"
-                    className="w-full px-4 py-3 border-2 border-dark bg-light text-dark placeholder-muted focus:outline-none focus:bg-white transition-colors text-sm"
+                    className="w-full px-4 py-3 border-2 border-dark bg-white text-dark placeholder-muted focus:outline-none focus:bg-rb-blue-tint transition-colors text-sm"
                   />
                 </div>
               )}
               <div>
-                <label className="text-xs font-bold uppercase tracking-widest text-muted mb-2 block">
+                <label className="text-xs uppercase tracking-widest text-darker mb-2 block">
                   {mode === 'review'
-                    ? <> Platform description <span className="text-muted font-normal normal-case tracking-normal">(optional)</span></>
+                    ? <> Platform description <span className="text-darker normal-case tracking-normal">(optional)</span></>
                     : 'Platform idea'}
                 </label>
                 <textarea
@@ -349,10 +349,10 @@ export default function LandingView({ onStart, onReadingList }) {
                     ? "Describe the platform's purpose, target audience, business model, key features..."
                     : "Describe your platform concept — what brings people together, who it's for, what the core social object is, how it would be governed and funded..."}
                   rows={mode === 'design' ? 7 : 4}
-                  className="w-full px-4 py-3 border-2 border-dark bg-light text-dark placeholder-muted focus:outline-none focus:bg-white transition-colors text-sm resize-y"
+                  className="w-full px-4 py-3 border-2 border-dark bg-white text-dark placeholder-muted focus:outline-none focus:bg-rb-blue-tint transition-colors text-sm resize-y"
                 />
                 {mode === 'design' && (
-                  <p className="text-xs text-muted mt-2">Tip: include purpose, target audience, core social object, governance model, and business model if you have ideas.</p>
+                  <p className="text-xs text-darker mt-2">Tip: include purpose, target audience, core social object, governance model, and business model if you have ideas.</p>
                 )}
               </div>
             </div>
@@ -361,12 +361,12 @@ export default function LandingView({ onStart, onReadingList }) {
           {/* Step 3 — File upload */}
           <div className="border-2 border-t-0 border-dark bg-white mb-0">
             <div className="px-6 pt-5 pb-4 flex items-center gap-3">
-              <span className="w-7 h-7 bg-dark text-light flex items-center justify-center text-sm font-bold flex-shrink-0">3</span>
+              <span className="w-7 h-7 bg-dark text-white flex items-center justify-center text-sm flex-shrink-0">3</span>
               <div>
-                <h2 className="text-base font-bold text-dark">
-                  Upload supporting materials <span className="text-muted font-normal normal-case tracking-normal text-xs">(optional)</span>
+                <h2 className="text-base text-dark">
+                  Upload supporting materials <span className="text-darker normal-case tracking-normal text-xs">(optional)</span>
                 </h2>
-                <p className="text-xs text-muted">
+                <p className="text-xs text-darker">
                   {mode === 'review'
                     ? 'Screenshots, pitch decks, research docs — helps the AI see beyond the public homepage'
                     : 'Concept docs, pitch decks, wireframes, mood boards — the AI will use these to tailor the design guidance'}
@@ -382,17 +382,17 @@ export default function LandingView({ onStart, onReadingList }) {
                 onDrop={handleDrop}
                 onClick={() => fileInputRef.current?.click()}
                 className={`border-2 border-dashed cursor-pointer transition-colors px-6 py-8 flex flex-col items-center gap-2 text-center ${
-                  isDragging ? 'border-dark bg-light' : 'border-muted hover:border-dark hover:bg-light'
+                  isDragging ? 'border-dark bg-rb-blue-tint' : 'border-muted hover:border-dark hover:bg-rb-blue-tint'
                 }`}
               >
                 {processingFiles
                   ? <Loader2 size={20} className="animate-spin text-muted" />
                   : <Upload size={20} className="text-muted" />
                 }
-                <p className="text-sm text-darker font-bold">
+                <p className="text-sm text-darker">
                   {processingFiles ? 'Processing files...' : 'Drop files here or click to browse'}
                 </p>
-                <p className="text-xs text-muted">
+                <p className="text-xs text-darker">
                   Screenshots (PNG, JPG, WebP) · PDFs · up to {MAX_IMAGES} images + {MAX_PDFS} PDFs
                 </p>
                 <input
@@ -408,7 +408,7 @@ export default function LandingView({ onStart, onReadingList }) {
               {/* Uploaded files list */}
               {processedFiles.length > 0 && (
                 <div className="space-y-2">
-                  <p className="text-xs font-bold uppercase tracking-widest text-muted">
+                  <p className="text-xs uppercase tracking-widest text-darker">
                     {imageCount > 0 && `${imageCount} screenshot${imageCount > 1 ? 's' : ''}`}
                     {imageCount > 0 && pdfCount > 0 && ' · '}
                     {pdfCount > 0 && `${pdfCount} PDF${pdfCount > 1 ? 's' : ''}`}
@@ -421,7 +421,7 @@ export default function LandingView({ onStart, onReadingList }) {
                       }
                       <span className="text-xs text-darker flex-1 truncate">{f.name}</span>
                       {f.type === 'pdf' && (
-                        <span className="text-xs text-muted flex-shrink-0">{f.pageCount}pp</span>
+                        <span className="text-xs text-darker flex-shrink-0">{f.pageCount}pp</span>
                       )}
                       {f.type === 'image' && (
                         <img src={`data:${f.mediaType};base64,${f.base64}`} alt="" className="w-8 h-8 object-cover border border-dark flex-shrink-0" />
@@ -451,17 +451,17 @@ export default function LandingView({ onStart, onReadingList }) {
           {/* Step 4 — LLM chooser */}
           <div className="border-2 border-t-0 border-dark bg-white mb-0">
             <div className="px-6 pt-5 pb-4 flex items-center gap-3">
-              <span className="w-7 h-7 bg-dark text-light flex items-center justify-center text-sm font-bold flex-shrink-0">4</span>
+              <span className="w-7 h-7 bg-dark text-white flex items-center justify-center text-sm flex-shrink-0">4</span>
               <div>
-                <h2 className="text-base font-bold text-dark">Choose your LLM</h2>
-                <p className="text-xs text-muted">Bring your own API — cloud or fully local</p>
+                <h2 className="text-base text-dark">Choose your LLM</h2>
+                <p className="text-xs text-darker">Bring your own API — cloud or fully local</p>
               </div>
             </div>
             <div className="px-6 py-6 space-y-6">
 
               {/* Cloud providers */}
               <div>
-                <p className="text-xs font-bold uppercase tracking-widest text-muted mb-3">Cloud APIs</p>
+                <p className="text-xs uppercase tracking-widest text-darker mb-3">Cloud APIs</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {PROVIDERS.filter(p => p.category === 'cloud').map(p => (
                     <button
@@ -471,16 +471,16 @@ export default function LandingView({ onStart, onReadingList }) {
                       className={`p-4 border-2 text-left transition-colors ${
                         provider === p.id
                           ? 'border-dark bg-dark text-light'
-                          : 'border-dark bg-light hover:bg-lighter text-dark'
+                          : 'border-dark bg-white hover:bg-rb-blue-tint text-dark'
                       }`}
                     >
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="font-bold text-sm">{p.name}</span>
+                        <span className="text-sm">{p.name}</span>
                         {p.supportsVision && (
-                          <span className={`px-1.5 py-0.5 text-xs font-bold border ${provider === p.id ? 'border-light text-light' : 'border-rb-blue text-rb-blue'}`}>Vision</span>
+                          <span className={`px-1.5 py-0.5 text-xs border ${provider === p.id ? 'border-white text-white' : 'border-rb-blue text-rb-blue'}`}>Vision</span>
                         )}
                       </div>
-                      <div className={`text-xs mb-2 ${provider === p.id ? 'text-lighter' : 'text-muted'}`}>{p.description}</div>
+                      <div className={`text-xs mb-2 ${provider === p.id ? 'text-lighter' : 'text-darker'}`}>{p.description}</div>
                       <a
                         href={p.docs}
                         target="_blank"
@@ -497,7 +497,7 @@ export default function LandingView({ onStart, onReadingList }) {
 
               {/* Local providers */}
               <div>
-                <p className="text-xs font-bold uppercase tracking-widest text-muted mb-3">Local & Private</p>
+                <p className="text-xs uppercase tracking-widest text-darker mb-3">Local & Private</p>
                 <div className="grid grid-cols-1 gap-2">
                   {PROVIDERS.filter(p => p.category === 'local').map(p => (
                     <button
@@ -507,14 +507,14 @@ export default function LandingView({ onStart, onReadingList }) {
                       className={`p-4 border-2 text-left transition-colors ${
                         provider === p.id
                           ? 'border-dark bg-dark text-light'
-                          : 'border-dark bg-light hover:bg-lighter text-dark'
+                          : 'border-dark bg-white hover:bg-rb-blue-tint text-dark'
                       }`}
                     >
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="font-bold text-sm">{p.name}</span>
-                        <span className={`px-2 py-0.5 text-xs font-bold border ${provider === p.id ? 'border-light text-light' : 'border-rb-green text-rb-green'}`}>FREE</span>
+                        <span className="text-sm">{p.name}</span>
+                        <span className={`px-2 py-0.5 text-xs border ${provider === p.id ? 'border-white text-white' : 'border-rb-green text-rb-green-shade'}`}>FREE</span>
                       </div>
-                      <div className={`text-xs mb-2 ${provider === p.id ? 'text-lighter' : 'text-muted'}`}>{p.description}</div>
+                      <div className={`text-xs mb-2 ${provider === p.id ? 'text-lighter' : 'text-darker'}`}>{p.description}</div>
                       <a
                         href={p.docs}
                         target="_blank"
@@ -537,7 +537,7 @@ export default function LandingView({ onStart, onReadingList }) {
                     <span>Download from <a href="https://ollama.ai" target="_blank" rel="noopener noreferrer" className="underline">ollama.ai</a>, install a model (<code className="bg-white px-1">ollama pull mistral</code>), then start the server.</span>
                   </div>
                   <div>
-                    <label className="text-xs font-bold uppercase tracking-widest text-muted mb-2 block">Ollama Endpoint</label>
+                    <label className="text-xs uppercase tracking-widest text-darker mb-2 block">Ollama Endpoint</label>
                     <input
                       type="url"
                       value={apiKey}
@@ -546,14 +546,14 @@ export default function LandingView({ onStart, onReadingList }) {
                       className="w-full px-4 py-3 border-2 border-dark bg-white text-dark focus:outline-none text-sm"
                     />
                     <div className="mt-2 text-sm">
-                      {ollamaStatus === 'checking' && <span className="text-muted">Checking connection...</span>}
+                      {ollamaStatus === 'checking' && <span className="text-darker">Checking connection...</span>}
                       {ollamaStatus === 'connected' && <span className="text-rb-green flex items-center gap-1"><Check size={14}/> Connected</span>}
                       {ollamaStatus === 'error' && <span className="text-rb-red flex items-center gap-1"><AlertCircle size={14}/> Cannot connect</span>}
                     </div>
                   </div>
                   {ollamaStatus === 'connected' && ollamaModels.length > 0 && (
                     <div>
-                      <label className="text-xs font-bold uppercase tracking-widest text-muted mb-2 block">Model</label>
+                      <label className="text-xs uppercase tracking-widest text-darker mb-2 block">Model</label>
                       <select
                         value={selectedModel}
                         onChange={e => setSelectedModel(e.target.value)}
@@ -576,7 +576,7 @@ export default function LandingView({ onStart, onReadingList }) {
               {/* API Key */}
               {!isOllama && (
                 <div>
-                  <label className="text-xs font-bold uppercase tracking-widest text-muted mb-2 block">
+                  <label className="text-xs uppercase tracking-widest text-darker mb-2 block">
                     API Key — {selectedProvider?.name}
                   </label>
                   <div className="relative">
@@ -585,17 +585,17 @@ export default function LandingView({ onStart, onReadingList }) {
                       value={apiKey}
                       onChange={e => setApiKey(e.target.value)}
                       placeholder={selectedProvider?.keyPlaceholder}
-                      className="w-full px-4 py-3 border-2 border-dark bg-light text-dark placeholder-muted focus:outline-none focus:bg-white transition-colors text-sm pr-16"
+                      className="w-full px-4 py-3 border-2 border-dark bg-white text-dark placeholder-muted focus:outline-none focus:bg-rb-blue-tint transition-colors text-sm pr-16"
                     />
                     <button
                       type="button"
                       onClick={() => setShowApiKey(!showApiKey)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted hover:text-dark"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-darker hover:text-dark"
                     >
                       {showApiKey ? 'Hide' : 'Show'}
                     </button>
                   </div>
-                  <p className="text-xs text-muted mt-2">
+                  <p className="text-xs text-darker mt-2">
                     Your key stays in your browser and is never sent to any server other than your chosen provider.
                   </p>
                 </div>
@@ -614,13 +614,13 @@ export default function LandingView({ onStart, onReadingList }) {
           {/* Submit */}
           <button
             type="submit"
-            className="w-full bg-dark text-light border-2 border-dark py-4 font-bold text-sm hover:bg-darker transition-colors flex items-center justify-center gap-2 mt-6"
+            className="w-full bg-dark text-white border-2 border-dark py-4 text-sm uppercase tracking-widest hover:bg-darker transition-colors flex items-center justify-center gap-2 mt-6"
           >
             {mode === 'review' ? 'Start Review' : 'Start Design Workshop'} <ArrowRight size={16} />
           </button>
         </form>
 
-        <p className="mt-8 text-xs text-muted text-center leading-relaxed">
+        <p className="mt-8 text-xs text-darker text-center leading-relaxed">
           13 dimensions across the Social Design Framework —<br/>
           Social Object · Platform Intent · Identity · Conversations · Sharing · Presence · Relationships · Reputation · Groups · Agency · Enable · Grow · Protect
         </p>
@@ -642,11 +642,11 @@ export default function LandingView({ onStart, onReadingList }) {
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <Icon size={18} className="text-dark flex-shrink-0" />
                     {internal
-                      ? <ArrowRight size={13} className="text-muted flex-shrink-0 transition-transform group-hover:translate-x-1" />
-                      : <ArrowUpRight size={13} className="text-muted flex-shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />}
+                      ? <ArrowRight size={13} className="text-darker flex-shrink-0 transition-transform group-hover:translate-x-1" />
+                      : <ArrowUpRight size={13} className="text-darker flex-shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />}
                   </div>
-                  <div className="font-bold text-sm text-dark mb-2 group-hover:underline underline-offset-4">{title}</div>
-                  <p className="text-xs text-muted leading-relaxed">{desc}</p>
+                  <div className="text-sm text-dark mb-2 group-hover:underline underline-offset-4">{title}</div>
+                  <p className="text-xs text-darker leading-relaxed">{desc}</p>
                 </>
               );
 

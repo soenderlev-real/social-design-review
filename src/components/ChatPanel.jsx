@@ -52,7 +52,7 @@ function Message({ msg }) {
   return (
     <div className={`flex gap-3 ${isUser ? 'justify-end' : 'justify-start'}`}>
       {!isUser && (
-        <div className="flex-shrink-0 w-7 h-7 bg-dark text-light flex items-center justify-center text-xs font-bold border-2 border-dark mt-0.5">
+        <div className="flex-shrink-0 w-7 h-7 bg-dark text-white flex items-center justify-center text-xs border-2 border-dark mt-0.5">
           AI
         </div>
       )}
@@ -67,7 +67,7 @@ function Message({ msg }) {
         {msg.content}
       </div>
       {isUser && (
-        <div className="flex-shrink-0 w-7 h-7 bg-darker text-light flex items-center justify-center text-xs font-bold border-2 border-dark mt-0.5">
+        <div className="flex-shrink-0 w-7 h-7 bg-darker text-white flex items-center justify-center text-xs border-2 border-dark mt-0.5">
           You
         </div>
       )}
@@ -138,15 +138,15 @@ export default function ChatPanel({ providerId, apiKey, platformUrl, platformDes
           <MessageSquare size={16} />
         </div>
         <div>
-          <h3 className="font-bold text-dark text-sm">Discuss the Review</h3>
-          <p className="text-xs text-muted">Ask follow-up questions based on the {completedCount} completed analyses</p>
+          <h3 className="text-dark text-sm tracking-wide">Discuss the Review</h3>
+          <p className="text-xs text-darker">Ask follow-up questions based on the {completedCount} completed analyses</p>
         </div>
       </div>
 
       {/* Suggestions — shown only before first message */}
       {messages.length === 0 && (
         <div className="px-5 py-4 border-b-2 border-dark">
-          <p className="text-xs font-bold uppercase tracking-widest text-muted mb-3">Suggested questions</p>
+          <p className="text-xs uppercase tracking-widest text-darker mb-3">Suggested questions</p>
           <div className="flex flex-wrap gap-2">
             {SUGGESTIONS.map((s, i) => (
               <button
@@ -167,7 +167,7 @@ export default function ChatPanel({ providerId, apiKey, platformUrl, platformDes
           {messages.map((m, i) => <Message key={i} msg={m} />)}
           {isLoading && (
             <div className="flex gap-3 justify-start">
-              <div className="flex-shrink-0 w-7 h-7 bg-dark text-light flex items-center justify-center text-xs font-bold border-2 border-dark">
+              <div className="flex-shrink-0 w-7 h-7 bg-dark text-white flex items-center justify-center text-xs border-2 border-dark">
                 AI
               </div>
               <div className="px-4 py-3 border-2 border-dark bg-white">
@@ -193,7 +193,7 @@ export default function ChatPanel({ providerId, apiKey, platformUrl, platformDes
           onKeyDown={handleKey}
           placeholder="Ask anything about this review..."
           rows={2}
-          className="flex-1 px-4 py-3 border-2 border-dark bg-light text-dark placeholder-muted focus:outline-none focus:bg-white transition-colors text-sm resize-none"
+          className="flex-1 px-4 py-3 border-2 border-dark bg-white text-dark placeholder-muted focus:outline-none focus:bg-rb-blue-tint transition-colors text-sm resize-none"
         />
         <button
           onClick={() => send()}
