@@ -35,6 +35,47 @@ export class BaseProvider {
 }
 
 /**
+ * Build an Error from a failed API response, preserving what the caller needs
+ * to decide whether to retry.
+ *
+ * Providers throw bare Errors, which loses the status code — so a 429 (wait and
+ * retry) became indistinguishable from a 401 (never retry). This attaches:
+ *   .status        HTTP status
+ *   .retryAfterMs  how long the server asked us to wait, when it says so
+ *
+ * OpenAI and Mistral put the wait in the message text ("Please try again in
+ * 5.572s") rather than only in a Retry-After header, so both are parsed.
+ */
+export async function buildApiError(response, fallbackMessage) {
+  const body = await response.json().catch(() => ({}));
+  const message =
+    body.error?.message || body.message || fallbackMessage || `API error: ${response.status}`;
+
+  const err = new Error(message);
+  err.status = response.status;
+
+  let waitMs = null;
+
+  const header = response.headers?.get?.('retry-after');
+  if (header) {
+    const seconds = parseFloat(header);
+    if (Number.isFinite(seconds)) waitMs = seconds * 1000;
+  }
+
+  if (waitMs === null) {
+    const m = message.match(/try again in\s+([\d.]+)\s*(ms|s|m)\b/i);
+    if (m) {
+      const n = parseFloat(m[1]);
+      const unit = m[2].toLowerCase();
+      waitMs = unit === 'ms' ? n : unit === 'm' ? n * 60000 : n * 1000;
+    }
+  }
+
+  err.retryAfterMs = waitMs;
+  return err;
+}
+
+/**
  * Parse analysis response text into structured sections.
  * Handles multiple formatting styles across different LLM providers.
  */

@@ -92,6 +92,59 @@ function stripHtmlToText(html) {
 }
 
 /**
+ * Rate limits are a normal condition here, not an exceptional one.
+ *
+ * A full 13-dimension run costs roughly 96k tokens (a ~3.7k-token system prompt
+ * plus page content, times thirteen, plus reserved output). On a 30k tokens-per-
+ * minute key that cannot physically complete inside one minute — so the ceiling
+ * WILL be reached on any tier-1 key, and the correct response is to wait, not to
+ * discard the dimension. Previously a 429 became a permanent per-dimension error
+ * even though the API had replied "try again in 5.572s".
+ */
+const RETRYABLE_STATUS = new Set([408, 409, 425, 429, 500, 502, 503, 504]);
+const MAX_ATTEMPTS = 5;
+const MAX_BACKOFF_MS = 60000;
+
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+function isRetryable(err) {
+  if (RETRYABLE_STATUS.has(err?.status)) return true;
+  // Network blips surface as TypeError with no status
+  if (err?.status === undefined && /fetch|network|load failed/i.test(err?.message || '')) return true;
+  return false;
+}
+
+/**
+ * Prefer the server's own hint; otherwise exponential backoff with jitter so a
+ * whole batch does not wake up and retry in lockstep.
+ */
+function backoffMs(err, attempt) {
+  if (Number.isFinite(err?.retryAfterMs) && err.retryAfterMs > 0) {
+    return Math.min(err.retryAfterMs + 500, MAX_BACKOFF_MS);
+  }
+  const base = Math.min(2000 * Math.pow(2, attempt - 1), MAX_BACKOFF_MS);
+  return base + Math.random() * 1000;
+}
+
+async function withRetry(fn, { label, onStatus } = {}) {
+  let lastErr;
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    try {
+      return await fn();
+    } catch (err) {
+      lastErr = err;
+      if (!isRetryable(err) || attempt === MAX_ATTEMPTS) throw err;
+      const wait = backoffMs(err, attempt);
+      onStatus?.(
+        `Rate limited on ${label} — waiting ${(wait / 1000).toFixed(1)}s (attempt ${attempt} of ${MAX_ATTEMPTS - 1})...`
+      );
+      await sleep(wait);
+    }
+  }
+  throw lastErr;
+}
+
+/**
  * Analyze a single concept using the selected provider.
  * processedFiles: array of { type: 'image'|'pdf', base64?, mediaType?, text?, name }
  */
@@ -137,16 +190,21 @@ export async function analyzeAll(providerId, apiKey, concepts, platformUrl, plat
     onStatus?.('Could not fetch page — analysing based on URL and description...');
   }
 
-  // Local Ollama runs sequentially to avoid overloading the local model
+  // Local Ollama runs sequentially to avoid overloading the local model.
+  // Cloud batches are 3, not 5: at ~7.4k tokens per call a batch of 5 costs
+  // ~37k, which exceeds a 30k-TPM key's entire per-minute budget in one go.
   const isLocal = providerId === 'ollama';
-  const CONCURRENCY = isLocal ? 1 : 5;
+  const CONCURRENCY = isLocal ? 1 : 3;
 
   const results = {};
 
   // Run in parallel batches
   async function runConcept(concept) {
     try {
-      const result = await analyzeConcept(provider, concept, platformUrl, platformDescription, siteContent, processedFiles);
+      const result = await withRetry(
+        () => analyzeConcept(provider, concept, platformUrl, platformDescription, siteContent, processedFiles),
+        { label: concept.title, onStatus }
+      );
       results[concept.id] = { status: 'done', ...result };
     } catch (err) {
       results[concept.id] = { status: 'error', error: err.message };
@@ -184,12 +242,15 @@ export async function designAll(providerId, apiKey, concepts, platformDescriptio
   }
 
   const isLocal = providerId === 'ollama';
-  const CONCURRENCY = isLocal ? 1 : 5;
+  const CONCURRENCY = isLocal ? 1 : 3;
   const results = {};
 
   async function runConcept(concept) {
     try {
-      const result = await designConcept(provider, concept, platformDescription, processedFiles);
+      const result = await withRetry(
+        () => designConcept(provider, concept, platformDescription, processedFiles),
+        { label: concept.title, onStatus }
+      );
       results[concept.id] = { status: 'done', ...result };
     } catch (err) {
       results[concept.id] = { status: 'error', error: err.message };

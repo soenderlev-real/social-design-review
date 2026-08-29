@@ -1,4 +1,4 @@
-import { BaseProvider } from './base';
+import { BaseProvider, buildApiError } from './base';
 
 export class MistralProvider extends BaseProvider {
   supportsVision = true; // via Pixtral models
@@ -40,8 +40,7 @@ export class MistralProvider extends BaseProvider {
     });
 
     if (!response.ok) {
-      const err = await response.json().catch(() => ({}));
-      throw new Error(err.error?.message || `API error: ${response.status}`);
+      throw await buildApiError(response);
     }
 
     const data = await response.json();
