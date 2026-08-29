@@ -323,17 +323,16 @@ export default function ReviewDashboard({ mode = 'review', providerId, apiKey, p
           mode={mode}
         />
 
-        {/* Chat panel — review mode only */}
-        {!isDesignMode && (
-          <ChatPanel
-            providerId={providerId}
-            apiKey={apiKey}
-            platformUrl={platformUrl}
-            platformDescription={platformDescription}
-            results={results}
-            ollamaConfig={ollamaConfig}
-          />
-        )}
+        {/* Chat panel — both modes */}
+        <ChatPanel
+          mode={mode}
+          providerId={providerId}
+          apiKey={apiKey}
+          platformUrl={platformUrl}
+          platformDescription={platformDescription}
+          results={results}
+          ollamaConfig={ollamaConfig}
+        />
       </div>
     </div>
   );

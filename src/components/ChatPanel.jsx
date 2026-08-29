@@ -12,10 +12,11 @@ function buildReviewContext(platformUrl, platformDescription, results) {
     const r = results[c.id];
     if (!r || r.status !== 'done') return;
     ctx += `## ${c.title} — Score: ${r.score}/5\n`;
-    if (r.strengths)          ctx += `Strengths: ${r.strengths}\n`;
-    if (r.assessment)         ctx += `Assessment: ${r.assessment}\n`;
-    if (r.darkPatterns)       ctx += `Dark Patterns: ${r.darkPatterns}\n`;
-    if (r.recommendations)    ctx += `Recommendations: ${r.recommendations}\n`;
+    if (r.strengths)           ctx += `Strengths: ${r.strengths}\n`;
+    if (r.assessment)          ctx += `Assessment: ${r.assessment}\n`;
+    if (r.darkPatterns)        ctx += `Dark Patterns: ${r.darkPatterns}\n`;
+    if (r.recommendations)     ctx += `Recommendations: ${r.recommendations}\n`;
+    if (r.interfacePatterns)   ctx += `Interface Notes: ${r.interfacePatterns}\n`;
     if (r.europeanPerspective) ctx += `European Perspective: ${r.europeanPerspective}\n`;
     ctx += '\n';
   });
@@ -23,7 +24,43 @@ function buildReviewContext(platformUrl, platformDescription, results) {
   return ctx;
 }
 
-function buildSystemPrompt(platformUrl, platformDescription, results) {
+function buildDesignContext(platformDescription, results) {
+  let ctx = `You have just completed a Social Design Workshop for a new platform concept.\n\n`;
+  ctx += `Platform concept:\n${platformDescription || 'No concept description provided.'}\n`;
+  ctx += `\nHere is the full design guidance produced for each dimension:\n\n`;
+
+  CONCEPTS.forEach(c => {
+    const r = results[c.id];
+    if (!r || r.status !== 'done') return;
+    ctx += `## ${c.title}\n`;
+    if (r.considerations)      ctx += `Design Considerations: ${r.considerations}\n`;
+    if (r.suggestions)         ctx += `Suggestions: ${r.suggestions}\n`;
+    if (r.interfacePatterns)   ctx += `Interface Patterns: ${r.interfacePatterns}\n`;
+    if (r.watchOutFor)         ctx += `Watch Out For: ${r.watchOutFor}\n`;
+    if (r.europeanPerspective) ctx += `European Perspective: ${r.europeanPerspective}\n`;
+    ctx += '\n';
+  });
+
+  return ctx;
+}
+
+function buildSystemPrompt(mode, platformUrl, platformDescription, results) {
+  if (mode === 'design') {
+    return `You are an expert social platform design consultant, grounded in the Social Design Framework developed for the Rebuild.net European social platforms initiative.
+
+${buildDesignContext(platformDescription, results)}
+
+The user wants to have a conversation about this design workshop. You can:
+- Explain or expand on any part of the guidance
+- Help sequence the work — what to build first, what can wait, and why
+- Turn a dimension's guidance into concrete screens, components, states and microcopy
+- Surface tensions where two dimensions pull against each other, and suggest how to resolve them
+- Discuss the European regulatory and values context (GDPR, DSA, the AI Act, democratic participation)
+- Answer "what if the concept changed to X" questions
+
+Be specific, constructive and grounded in the workshop data above. When the user asks for something buildable, name the screen, component or copy rather than restating the principle. Keep responses focused and practical.`;
+  }
+
   return `You are an expert social platform design reviewer, grounded in the Social Design Framework developed for the Rebuild.net European social platforms initiative.
 
 ${buildReviewContext(platformUrl, platformDescription, results)}
@@ -75,15 +112,25 @@ function Message({ msg }) {
   );
 }
 
-const SUGGESTIONS = [
-  'What should we fix first?',
-  'Which dimension is strongest?',
-  'How could this platform better align with European values?',
-  'What dark patterns are most harmful here?',
-  'Suggest a platform that does this better',
-];
+const SUGGESTIONS = {
+  review: [
+    'What should we fix first?',
+    'Which dimension is strongest?',
+    'How could this platform better align with European values?',
+    'What dark patterns are most harmful here?',
+    'Suggest a platform that does this better',
+  ],
+  design: [
+    'What should we build first?',
+    'Which dimensions pull against each other here?',
+    'What would a first release include?',
+    'Sketch the onboarding flow',
+    'Where is this concept most likely to go wrong?',
+  ],
+};
 
-export default function ChatPanel({ providerId, apiKey, platformUrl, platformDescription, results, ollamaConfig }) {
+export default function ChatPanel({ providerId, apiKey, platformUrl, platformDescription, results, ollamaConfig, mode = 'review' }) {
+  const isDesignMode = mode === 'design';
   const [messages, setMessages]   = useState([]);
   const [input, setInput]         = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -107,7 +154,7 @@ export default function ChatPanel({ providerId, apiKey, platformUrl, platformDes
 
     try {
       const provider = createProvider(providerId, apiKey, ollamaConfig || {});
-      const systemPrompt = buildSystemPrompt(platformUrl, platformDescription, results);
+      const systemPrompt = buildSystemPrompt(mode, platformUrl, platformDescription, results);
       // Include history in the user prompt since providers use single-turn interface
       const userPrompt = buildUserPrompt(messages, message);
       const reply = await provider.sendMessage(systemPrompt, userPrompt);
@@ -138,8 +185,12 @@ export default function ChatPanel({ providerId, apiKey, platformUrl, platformDes
           <MessageSquare size={16} />
         </div>
         <div>
-          <h3 className="font-bold text-dark text-sm">Discuss the Review</h3>
-          <p className="text-xs text-muted">Ask follow-up questions based on the {completedCount} completed analyses</p>
+          <h3 className="font-bold text-dark text-sm">{isDesignMode ? 'Discuss the Workshop' : 'Discuss the Review'}</h3>
+          <p className="text-xs text-muted">
+            {isDesignMode
+              ? `Ask follow-up questions based on the ${completedCount} mapped dimensions`
+              : `Ask follow-up questions based on the ${completedCount} completed analyses`}
+          </p>
         </div>
       </div>
 
@@ -148,7 +199,7 @@ export default function ChatPanel({ providerId, apiKey, platformUrl, platformDes
         <div className="px-5 py-4 border-b-2 border-dark">
           <p className="text-xs font-bold uppercase tracking-widest text-muted mb-3">Suggested questions</p>
           <div className="flex flex-wrap gap-2">
-            {SUGGESTIONS.map((s, i) => (
+            {SUGGESTIONS[isDesignMode ? 'design' : 'review'].map((s, i) => (
               <button
                 key={i}
                 onClick={() => send(s)}
@@ -191,7 +242,7 @@ export default function ChatPanel({ providerId, apiKey, platformUrl, platformDes
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={handleKey}
-          placeholder="Ask anything about this review..."
+          placeholder={isDesignMode ? 'Ask anything about this design...' : 'Ask anything about this review...'}
           rows={2}
           className="flex-1 px-4 py-3 border-2 border-dark bg-light text-dark placeholder-muted focus:outline-none focus:bg-white transition-colors text-sm resize-none"
         />
