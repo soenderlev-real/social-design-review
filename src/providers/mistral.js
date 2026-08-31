@@ -7,10 +7,12 @@ export class MistralProvider extends BaseProvider {
   validateKey() { return this.apiKey.length > 10; }
 
   async sendMessage(systemPrompt, userPrompt, images = []) {
-    // Use Pixtral when images are present, otherwise standard text model
+    // Large, not Medium: Mistral Large 3 is $0.50/$1.50 per 1M tokens against
+    // Medium 3.5's $1.50/$7.50 — five times cheaper on output, and the stronger
+    // model. Matches the models the hosted proxy uses.
     const model = images.length > 0
-      ? (this.config.model || 'pixtral-12b-2409')
-      : (this.config.model || 'mistral-medium');
+      ? (this.config.model || 'pixtral-large-latest')
+      : (this.config.model || 'mistral-large-latest');
 
     // Build content array — same format as OpenAI
     const content = images.length > 0
