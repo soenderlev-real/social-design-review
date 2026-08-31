@@ -14,14 +14,15 @@
 const MISTRAL_URL = 'https://api.mistral.ai/v1/chat/completions';
 
 const TEXT_MODEL   = 'mistral-large-latest';
-const VISION_MODEL = 'pixtral-large-latest';
+const VISION_MODEL = 'mistral-large-latest';
 
 // A full 13-dimension run is 13 requests, so the window has to allow a few runs
 // while still stopping a script. Best-effort only — see the note by `hits`.
 const WINDOW_MS    = 10 * 60 * 1000;
 const MAX_PER_IP   = 45;
 const MAX_BODY     = 1_000_000;   // ~1MB, enough for prompts plus a couple of images
-const MAX_IMAGES   = 3;
+const MAX_IMAGES   = 6;   // matches fileProcessing.js MAX_IMAGES — silently
+                          // dropping the rest would lose evidence without saying so
 const MAX_TOKENS   = 2000;
 
 /**
@@ -124,12 +125,17 @@ export default async function handler(req, res) {
       // retry/backoff can act on them; never forward anything key-shaped.
       const retryAfter = upstream.headers.get('retry-after');
       if (retryAfter) res.setHeader('Retry-After', retryAfter);
+      // Mistral uses {message} at the top level for some errors and
+      // {error:{message}} for others — read both, or diagnostics vanish.
+      const upstreamMessage =
+        detail.error?.message || detail.message ||
+        (typeof detail.detail === 'string' ? detail.detail : null);
       const message =
         upstream.status === 429
-          ? (detail.error?.message || 'The shared key is rate limited right now. Retrying shortly.')
+          ? (upstreamMessage || 'The shared key is rate limited right now. Retrying shortly.')
           : upstream.status === 401 || upstream.status === 403
             ? 'The shared key was rejected. Please use your own API key for now.'
-            : (detail.error?.message || `Upstream error ${upstream.status}`);
+            : (upstreamMessage || `Upstream error ${upstream.status}`);
       return res.status(upstream.status).json({ error: { message } });
     }
 
