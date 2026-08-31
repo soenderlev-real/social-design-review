@@ -2,12 +2,24 @@ import { AnthropicProvider } from './anthropic';
 import { OpenAIProvider } from './openai';
 import { GeminiProvider } from './gemini';
 import { MistralProvider } from './mistral';
+import { HostedMistralProvider } from './hostedMistral';
 import { GroqProvider } from './groq';
 import { TogetherProvider } from './together';
 import { LLMBaseProvider } from './llmbase';
 import { OllamaProvider } from './ollama';
 
 export const PROVIDERS = [
+  {
+    id: 'hosted-mistral',
+    name: 'Mistral — no key needed',
+    description: 'Try it instantly · EU-hosted · shared key, fair-use limited',
+    category: 'cloud',
+    supportsVision: true,
+    hostedKey: true,          // key lives server-side; the UI hides the key field
+    keyPlaceholder: null,
+    constructor: HostedMistralProvider,
+    docs: 'https://mistral.ai',
+  },
   {
     id: 'anthropic',
     name: 'Anthropic (Claude)',
@@ -95,6 +107,9 @@ export function createProvider(id, apiKey, config = {}) {
     const modelName = config.modelName || 'mistral';
     return new OllamaProvider(endpoint, modelName, config);
   }
+
+  // Hosted providers carry no user key — the server holds it
+  if (providerDef.hostedKey) return new providerDef.constructor(null, config);
 
   return new providerDef.constructor(apiKey, config);
 }

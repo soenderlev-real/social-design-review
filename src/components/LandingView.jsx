@@ -90,6 +90,7 @@ export default function LandingView({ onStart, onReadingList }) {
 
   const selectedProvider = PROVIDERS.find(p => p.id === provider);
   const isOllama = provider === 'ollama';
+  const isHostedKey = !!selectedProvider?.hostedKey;
 
   useEffect(() => {
     if (!isOllama) return;
@@ -118,7 +119,7 @@ export default function LandingView({ onStart, onReadingList }) {
       if (!apiKey.trim()) { setError('Please enter the Ollama endpoint URL'); return; }
       if (ollamaStatus !== 'connected') { setError('Cannot connect to Ollama. Check the endpoint URL and that Ollama is running.'); return; }
       if (!selectedModel) { setError('Please select a model'); return; }
-    } else {
+    } else if (!isHostedKey) {
       if (!apiKey.trim()) { setError(`An API key is required for ${selectedProvider.name}`); return; }
     }
     onStart({
@@ -573,8 +574,27 @@ export default function LandingView({ onStart, onReadingList }) {
                 </div>
               )}
 
+              {/* Hosted key — nothing for the user to enter */}
+              {isHostedKey && (
+                <div className="border-2 border-dark bg-rb-green-tint p-4">
+                  <p className="text-xs font-bold uppercase tracking-widest text-rb-green-shade mb-2">
+                    No API key needed
+                  </p>
+                  <p className="text-sm text-darker">
+                    This runs on a shared Mistral key provided by Rebuild.net, hosted in the EU.
+                    It is fair-use limited, so a busy day may mean waiting — picking any other
+                    provider above and using your own key always works and is faster.
+                  </p>
+                  <p className="text-xs text-muted mt-2">
+                    Your platform URL, description and any uploaded files are sent to this site's
+                    server, which forwards them to Mistral. With your own key, they go straight
+                    from your browser to the provider instead.
+                  </p>
+                </div>
+              )}
+
               {/* API Key */}
-              {!isOllama && (
+              {!isOllama && !isHostedKey && (
                 <div>
                   <label className="text-xs font-bold uppercase tracking-widest text-muted mb-2 block">
                     API Key — {selectedProvider?.name}
