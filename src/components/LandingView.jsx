@@ -460,7 +460,9 @@ export default function LandingView({ onStart, onReadingList }) {
             </div>
             <div className="px-6 py-6 space-y-6">
 
-              {/* Hosted — no key required */}
+              {/* Hosted — no key required. Button and its explanation are wrapped
+                  together so the parent's space-y does not push them apart. */}
+              <div>
               {PROVIDERS.filter(p => p.category === 'hosted').map(p => (
                 <button
                   key={p.id}
@@ -483,6 +485,26 @@ export default function LandingView({ onStart, onReadingList }) {
                   </div>
                 </button>
               ))}
+
+              {/* Explanation sits directly under the blue button it describes */}
+              {isHostedKey && (
+                <div className="border-2 border-dark border-t-0 bg-rb-green-tint p-4">
+                  <p className="text-xs font-bold uppercase tracking-widest text-rb-green-shade mb-2">
+                    No API key needed
+                  </p>
+                  <p className="text-sm text-darker">
+                    This runs on a shared Mistral key provided by the Social Design Framework team,
+                    hosted in the EU. It is fair-use limited, so a busy day may mean waiting —
+                    using your own key below always works and is faster.
+                  </p>
+                  <p className="text-xs text-muted mt-2">
+                    Your platform URL, description and any uploaded files are sent to this site's
+                    server, which forwards them to Mistral. With your own key, they go straight
+                    from your browser to the provider instead.
+                  </p>
+                </div>
+              )}
+              </div>
 
               {/* Cloud providers */}
               <div>
@@ -595,25 +617,6 @@ export default function LandingView({ onStart, onReadingList }) {
                   {ollamaStatus === 'connected' && ollamaModels.length === 0 && (
                     <p className="text-sm text-darker">No models found. Run <code className="bg-white px-1">ollama pull mistral</code> to download one.</p>
                   )}
-                </div>
-              )}
-
-              {/* Hosted key — nothing for the user to enter */}
-              {isHostedKey && (
-                <div className="border-2 border-dark bg-rb-green-tint p-4">
-                  <p className="text-xs font-bold uppercase tracking-widest text-rb-green-shade mb-2">
-                    No API key needed
-                  </p>
-                  <p className="text-sm text-darker">
-                    This runs on a shared Mistral key provided by Rebuild.net, hosted in the EU.
-                    It is fair-use limited, so a busy day may mean waiting — picking any other
-                    provider above and using your own key always works and is faster.
-                  </p>
-                  <p className="text-xs text-muted mt-2">
-                    Your platform URL, description and any uploaded files are sent to this site's
-                    server, which forwards them to Mistral. With your own key, they go straight
-                    from your browser to the provider instead.
-                  </p>
                 </div>
               )}
 
