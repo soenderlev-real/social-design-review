@@ -11,9 +11,9 @@ import { OllamaProvider } from './ollama';
 export const PROVIDERS = [
   {
     id: 'hosted-mistral',
-    name: 'Mistral — no key needed',
-    description: 'Try it instantly · EU-hosted · shared key, fair-use limited',
-    category: 'cloud',
+    name: 'Free for Rebuild Helsinki (Mistral 4)',
+    description: 'No API key needed · EU-hosted · shared key, fair-use limited',
+    category: 'hosted',
     supportsVision: true,
     hostedKey: true,          // key lives server-side; the UI hides the key field
     keyPlaceholder: null,

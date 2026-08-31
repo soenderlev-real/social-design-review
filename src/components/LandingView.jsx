@@ -455,14 +455,38 @@ export default function LandingView({ onStart, onReadingList }) {
               <span className="w-7 h-7 bg-dark text-light flex items-center justify-center text-sm font-bold flex-shrink-0">4</span>
               <div>
                 <h2 className="text-base font-bold text-dark">Choose your LLM</h2>
-                <p className="text-xs text-muted">Bring your own API — cloud or fully local</p>
+                <p className="text-xs text-muted">Use the free shared key, or bring your own — cloud or fully local</p>
               </div>
             </div>
             <div className="px-6 py-6 space-y-6">
 
+              {/* Hosted — no key required */}
+              {PROVIDERS.filter(p => p.category === 'hosted').map(p => (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => setProvider(p.id)}
+                  className={`w-full p-4 border-2 border-dark text-left transition-colors ${
+                    provider === p.id
+                      ? 'bg-rb-blue-shade text-light'
+                      : 'bg-rb-blue text-dark hover:bg-rb-blue-shade hover:text-light'
+                  }`}
+                >
+                  <div className="flex items-center gap-2 mb-1 flex-wrap">
+                    <span className="font-bold text-sm">{p.name}</span>
+                    <span className={`px-2 py-0.5 text-xs font-bold border ${
+                      provider === p.id ? 'border-light text-light' : 'border-dark text-dark'
+                    }`}>NO KEY</span>
+                  </div>
+                  <div className={`text-xs ${provider === p.id ? 'text-lighter' : 'text-darker'}`}>
+                    {p.description}
+                  </div>
+                </button>
+              ))}
+
               {/* Cloud providers */}
               <div>
-                <p className="text-xs font-bold uppercase tracking-widest text-muted mb-3">Cloud APIs</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-muted mb-3">Or bring your own key — Cloud APIs</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {PROVIDERS.filter(p => p.category === 'cloud').map(p => (
                     <button
