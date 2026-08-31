@@ -11,7 +11,7 @@ import { OllamaProvider } from './ollama';
 export const PROVIDERS = [
   {
     id: 'hosted-mistral',
-    name: 'Free for Rebuild Helsinki (Mistral 4)',
+    name: 'Free for Rebuild Helsinki (Mistral Large)',
     description: 'No API key needed · EU-hosted · shared key, fair-use limited',
     category: 'hosted',
     supportsVision: true,
