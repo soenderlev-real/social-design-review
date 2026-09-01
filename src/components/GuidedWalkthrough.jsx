@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, Loader2, Download, RotateCcw, GraduationCap, Flag } from 'lucide-react';
+import { Send, Loader2, Download, RotateCcw, GraduationCap, Flag, Rocket } from 'lucide-react';
 import * as Icons from 'lucide-react';
 import { CONCEPTS, GUIDE_SYSTEM_PROMPT, buildGuidePrompt, buildGuideWrapUpPrompt } from '../data/framework';
 import { createProvider } from '../providers';
+import { buildSessionLovableUrl } from '../utils/lovable';
 
 const WRAP_PATTERNS = /^\s*(wrap[\s-]?up|wrap|summar(y|ise|ize)|finish|done|that'?s enough)\s*[.!]?\s*$/i;
 
@@ -166,6 +167,14 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
   }
 
+  function handlePrototypeInLovable() {
+    const wrap = messages.find(m => m.isWrapUp);
+    const { url } = buildSessionLovableUrl(
+      platformDescription, answers, wrap ? wrap.content : null, CONCEPTS
+    );
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+
   function handleExport() {
     let md = `# Social Design Framework — Guided Session\n\n`;
     md += `**Date:** ${new Date().toLocaleDateString()}\n\n`;
@@ -222,6 +231,15 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
                 </div>
                 <div className="text-xs text-muted uppercase tracking-widest">Covered</div>
               </div>
+              {answers.length > 0 && (
+                <button
+                  onClick={handlePrototypeInLovable}
+                  title="Open Lovable with this session as a build brief — you pick the workspace there"
+                  className="flex items-center gap-2 px-4 py-2 border-2 border-dark text-dark hover:bg-dark hover:text-light transition-colors text-sm font-bold"
+                >
+                  <Rocket size={14} /> Prototype
+                </button>
+              )}
               {answers.length > 0 && (
                 <button
                   onClick={handleExport}
