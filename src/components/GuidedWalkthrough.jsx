@@ -5,6 +5,30 @@ import { createProvider } from '../providers';
 
 const WRAP_PATTERNS = /^\s*(wrap[\s-]?up|wrap|summar(y|ise|ize)|finish|done|that'?s enough)\s*[.!]?\s*$/i;
 
+/**
+ * The facilitator writes prose, but the wrap-up uses ### headers and emphasis.
+ * Render just enough markdown that those do not show up as literal characters.
+ */
+function renderRich(text) {
+  const inline = (t) => t
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*([^*\n]+?)\*/g, '<em>$1</em>');
+
+  return text.split('\n').map((line, i) => {
+    const heading = line.match(/^#{2,4}\s+(.*)$/);
+    if (heading) {
+      return (
+        <h4 key={i} className="text-xs font-bold uppercase tracking-widest text-muted mt-4 first:mt-0 mb-1">
+          {heading[1]}
+        </h4>
+      );
+    }
+    if (!line.trim()) return <div key={i} className="h-2" />;
+    return <p key={i} className="mb-2 last:mb-0" dangerouslySetInnerHTML={{ __html: inline(line) }} />;
+  });
+}
+
 function Bubble({ msg }) {
   const isUser = msg.role === 'user';
   return (
@@ -18,9 +42,9 @@ function Bubble({ msg }) {
         className={`max-w-[85%] px-4 py-3 border-2 text-sm leading-relaxed ${
           isUser ? 'bg-dark text-light border-dark' : 'bg-white text-dark border-dark'
         }`}
-        style={{ whiteSpace: 'pre-wrap' }}
+        style={isUser ? { whiteSpace: 'pre-wrap' } : undefined}
       >
-        {msg.content}
+        {isUser ? msg.content : renderRich(msg.content)}
       </div>
       {isUser && (
         <div className="flex-shrink-0 w-7 h-7 bg-darker text-light flex items-center justify-center text-xs font-bold border-2 border-dark mt-0.5">
