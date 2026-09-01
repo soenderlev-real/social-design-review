@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Globe, Key, FileText, ArrowRight, ExternalLink, AlertCircle, Check, Upload, X, ImageIcon, FileText as FileTextIcon, Loader2, Search, Lightbulb, Bot, Download, MessageSquare, BarChart3, GitFork, Maximize2, Presentation, Users, Smile, BookOpen, ArrowUpRight } from 'lucide-react';
+import { Globe, Key, FileText, ArrowRight, ExternalLink, AlertCircle, Check, Upload, X, ImageIcon, FileText as FileTextIcon, Loader2, Search, Lightbulb, Bot, Download, MessageSquare, BarChart3, GitFork, Maximize2, Presentation, Users, Smile, BookOpen, ArrowUpRight, GraduationCap } from 'lucide-react';
 import { PROVIDERS } from '../providers';
 import { CONCEPTS } from '../data/framework';
 import { processFiles, IMAGE_TYPES, PDF_TYPE, MAX_IMAGES, MAX_PDFS } from '../utils/fileProcessing';
@@ -116,6 +116,7 @@ export default function LandingView({ onStart, onReadingList }) {
     setError('');
     if (mode === 'review' && !url.trim()) { setError('Please enter a platform URL'); return; }
     if (mode === 'design' && !description.trim()) { setError('Please describe your platform idea'); return; }
+    // guide mode needs nothing — the walkthrough works with or without an idea
     if (isOllama) {
       if (!apiKey.trim()) { setError('Please enter the Ollama endpoint URL'); return; }
       if (ollamaStatus !== 'connected') { setError('Cannot connect to Ollama. Check the endpoint URL and that Ollama is running.'); return; }
@@ -282,10 +283,10 @@ export default function LandingView({ onStart, onReadingList }) {
               <span className="w-7 h-7 bg-dark text-light flex items-center justify-center text-sm font-bold flex-shrink-0">1</span>
               <div>
                 <h2 className="text-base font-bold text-dark">Choose what you want to do</h2>
-                <p className="text-xs text-muted">Review an existing platform or get design guidance for a new idea</p>
+                <p className="text-xs text-muted">Review an existing platform, design a new one, or learn the framework</p>
               </div>
             </div>
-            <div className="px-6 py-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="px-6 py-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
               <button
                 type="button"
                 onClick={() => { setMode('review'); setError(''); }}
@@ -308,6 +309,17 @@ export default function LandingView({ onStart, onReadingList }) {
                   Describe your platform idea and get concrete design suggestions for each framework dimension.
                 </div>
               </button>
+              <button
+                type="button"
+                onClick={() => { setMode('guide'); setError(''); }}
+                className={`p-5 border-2 text-left transition-colors ${mode === 'guide' ? 'border-dark bg-dark text-light' : 'border-dark bg-light hover:bg-lighter text-dark'}`}
+              >
+                <GraduationCap size={18} className="mb-3" />
+                <div className="font-bold text-sm mb-1">Learn the framework</div>
+                <div className={`text-xs leading-relaxed ${mode === 'guide' ? 'text-lighter' : 'text-muted'}`}>
+                  A guided walkthrough, one dimension at a time, applying each to your own idea. Works as a team workshop.
+                </div>
+              </button>
             </div>
           </div>
 
@@ -316,7 +328,10 @@ export default function LandingView({ onStart, onReadingList }) {
             <div className="px-6 pt-5 pb-4 flex items-center gap-3">
               <span className="w-7 h-7 bg-dark text-light flex items-center justify-center text-sm font-bold flex-shrink-0">2</span>
               <div>
-                {mode === 'review' ? (
+                {mode === 'guide' ? (
+                  <><h2 className="text-base font-bold text-dark">What are you working on?</h2>
+                  <p className="text-xs text-muted">Optional — the walkthrough adapts to your idea, but works without one</p></>
+                ) : mode === 'review' ? (
                   <><h2 className="text-base font-bold text-dark">Review a social platform</h2>
                   <p className="text-xs text-muted">Enter the platform you want to analyse</p></>
                 ) : (
@@ -340,16 +355,18 @@ export default function LandingView({ onStart, onReadingList }) {
               )}
               <div>
                 <label className="text-xs font-bold uppercase tracking-widest text-muted mb-2 block">
-                  {mode === 'review'
-                    ? <> Platform description <span className="text-muted font-normal normal-case tracking-normal">(optional)</span></>
-                    : 'Platform idea'}
+                  {mode === 'design'
+                    ? 'Platform idea'
+                    : <> Platform {mode === 'guide' ? 'or idea' : 'description'} <span className="text-muted font-normal normal-case tracking-normal">(optional)</span></>}
                 </label>
                 <textarea
                   value={description}
                   onChange={e => setDescription(e.target.value)}
-                  placeholder={mode === 'review'
-                    ? "Describe the platform's purpose, target audience, business model, key features..."
-                    : "Describe your platform concept — what brings people together, who it's for, what the core social object is, how it would be governed and funded..."}
+                  placeholder={mode === 'guide'
+                    ? "Optional — a sentence or two about what you're building, or the idea you're carrying. Leave blank to explore the framework on its own."
+                    : mode === 'review'
+                      ? "Describe the platform's purpose, target audience, business model, key features..."
+                      : "Describe your platform concept — what brings people together, who it's for, what the core social object is, how it would be governed and funded..."}
                   rows={mode === 'design' ? 7 : 4}
                   className="w-full px-4 py-3 border-2 border-dark bg-light text-dark placeholder-muted focus:outline-none focus:bg-white transition-colors text-sm resize-y"
                 />
@@ -664,7 +681,7 @@ export default function LandingView({ onStart, onReadingList }) {
             type="submit"
             className="w-full bg-dark text-light border-2 border-dark py-4 font-bold text-sm hover:bg-darker transition-colors flex items-center justify-center gap-2 mt-6"
           >
-            {mode === 'review' ? 'Start Review' : 'Start Design Workshop'} <ArrowRight size={16} />
+            {mode === 'review' ? 'Start Review' : mode === 'guide' ? 'Start Walkthrough' : 'Start Design Workshop'} <ArrowRight size={16} />
           </button>
         </form>
 

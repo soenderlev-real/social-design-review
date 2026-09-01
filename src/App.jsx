@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import LandingView from './components/LandingView';
 import ReviewDashboard from './components/ReviewDashboard';
+import GuidedWalkthrough from './components/GuidedWalkthrough';
 import InstructionsView from './components/InstructionsView';
 import ReadingListView from './components/ReadingListView';
 import Header from './components/Header';
@@ -25,7 +26,7 @@ export default function App() {
 
   useEffect(() => {
     function onHashChange() {
-      setView(v => (v === 'review' ? v : viewFromHash()));
+      setView(v => (v === 'review' || v === 'guide' ? v : viewFromHash()));
     }
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
@@ -33,7 +34,7 @@ export default function App() {
 
   function handleStartReview(cfg) {
     setConfig(cfg);
-    setView('review');
+    setView(cfg.mode === 'guide' ? 'guide' : 'review');
   }
 
   function handleBackToLanding() {
@@ -63,6 +64,15 @@ export default function App() {
         {view === 'landing' && <LandingView onStart={handleStartReview} onReadingList={handleShowReadingList} />}
         {view === 'instructions' && <InstructionsView />}
         {view === 'reading-list' && <ReadingListView />}
+        {view === 'guide' && (
+          <GuidedWalkthrough
+            providerId={config.providerId}
+            apiKey={config.apiKey}
+            platformDescription={config.platformDescription}
+            ollamaConfig={config.ollamaConfig}
+            onBack={handleBackToLanding}
+          />
+        )}
         {view === 'review' && (
           <ReviewDashboard
             mode={config.mode}

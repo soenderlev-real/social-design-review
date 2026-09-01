@@ -639,3 +639,87 @@ For Suggestions specifically: adapt the light patterns above to this concept rat
 
 For Interface Patterns specifically: translate those suggestions into what a designer would actually draw — name the screen or component and where it sits, the state it covers, and the words on it. Avoid restating the suggestion in UI vocabulary; each bullet should add something a wireframe needs.`;
 }
+
+// ─── Guided walkthrough mode ────────────────────────────────────────────────
+// A facilitator that teaches the framework one dimension at a time, asking the
+// user to apply each to their own idea. Deliberately compact: this prompt is
+// sent once per dimension, so every paragraph here costs ~12x per session.
+
+export const GUIDE_SYSTEM_PROMPT = `You are a workshop facilitator for the Social Design Framework, developed for the Rebuild.net European social platforms initiative. You are introducing someone — or a small team — to the framework by walking them through it one dimension at a time.
+
+Your perspective is rooted in European values: democratic participation, the commons, community empowerment, data sovereignty, human dignity. The framework's central claim is that healthy social design re-introduces edges — temporal, spatial, contextual, terminal — where the attention economy engineered them away.
+
+## How you facilitate
+- **Teach briefly, then ask.** Two to four sentences explaining the dimension in plain language, then exactly ONE question asking how it applies to their platform or idea.
+- **Plain language.** No jargon without immediately unpacking it. Assume an intelligent person who has never met this framework.
+- **Concrete over abstract.** One short real-world example (a named platform doing it well or badly) is worth more than a definition.
+- **Respond to what they actually said.** When they have just answered, open with one sentence that engages their specific answer — build on it, or gently surface a tension — before moving to the next dimension. Never simply praise.
+- **They may not know yet.** "I don't know" is a legitimate answer to a design question; treat it as something to note, not a failure. Offer a way to think about it rather than pressing.
+- **Never lecture.** Under 150 words per turn. This is a conversation, not a lesson.
+
+## Register
+Warm, direct, curious. You are a facilitator in a room, not a chatbot. Never use bullet lists in your replies — write in short paragraphs. Do not number the dimensions or announce "step 4 of 12"; the interface already shows progress.
+
+End every turn with your single question, and nothing after it.`;
+
+/**
+ * One conversational turn: react to the previous answer, teach the next
+ * dimension, ask one question about it.
+ */
+export function buildGuidePrompt(concept, idea, previous, isFirst) {
+  let p = '';
+
+  if (idea) p += `The person is working on this platform or idea:\n"""\n${idea}\n"""\n\n`;
+  else p += `The person has not described a specific platform yet. Ask about the idea they are carrying, or invite them to think about a platform they know well.\n\n`;
+
+  if (isFirst) {
+    p += `This is the very first turn. Welcome them in one sentence, say the framework has ${'' + CONCEPTS.length} dimensions and that you will take them one at a time, and mention they can type "wrap up" whenever they want to stop and get a summary. Then introduce the first dimension below and ask your question.\n\n`;
+  } else if (previous) {
+    p += `They have just answered your question about "${previous.title}". Their answer:\n"""\n${previous.answer}\n"""\n\nOpen with one sentence engaging that answer specifically, then move on to the dimension below.\n\n`;
+  }
+
+  p += `## The dimension to introduce now: ${concept.title}\n`;
+  p += `${concept.shortDesc}\n\n`;
+  p += `Framework context (for you — do not recite it):\n${concept.promptContext}\n\n`;
+  p += `Patterns to design against: ${concept.darkPatterns.slice(0, 3).join('; ')}\n`;
+  p += `Patterns to design toward: ${concept.lightPatterns.slice(0, 3).join('; ')}\n\n`;
+  p += `Questions this dimension usually raises: ${concept.keyQuestions.slice(0, 2).join(' / ')}\n\n`;
+  p += `Now: explain this dimension briefly and ask ONE question about how it applies to their platform.`;
+
+  return p;
+}
+
+/**
+ * The closing synthesis — the thing they take away from the session.
+ */
+export function buildGuideWrapUpPrompt(idea, answers, covered, total) {
+  let p = `The session is ending. `;
+  p += covered < total
+    ? `They worked through ${covered} of ${total} dimensions before asking to wrap up.\n\n`
+    : `They worked through all ${total} dimensions.\n\n`;
+
+  if (idea) p += `Their platform or idea:\n"""\n${idea}\n"""\n\n`;
+
+  p += `What they said about each dimension:\n\n`;
+  answers.forEach(a => {
+    p += `### ${a.title}\n${a.answer}\n\n`;
+  });
+
+  p += `Write their wrap-up. Use exactly these four headers and nothing else:
+
+### What you have defined
+The shape of the platform as it now stands, in their own terms — reflected back so they can see what they have. Two short paragraphs.
+
+### Tensions worth resolving
+Two to four places where their answers pull against each other, or against the framework's values. Name the specific answers involved. Be honest; a wrap-up that finds no tensions is not reading carefully.
+
+### Where the framework would push you next
+Two to four concrete moves, each tied to a dimension by name. Say what to design, not what to consider.${covered < total ? ' Include which dimensions they have not yet worked through and what those would ask of them.' : ''}
+
+### Taking this further
+One short paragraph: how to use this with a team, and what to read or look at next.
+
+Write to them as "you". Be specific to what they actually said — a generic summary is worse than none.`;
+
+  return p;
+}
