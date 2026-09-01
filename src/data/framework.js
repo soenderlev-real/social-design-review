@@ -47,41 +47,6 @@ export const CONCEPTS = [
     ],
   },
   {
-    id: "platform-intent",
-    title: "Platform Intent & Experience Intent",
-    icon: "Scale",
-    dimension: null,
-    shortDesc: "Alignment between business logic (ROI) and user value (ROX)",
-    promptContext: `Platform Intent is the business logic (ROI — Return on Investment). Experience Intent is user-centred logic (ROX — Return on Experience). Assess: Is the business model transparent? Does revenue come from advertising (structurally misaligned — engagement is the product) or from subscription/cooperative/public models? Are success metrics proxies for user value or for extraction? Could the platform publish its business logic without users feeling betrayed? Where do Platform Intent and Experience Intent diverge, and how is that managed?
-
-The structural point: revenue tied to engagement is the root cause of the extraction pattern library — infinite scroll, notification harassment, algorithmic amplification, FOMO framing. These patterns did not converge by accident across every major platform; they converged because engagement metrics were proxied for revenue. Generative and agentic AI do not change this dynamic — they give it a more powerful engine. A hyper-personalised nudge living in a model is more dangerous than a one-size dark pattern. The counter-design vocabulary requires a different business model, or explicit commitments to utility metrics over engagement metrics.
-
-Key test: is the platform's design language rooted in finitude (helping users achieve goals and leave satisfied) or in capture (removing edges to maximise time spent)?`,
-    darkPatterns: [
-      "Misaligned metrics — optimising for engagement (time spent, clicks) rather than utility or user satisfaction",
-      "Bait and switch / enshittification — launching user-centric, then degrading for advertiser or platform revenue",
-      "Manufactured necessity — creating artificial needs (pay for visibility that was previously free)",
-      "Data maximalism — collecting far more data than the service requires",
-      "AI-native dark patterns — hyper-personalised per-user nudges in the model, more dangerous than one-size social-era manipulation",
-      "Engagement-as-proxy — using time spent, clicks, and returns as success metrics when they measure capture, not value",
-    ],
-    lightPatterns: [
-      "Utility metrics — optimise and report on task completion and satisfaction, not time-on-platform",
-      "Intent contract — publish the business model in plain language; changes that break it require re-consent, not silent rollout",
-      "Earned visibility — keep paid-boost features additive, never a paywall for what was free and expected",
-      "Data minimalism — collect only what the service requires; publish a running account of what's collected and why",
-      "Explainable personalisation — every AI-driven nudge is inspectable and toggleable by the user it targets",
-      "Completability metric — track and publish whether users leave satisfied, not just how long they stayed",
-    ],
-    keyQuestions: [
-      "Can you explain the business model in one sentence that also describes something genuinely good for users?",
-      "Are key metrics proxies for user value, or for engagement that proxies for revenue?",
-      "Who are the customers vs. the users? Whose interests does the design actually serve?",
-      "If the platform became wildly successful, would its incentives still align with user wellbeing?",
-      "Does the platform measure Completability (users finishing and leaving satisfied) or capture (users staying longer)?",
-    ],
-  },
-  {
     id: "identity",
     title: "Identity",
     icon: "User",
@@ -363,7 +328,7 @@ External accountability: does the platform publish periodic algorithmic risk ass
     shortDesc: "Are the foundational conditions for healthy social life established?",
     promptContext: `Enable is the meta-dimension concerned with establishing the conditions under which healthy social life can emerge. Assess the platform holistically: Does the architecture make constructive participation the default? Are governance frameworks transparent and participatory? Do incentive structures align with community values? Is there clear onboarding that sets norms? How are the Identity, Conversations, Presence, and Platform Intent/Experience Intent concepts working together to create a healthy foundation? What gaps exist in the enabling infrastructure?
 
-Holistic finitude assessment: does the platform, taken as a whole, re-introduce or remove edges? Healthy social design re-introduces temporal edges (EndDesign, DifferentiatedTimeExperiences), contextual edges (SpatialUI), and directional edges (ExplorativeUI). The extraction architecture removed all of them deliberately. Assess whether the enabling infrastructure — onboarding, defaults, incentive structures, governance — is oriented toward finitude (helping users achieve goals and leave satisfied) or toward capture (removing decision points and stopping moments). This is the structural question that sits beneath all 13 dimensions.`,
+Holistic finitude assessment: does the platform, taken as a whole, re-introduce or remove edges? Healthy social design re-introduces temporal edges (EndDesign, DifferentiatedTimeExperiences), contextual edges (SpatialUI), and directional edges (ExplorativeUI). The extraction architecture removed all of them deliberately. Assess whether the enabling infrastructure — onboarding, defaults, incentive structures, governance — is oriented toward finitude (helping users achieve goals and leave satisfied) or toward capture (removing decision points and stopping moments). This is the structural question that sits beneath every dimension.`,
     darkPatterns: [
       "Weak governance — unclear rules and opaque decision-making",
       "Misaligned incentives — rewards that encourage bad behaviour",
@@ -447,7 +412,7 @@ Apply procedural justice theory (Tyler's model, applied to platforms by the Yale
 
 export const ANALYSIS_SYSTEM_PROMPT = `You are an expert social platform design reviewer, grounded in the Social Design Framework developed for the Rebuild.net European social platforms initiative.
 
-You evaluate social platforms against 13 core design dimensions plus 3 meta-dimensions. Your perspective is rooted in European values: democratic participation, the commons, community empowerment, data sovereignty, and human dignity. You draw on HCI, STS (Science and Technology Studies), design theory, sociology, philosophy of technology, calm technology research, and the emerging literature on generative and agentic AI interfaces. Seven of these dimensions — Identity, Conversations, Sharing, Presence, Relationships, Reputation, and Groups — trace to Kietzmann et al.'s "honeycomb" framework of social media functionality; Social Object draws on Engeström's concept of object-centred sociality.
+You evaluate social platforms against 9 core design dimensions plus 3 meta-dimensions. Your perspective is rooted in European values: democratic participation, the commons, community empowerment, data sovereignty, and human dignity. You draw on HCI, STS (Science and Technology Studies), design theory, sociology, philosophy of technology, calm technology research, and the emerging literature on generative and agentic AI interfaces. Seven of these dimensions — Identity, Conversations, Sharing, Presence, Relationships, Reputation, and Groups — trace to Kietzmann et al.'s "honeycomb" framework of social media functionality; Social Object draws on Engeström's concept of object-centred sociality.
 
 ## Structural lens: three eras of interface design
 You understand social platforms in the context of three overlapping design eras:

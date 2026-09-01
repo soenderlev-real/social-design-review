@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Globe, Key, FileText, ArrowRight, ExternalLink, AlertCircle, Check, Upload, X, ImageIcon, FileText as FileTextIcon, Loader2, Search, Lightbulb, Bot, Download, MessageSquare, BarChart3, GitFork, Maximize2, Presentation, Users, Smile, BookOpen, ArrowUpRight } from 'lucide-react';
 import { PROVIDERS } from '../providers';
+import { CONCEPTS } from '../data/framework';
 import { processFiles, IMAGE_TYPES, PDF_TYPE, MAX_IMAGES, MAX_PDFS } from '../utils/fileProcessing';
 import Lightbox from './Lightbox';
 
@@ -237,7 +238,7 @@ export default function LandingView({ onStart, onReadingList }) {
             <div className="p-6 border-b-2 sm:border-r-2 lg:border-b-0 border-dark">
               <BarChart3 size={18} className="mb-3 text-dark" />
               <h3 className="font-bold text-sm text-dark mb-2">Radar Chart & Report</h3>
-              <p className="text-xs text-muted leading-relaxed">Review results include a full radar chart across all 13 dimensions. Export the complete report as Markdown — scores, findings, dark patterns, recommendations, and European perspectives in one document.</p>
+              <p className="text-xs text-muted leading-relaxed">Review results include a full radar chart across all {CONCEPTS.length} dimensions. Export the complete report as Markdown — scores, findings, dark patterns, recommendations, and European perspectives in one document.</p>
             </div>
 
             <div className="p-6 border-b-2 lg:border-r-2 lg:border-b-0 border-dark">
@@ -668,8 +669,8 @@ export default function LandingView({ onStart, onReadingList }) {
         </form>
 
         <p className="mt-8 text-xs text-muted text-center leading-relaxed">
-          13 dimensions across the Social Design Framework —<br/>
-          Social Object · Platform Intent · Identity · Conversations · Sharing · Presence · Relationships · Reputation · Groups · Agency · Enable · Grow · Protect
+          {CONCEPTS.length} dimensions across the Social Design Framework —<br/>
+          Social Object · Identity · Conversations · Sharing · Presence · Relationships · Reputation · Groups · Agency · Enable · Grow · Protect
         </p>
         </div>
       </section>

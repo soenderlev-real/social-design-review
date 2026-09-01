@@ -187,15 +187,14 @@ export default function InstructionsView() {
 
 function InstructionsContent() {
   const socialObj = CONCEPTS.find(c => c.id === 'social-object');
-  const intentObj = CONCEPTS.find(c => c.id === 'platform-intent');
   const coreConcepts = CONCEPTS.filter(c =>
     c.dimension === null &&
-    !['social-object', 'platform-intent', 'enable-dimension', 'grow-dimension', 'protect-dimension'].includes(c.id)
+    !['social-object', 'enable-dimension', 'grow-dimension', 'protect-dimension'].includes(c.id)
   );
   const metaDimensions = CONCEPTS.filter(c =>
     ['enable-dimension', 'grow-dimension', 'protect-dimension'].includes(c.id)
   );
-  const allDimensions = [socialObj, intentObj, ...coreConcepts].filter(Boolean);
+  const allDimensions = [socialObj, ...coreConcepts].filter(Boolean);
 
   return (
     <div className="animate-fade-in">
@@ -214,7 +213,7 @@ function InstructionsContent() {
           </p>
           <div className="flex flex-wrap gap-x-8 gap-y-2 mt-8 pt-6 border-t-2 border-dark text-xs text-muted">
             <span><span className="font-bold text-darker">Modes</span> &nbsp;Review &middot; Design Workshop</span>
-            <span><span className="font-bold text-darker">Dimensions</span> &nbsp;13 (10 core + 3 meta)</span>
+            <span><span className="font-bold text-darker">Dimensions</span> &nbsp;{CONCEPTS.length} ({CONCEPTS.length - metaDimensions.length} core + {metaDimensions.length} meta)</span>
             <span><span className="font-bold text-darker">Consumed by</span> &nbsp;src/utils/analyzeWithAI.js</span>
           </div>
         </div>
