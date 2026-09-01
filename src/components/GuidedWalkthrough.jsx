@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Send, Loader2, Download, RotateCcw, GraduationCap, Flag } from 'lucide-react';
+import * as Icons from 'lucide-react';
 import { CONCEPTS, GUIDE_SYSTEM_PROMPT, buildGuidePrompt, buildGuideWrapUpPrompt } from '../data/framework';
 import { createProvider } from '../providers';
 
@@ -29,8 +30,27 @@ function renderRich(text) {
   });
 }
 
+/** The dimension this turn is introducing — icon and name, from the model. */
+function DimensionChip({ concept, isWrapUp }) {
+  if (isWrapUp) {
+    return (
+      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 border-2 border-rb-green bg-rb-green-tint text-rb-green-shade text-xs font-bold uppercase tracking-widest mb-2">
+        <Flag size={11} /> Wrap-up
+      </div>
+    );
+  }
+  if (!concept) return null;
+  const Icon = Icons[concept.icon] || Icons.Circle;
+  return (
+    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 border-2 border-dark bg-light text-dark text-xs font-bold uppercase tracking-widest mb-2">
+      <Icon size={11} /> {concept.title}
+    </div>
+  );
+}
+
 function Bubble({ msg }) {
   const isUser = msg.role === 'user';
+  const concept = msg.conceptId ? CONCEPTS.find(c => c.id === msg.conceptId) : null;
   return (
     <div className={`flex gap-3 ${isUser ? 'justify-end' : 'justify-start'}`}>
       {!isUser && (
@@ -44,6 +64,7 @@ function Bubble({ msg }) {
         }`}
         style={isUser ? { whiteSpace: 'pre-wrap' } : undefined}
       >
+        {!isUser && <DimensionChip concept={concept} isWrapUp={msg.isWrapUp} />}
         {isUser ? msg.content : renderRich(msg.content)}
       </div>
       {isUser && (
@@ -88,7 +109,7 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
       const concept = CONCEPTS[index];
       const userPrompt = buildGuidePrompt(concept, platformDescription, previous, index === 0);
       const reply = await provider().sendMessage(GUIDE_SYSTEM_PROMPT, userPrompt);
-      setMessages([...currentMessages, { role: 'assistant', content: reply.trim() }]);
+      setMessages([...currentMessages, { role: 'assistant', content: reply.trim(), conceptId: concept.id }]);
       setStepIndex(index);
     } catch (err) {
       setError(err.message);
@@ -182,7 +203,15 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
               <p className="text-xs font-bold uppercase tracking-widest text-muted mb-0.5">
                 Guided walkthrough
               </p>
-              <h2 className="text-lg font-bold text-dark truncate">
+              <h2 className="text-lg font-bold text-dark truncate flex items-center gap-2">
+                {!finished && current && (() => {
+                  const Icon = Icons[current.icon] || Icons.Circle;
+                  return (
+                    <span className="w-6 h-6 border-2 border-dark flex items-center justify-center flex-shrink-0">
+                      <Icon size={13} className="text-dark" />
+                    </span>
+                  );
+                })()}
                 {finished ? 'Session complete' : current?.title}
               </h2>
             </div>
