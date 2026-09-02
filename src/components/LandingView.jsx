@@ -92,7 +92,7 @@ function Feature({ icon: Icon, title, body, link }) {
 const FEEDBACK_EMAIL = 'soenderlev@gmail.com';
 const FEEDBACK_MAILTO =
   `mailto:${FEEDBACK_EMAIL}` +
-  `?subject=${encodeURIComponent('Social Design Review — feedback')}` +
+  `?subject=${encodeURIComponent('The Social Design Tools — feedback')}` +
   `&body=${encodeURIComponent(
     'What I was doing:\n\n\nWhat worked:\n\n\nWhat did not:\n\n\nWhat the framework is missing:\n\n'
   )}`;
@@ -297,7 +297,7 @@ export default function LandingView({ onStart, onReadingList }) {
           <div>
             <h2 className="text-2xl font-normal text-dark mb-2">The dimensions</h2>
             <p className="text-sm text-darker leading-relaxed mb-8">
-              Eight core dimensions of social life, and three holistic qualities on the outer ring.
+              Eight core dimensions of social platform design, and three holistic qualities on the outer ring.
               Every review and workshop works through all {CONCEPTS.length}.
             </p>
 
@@ -333,10 +333,11 @@ export default function LandingView({ onStart, onReadingList }) {
       </section>
 
       {/* The tool, introduced immediately before the form that runs it */}
-      <section className="bg-white">
+      <section className="bg-white border-t-2 border-dark">
         <div className="max-w-5xl mx-auto px-6 pt-16 pb-8">
-          <p className="text-base text-darker leading-relaxed max-w-2xl">
-            <strong className="text-dark">Social Design Review</strong> is an AI-powered analysis of social platforms through this lens — built for European platform founders, designers and researchers.
+          <h2 className="text-2xl font-normal text-dark mb-2">The Social Design Tools</h2>
+          <p className="text-sm text-darker leading-relaxed max-w-2xl">
+            AI-powered analysis of social platforms through this lens — review what exists, design what is next, or learn the framework. Built for European platform founders, designers and researchers.
           </p>
         </div>
       </section>

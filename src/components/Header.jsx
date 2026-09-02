@@ -55,7 +55,7 @@ export default function Header({ onLogoClick, onInstructionsClick, onReadingList
               <span className="font-bold">Re</span>build<span className="font-bold">.</span>
             </span>
             <span className="ml-3 text-muted text-sm font-normal hidden sm:inline">
-              Social Design Review
+              The Social Design Tools
             </span>
           </button>
         </div>
