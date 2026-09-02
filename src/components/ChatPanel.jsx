@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Send, Loader2, MessageSquare } from 'lucide-react';
 import { createProvider } from '../providers';
 import { CONCEPTS } from '../data/framework';
+import { createPacer } from '../utils/streamPacer';
 
 function buildReviewContext(platformUrl, platformDescription, results) {
   let ctx = `You have just completed a Social Design Review of "${platformUrl}".\n`;
@@ -157,38 +158,29 @@ export default function ChatPanel({ providerId, apiKey, platformUrl, platformDes
 
     setMessages([...newMessages, { role: 'assistant', content: '', streaming: true }]);
 
-    let acc = '';
-    let frame = null;
-    const flush = () => {
-      frame = null;
-      setMessages(prev => {
-        const next = [...prev];
-        const last = next.length - 1;
-        if (next[last]?.streaming) next[last] = { ...next[last], content: acc };
-        return next;
-      });
-    };
+    const paint = (text) => setMessages(prev => {
+      const next = [...prev];
+      const last = next.length - 1;
+      if (next[last]?.streaming) next[last] = { ...next[last], content: text };
+      return next;
+    });
+    const pacer = createPacer({ onUpdate: paint });
 
     try {
       const provider = createProvider(providerId, apiKey, ollamaConfig || {});
       const systemPrompt = buildSystemPrompt(mode, platformUrl, platformDescription, results);
       // Include history in the user prompt since providers use single-turn interface
       const userPrompt = buildUserPrompt(messages, message);
-      // Batched on an animation frame — a fast stream emits chunks far quicker
-      // than the transcript can usefully re-render.
-      await provider.sendMessageStream(systemPrompt, userPrompt, [], piece => {
-        acc += piece;
-        if (frame === null) frame = requestAnimationFrame(flush);
-      });
-      if (frame !== null) cancelAnimationFrame(frame);
+      await provider.sendMessageStream(systemPrompt, userPrompt, [], piece => pacer.push(piece));
+      const full = await pacer.end();
       setMessages(prev => {
         const next = [...prev];
         const last = next.length - 1;
-        if (next[last]?.streaming) next[last] = { content: acc.trim(), role: 'assistant' };
+        if (next[last]?.streaming) next[last] = { content: full.trim(), role: 'assistant' };
         return next;
       });
     } catch (err) {
-      if (frame !== null) cancelAnimationFrame(frame);
+      pacer.cancel();
       setMessages(newMessages);   // drop the empty placeholder
       setError(err.message);
     } finally {

@@ -5,6 +5,7 @@ import { CONCEPTS, GUIDE_SYSTEM_PROMPT, buildGuidePrompt, buildGuideWrapUpPrompt
 import { referencesForConcept } from '../data/bibliography';
 import { createProvider } from '../providers';
 import { buildSessionLovableUrl } from '../utils/lovable';
+import { createPacer } from '../utils/streamPacer';
 
 const WRAP_PATTERNS = /^\s*(wrap[\s-]?up|wrap|summar(y|ise|ize)|finish|done|that'?s enough)\s*[.!]?\s*$/i;
 
@@ -123,33 +124,26 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
     const placeholder = { role: 'assistant', content: '', streaming: true, ...meta };
     setMessages([...currentMessages, placeholder]);
 
-    let acc = '';
-    let frame = null;
-    const flush = () => {
-      frame = null;
-      setMessages(prev => {
-        const next = [...prev];
-        const last = next.length - 1;
-        if (next[last]?.streaming) next[last] = { ...next[last], content: acc };
-        return next;
-      });
-    };
+    const paint = (text) => setMessages(prev => {
+      const next = [...prev];
+      const last = next.length - 1;
+      if (next[last]?.streaming) next[last] = { ...next[last], content: text };
+      return next;
+    });
+    const pacer = createPacer({ onUpdate: paint });
 
     try {
-      await provider().sendMessageStream(GUIDE_SYSTEM_PROMPT, userPrompt, [], piece => {
-        acc += piece;
-        if (frame === null) frame = requestAnimationFrame(flush);
-      });
-      if (frame !== null) cancelAnimationFrame(frame);
+      await provider().sendMessageStream(GUIDE_SYSTEM_PROMPT, userPrompt, [], piece => pacer.push(piece));
+      const full = await pacer.end();   // waits for the paced text to finish rendering
       setMessages(prev => {
         const next = [...prev];
         const last = next.length - 1;
-        if (next[last]?.streaming) next[last] = { ...next[last], content: acc.trim(), streaming: false };
+        if (next[last]?.streaming) next[last] = { ...next[last], content: full.trim(), streaming: false };
         return next;
       });
-      return acc.trim();
+      return full.trim();
     } catch (err) {
-      if (frame !== null) cancelAnimationFrame(frame);
+      pacer.cancel();
       // Drop the empty placeholder so a failed turn does not leave a blank bubble
       setMessages(currentMessages);
       setError(err.message);
