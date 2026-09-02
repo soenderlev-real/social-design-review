@@ -11,7 +11,7 @@
  */
 
 /** Reading pace while text is still arriving. Raise to speed up, lower to slow. */
-const CHARS_PER_SECOND = 75;
+const CHARS_PER_SECOND = 50;
 
 /**
  * Once the provider has finished, the remaining backlog is drained within this
