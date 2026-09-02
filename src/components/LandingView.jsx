@@ -92,6 +92,25 @@ export default function LandingView({ onStart, onReadingList }) {
   const selectedProvider = PROVIDERS.find(p => p.id === provider);
   const isOllama = provider === 'ollama';
   const isHostedKey = !!selectedProvider?.hostedKey;
+  const hostedProvider = PROVIDERS.find(p => p.hostedKey);
+
+  /**
+   * Straight into a guided session from the framework introduction — no form,
+   * no key. Only offered when a hosted provider exists, so a deployment
+   * without one shows nothing rather than a button that 503s.
+   */
+  function startGuidedSession() {
+    if (!hostedProvider) return;
+    onStart({
+      mode: 'guide',
+      providerId: hostedProvider.id,
+      apiKey: '',
+      platformUrl: '',
+      platformDescription: '',
+      ollamaConfig: undefined,
+      processedFiles: [],
+    });
+  }
 
   useEffect(() => {
     if (!isOllama) return;
@@ -153,6 +172,22 @@ export default function LandingView({ onStart, onReadingList }) {
             <p className="text-sm text-darker leading-relaxed">
               A practical lens for designing and evaluating social platforms around genuine human connection rather than pure engagement metrics. It emerged from the <a href="https://rebuild.net" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-dark">Rebuild.net</a> European social platforms sprint.
             </p>
+            {hostedProvider && (
+              <button
+                type="button"
+                onClick={startGuidedSession}
+                className="mt-6 inline-flex items-center gap-2 px-5 py-3 border-2 border-dark bg-rb-blue text-dark hover:bg-rb-blue-shade hover:text-light transition-colors text-sm font-bold"
+              >
+                <GraduationCap size={16} />
+                Learn the framework — start a guided session
+                <ArrowRight size={15} />
+              </button>
+            )}
+            {hostedProvider && (
+              <p className="text-xs text-muted mt-2">
+                A conversation, one dimension at a time. No API key needed.
+              </p>
+            )}
           </div>
 
           {/* Social Object — its own row so the diagram can align to it */}
