@@ -36,6 +36,91 @@ const RESOURCES = [
   },
 ];
 
+/** Icon sits on the heading line; one short line of copy beneath. */
+function Feature({ icon: Icon, title, body, link }) {
+  return (
+    <div>
+      <h3 className="font-bold text-sm text-dark mb-2 flex items-center gap-2">
+        <Icon size={16} className="flex-shrink-0" />
+        {title}
+      </h3>
+      <p className="text-xs text-muted leading-relaxed">{body}</p>
+      {link && (
+        <a
+          href={link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs inline-flex items-center gap-1 mt-2 underline underline-offset-2 text-darker hover:text-dark break-all"
+        >
+          {link.replace(/^https?:\/\//, '')} <ExternalLink size={10} className="flex-shrink-0" />
+        </a>
+      )}
+    </div>
+  );
+}
+
+const MODES = [
+  {
+    icon: Search,
+    title: 'Platform Review',
+    body: `Score a live platform across all ${CONCEPTS.length} dimensions — dark patterns named, concrete fixes, European perspective.`,
+  },
+  {
+    icon: Lightbulb,
+    title: 'Design Workshop',
+    body: 'Describe an idea and get design guidance per dimension, before any code is written.',
+  },
+  {
+    icon: GraduationCap,
+    title: 'Guided Walkthrough',
+    body: 'Learn the framework as a conversation, one dimension at a time. Works as a team workshop.',
+  },
+];
+
+const FEATURES = [
+  {
+    icon: MapPin,
+    title: 'Rebuild Platforms in Europe',
+    body: `${REBUILD_COUNT} European platforms from the Rebuild.net directory, surfaced per dimension with links.`,
+  },
+  {
+    icon: Rocket,
+    title: 'Prototype in Lovable',
+    body: 'Send a workshop or walkthrough to Lovable as a build brief, in one click.',
+  },
+  {
+    icon: Bot,
+    title: 'Agent .md Export',
+    body: 'Your results as a CLAUDE.md, .cursorrules or Windsurf instruction file.',
+  },
+  {
+    icon: MessageSquare,
+    title: 'AI Chat Panel',
+    body: 'Ask follow-up questions with the whole analysis already loaded.',
+  },
+  {
+    icon: BarChart3,
+    title: 'Radar Chart & Report',
+    body: `A radar chart across all ${CONCEPTS.length} dimensions, plus the full report as Markdown.`,
+  },
+  {
+    icon: Upload,
+    title: 'File Uploads',
+    body: 'Screenshots, wireframes and PDFs — parsed in your browser, never sent to a server.',
+  },
+  {
+    icon: Key,
+    title: 'Bring Your Own API',
+    body: 'Start free on a shared EU-hosted key, or use your own. Ollama runs fully offline.',
+  },
+  {
+    icon: GitFork,
+    title: 'Get Involved',
+    body: 'Fork it — add dimensions, support new providers, adapt it for your community.',
+    link: 'https://github.com/soenderlev-real/social-design-review',
+  },
+];
+
 export default function LandingView({ onStart, onReadingList }) {
   const [mode, setMode] = useState('review'); // 'review' | 'design'
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -251,88 +336,15 @@ export default function LandingView({ onStart, onReadingList }) {
             <strong className="text-dark">Social Design Review</strong> is an AI-powered analysis of social platforms through this lens — built for European platform founders, designers and researchers.
           </p>
           {/* Three modes — the ways in */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-10 gap-y-10 mb-12">
-
-            <div>
-              <Search size={18} className="mb-3 text-dark" />
-              <h3 className="font-bold text-sm text-dark mb-2">Platform Review</h3>
-              <p className="text-xs text-muted leading-relaxed">Analyse any live social platform across all {CONCEPTS.length} framework dimensions. Each dimension gets a score (1&ndash;5), strengths, dark patterns detected, concrete recommendations, and a European perspective.</p>
-            </div>
-
-            <div>
-              <Lightbulb size={18} className="mb-3 text-dark" />
-              <h3 className="font-bold text-sm text-dark mb-2">Design Workshop</h3>
-              <p className="text-xs text-muted leading-relaxed">Describe a new platform idea and get per-dimension design guidance &mdash; what to consider before coding, patterns to implement, anti-patterns to avoid, and alignment with European values.</p>
-            </div>
-
-            <div>
-              <GraduationCap size={18} className="mb-3 text-dark" />
-              <h3 className="font-bold text-sm text-dark mb-2">Guided Walkthrough</h3>
-              <p className="text-xs text-muted leading-relaxed">Learn the framework as a conversation, one dimension at a time, applying each to your own idea. Ask questions, go deeper, or wrap up early for a summary. Works as a team workshop.</p>
-            </div>
-
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-10 gap-y-10 mb-14">
+            {MODES.map(f => <Feature key={f.title} {...f} />)}
           </div>
 
-          {/* Everything the three modes give you */}
+          {/* What the three modes give you */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-14 gap-y-10">
-
-            <div>
-              <MapPin size={18} className="mb-3 text-dark" />
-              <h3 className="font-bold text-sm text-dark mb-2">Rebuild Platforms in Europe</h3>
-              <p className="text-xs text-muted leading-relaxed">Find relevant European social platforms from the Rebuild.net directory &mdash; {REBUILD_COUNT} platforms across {REBUILD_COUNTRIES} countries, surfaced per dimension with links, so comparisons point somewhere real rather than to the usual American examples.</p>
-            </div>
-
-            <div>
-              <Rocket size={18} className="mb-3 text-dark" />
-              <h3 className="font-bold text-sm text-dark mb-2">Prototype in Lovable</h3>
-              <p className="text-xs text-muted leading-relaxed">Send a workshop or walkthrough straight to Lovable as a build brief &mdash; the concept, your decisions per dimension, the non-negotiable rules, and what never to build. One click from results to a working prototype.</p>
-            </div>
-
-            <div>
-              <Bot size={18} className="mb-3 text-dark" />
-              <h3 className="font-bold text-sm text-dark mb-2">Agent .md Export</h3>
-              <p className="text-xs text-muted leading-relaxed">Export results as a coding agent instruction file &mdash; ready to drop into Claude Code (CLAUDE.md), Cursor (.cursorrules), Windsurf, or Lovable. Binary ALWAYS/NEVER directives, a Core Constitution, Default States, and Hard Refusals.</p>
-            </div>
-
-            <div>
-              <MessageSquare size={18} className="mb-3 text-dark" />
-              <h3 className="font-bold text-sm text-dark mb-2">AI Chat Panel</h3>
-              <p className="text-xs text-muted leading-relaxed">After a review or workshop, chat with the AI about the results. Dig into specific dimensions, ask follow-up questions, or explore what a higher score would require &mdash; with full context already loaded.</p>
-            </div>
-
-            <div>
-              <BarChart3 size={18} className="mb-3 text-dark" />
-              <h3 className="font-bold text-sm text-dark mb-2">Radar Chart &amp; Report</h3>
-              <p className="text-xs text-muted leading-relaxed">Review results include a full radar chart across all {CONCEPTS.length} dimensions. Export the complete report as Markdown &mdash; scores, findings, dark patterns, recommendations, and European perspectives in one document.</p>
-            </div>
-
-            <div>
-              <Upload size={18} className="mb-3 text-dark" />
-              <h3 className="font-bold text-sm text-dark mb-2">File Uploads</h3>
-              <p className="text-xs text-muted leading-relaxed">Upload screenshots, wireframes, pitch decks, or policy PDFs. Images go directly to vision-capable models. PDFs are parsed entirely in your browser &mdash; nothing is ever sent to a server.</p>
-            </div>
-
-            <div>
-              <Key size={18} className="mb-3 text-dark" />
-              <h3 className="font-bold text-sm text-dark mb-2">Bring Your Own API</h3>
-              <p className="text-xs text-muted leading-relaxed">Start free on a shared EU-hosted key, or bring your own &mdash; Anthropic, OpenAI, Mistral, Gemini, Groq, Together.ai or LLMBase. Your key lives only in your browser. Or run fully private with Ollama on your own machine.</p>
-            </div>
-
-            <div>
-              <GitFork size={18} className="mb-3 text-dark" />
-              <h3 className="font-bold text-sm text-dark mb-2">Get Involved</h3>
-              <p className="text-xs text-muted leading-relaxed mb-3">Fork and contribute &mdash; add framework dimensions, support new providers, or adapt the tool for your own research and community.</p>
-              <a
-                href="https://github.com/soenderlev-real/social-design-review"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs flex items-center gap-1 underline underline-offset-2 text-darker hover:text-dark"
-              >
-                github.com/soenderlev-real/social-design-review <ExternalLink size={10} />
-              </a>
-            </div>
-
+            {FEATURES.map(f => <Feature key={f.title} {...f} />)}
           </div>
+
         </div>
       </section>
 
