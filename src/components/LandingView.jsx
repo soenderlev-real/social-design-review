@@ -198,16 +198,18 @@ export default function LandingView({ onStart, onReadingList }) {
             {/* Sits inside the sticky column, so it travels with the diagram */}
             {hostedProvider && (
               <div className="mt-5">
+                {/* An action, not navigation — kept as a button for keyboard and
+                    screen-reader semantics, styled as a link. */}
                 <button
                   type="button"
                   onClick={startGuidedSession}
-                  className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 border-2 border-dark bg-rb-blue text-dark hover:bg-rb-blue-shade hover:text-light transition-colors text-sm font-bold"
+                  className="inline-flex items-center gap-2 text-sm font-bold text-dark underline underline-offset-4 decoration-2 hover:text-rb-blue-shade transition-colors"
                 >
-                  <GraduationCap size={16} />
+                  <GraduationCap size={16} className="flex-shrink-0" />
                   Learn the framework — start a guided session
-                  <ArrowRight size={15} />
+                  <ArrowRight size={14} className="flex-shrink-0" />
                 </button>
-                <p className="text-xs text-muted mt-2 text-center">
+                <p className="text-xs text-muted mt-2">
                   A conversation, one dimension at a time. No API key needed.
                 </p>
               </div>
