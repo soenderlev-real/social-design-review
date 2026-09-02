@@ -251,21 +251,21 @@ export default function LandingView({ onStart, onReadingList }) {
             <strong className="text-dark">Social Design Review</strong> is an AI-powered analysis of social platforms through this lens — built for European platform founders, designers and researchers.
           </p>
           {/* Three modes — the ways in */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 border-t-2 border-l-2 border-dark mb-10">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-10 gap-y-10 mb-12">
 
-            <div className="p-6 border-b-2 border-r-2 border-dark">
+            <div>
               <Search size={18} className="mb-3 text-dark" />
               <h3 className="font-bold text-sm text-dark mb-2">Platform Review</h3>
               <p className="text-xs text-muted leading-relaxed">Analyse any live social platform across all {CONCEPTS.length} framework dimensions. Each dimension gets a score (1&ndash;5), strengths, dark patterns detected, concrete recommendations, and a European perspective.</p>
             </div>
 
-            <div className="p-6 border-b-2 border-r-2 border-dark">
+            <div>
               <Lightbulb size={18} className="mb-3 text-dark" />
               <h3 className="font-bold text-sm text-dark mb-2">Design Workshop</h3>
               <p className="text-xs text-muted leading-relaxed">Describe a new platform idea and get per-dimension design guidance &mdash; what to consider before coding, patterns to implement, anti-patterns to avoid, and alignment with European values.</p>
             </div>
 
-            <div className="p-6 border-b-2 border-r-2 border-dark">
+            <div>
               <GraduationCap size={18} className="mb-3 text-dark" />
               <h3 className="font-bold text-sm text-dark mb-2">Guided Walkthrough</h3>
               <p className="text-xs text-muted leading-relaxed">Learn the framework as a conversation, one dimension at a time, applying each to your own idea. Ask questions, go deeper, or wrap up early for a summary. Works as a team workshop.</p>
@@ -274,51 +274,51 @@ export default function LandingView({ onStart, onReadingList }) {
           </div>
 
           {/* Everything the three modes give you */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border-t-2 border-l-2 border-dark">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-10">
 
-            <div className="p-6 border-b-2 border-r-2 border-dark">
+            <div>
               <MapPin size={18} className="mb-3 text-dark" />
               <h3 className="font-bold text-sm text-dark mb-2">Rebuild Platforms in Europe</h3>
               <p className="text-xs text-muted leading-relaxed">Find relevant European social platforms from the Rebuild.net directory &mdash; {REBUILD_COUNT} platforms across {REBUILD_COUNTRIES} countries, surfaced per dimension with links, so comparisons point somewhere real rather than to the usual American examples.</p>
             </div>
 
-            <div className="p-6 border-b-2 border-r-2 border-dark">
+            <div>
               <Rocket size={18} className="mb-3 text-dark" />
               <h3 className="font-bold text-sm text-dark mb-2">Prototype in Lovable</h3>
               <p className="text-xs text-muted leading-relaxed">Send a workshop or walkthrough straight to Lovable as a build brief &mdash; the concept, your decisions per dimension, the non-negotiable rules, and what never to build. One click from results to a working prototype.</p>
             </div>
 
-            <div className="p-6 border-b-2 border-r-2 border-dark">
+            <div>
               <Bot size={18} className="mb-3 text-dark" />
               <h3 className="font-bold text-sm text-dark mb-2">Agent .md Export</h3>
               <p className="text-xs text-muted leading-relaxed">Export results as a coding agent instruction file &mdash; ready to drop into Claude Code (CLAUDE.md), Cursor (.cursorrules), Windsurf, or Lovable. Binary ALWAYS/NEVER directives, a Core Constitution, Default States, and Hard Refusals.</p>
             </div>
 
-            <div className="p-6 border-b-2 border-r-2 border-dark">
+            <div>
               <MessageSquare size={18} className="mb-3 text-dark" />
               <h3 className="font-bold text-sm text-dark mb-2">AI Chat Panel</h3>
               <p className="text-xs text-muted leading-relaxed">After a review or workshop, chat with the AI about the results. Dig into specific dimensions, ask follow-up questions, or explore what a higher score would require &mdash; with full context already loaded.</p>
             </div>
 
-            <div className="p-6 border-b-2 border-r-2 border-dark">
+            <div>
               <BarChart3 size={18} className="mb-3 text-dark" />
               <h3 className="font-bold text-sm text-dark mb-2">Radar Chart &amp; Report</h3>
               <p className="text-xs text-muted leading-relaxed">Review results include a full radar chart across all {CONCEPTS.length} dimensions. Export the complete report as Markdown &mdash; scores, findings, dark patterns, recommendations, and European perspectives in one document.</p>
             </div>
 
-            <div className="p-6 border-b-2 border-r-2 border-dark">
+            <div>
               <Upload size={18} className="mb-3 text-dark" />
               <h3 className="font-bold text-sm text-dark mb-2">File Uploads</h3>
               <p className="text-xs text-muted leading-relaxed">Upload screenshots, wireframes, pitch decks, or policy PDFs. Images go directly to vision-capable models. PDFs are parsed entirely in your browser &mdash; nothing is ever sent to a server.</p>
             </div>
 
-            <div className="p-6 border-b-2 border-r-2 border-dark">
+            <div>
               <Key size={18} className="mb-3 text-dark" />
               <h3 className="font-bold text-sm text-dark mb-2">Bring Your Own API</h3>
               <p className="text-xs text-muted leading-relaxed">Start free on a shared EU-hosted key, or bring your own &mdash; Anthropic, OpenAI, Mistral, Gemini, Groq, Together.ai or LLMBase. Your key lives only in your browser. Or run fully private with Ollama on your own machine.</p>
             </div>
 
-            <div className="p-6 border-b-2 border-r-2 border-dark">
+            <div>
               <GitFork size={18} className="mb-3 text-dark" />
               <h3 className="font-bold text-sm text-dark mb-2">Get Involved</h3>
               <p className="text-xs text-muted leading-relaxed mb-3">Fork and contribute &mdash; add framework dimensions, support new providers, or adapt the tool for your own research and community.</p>
