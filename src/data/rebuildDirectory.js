@@ -686,3 +686,13 @@ export function directoryLines(conceptId, limit = 6) {
     .map(p => `- ${p.name} (${p.country}) — ${p.description}`)
     .join('\n');
 }
+
+/**
+ * Name/url pairs for the platforms offered in one turn, so the reply can link
+ * only those. Linking against the whole directory would be wrong: it contains
+ * entries called Adam, Done, Village and Bump, and those words appear in
+ * ordinary prose.
+ */
+export function linkablePlatforms(conceptId, limit = 6) {
+  return platformsForConcept(conceptId, limit).map(p => ({ name: p.name, url: p.url }));
+}

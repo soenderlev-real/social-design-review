@@ -13,11 +13,42 @@ const WRAP_PATTERNS = /^\s*(wrap[\s-]?up|wrap|summar(y|ise|ize)|finish|done|that
  * The facilitator writes prose, but the wrap-up uses ### headers and emphasis.
  * Render just enough markdown that those do not show up as literal characters.
  */
-function renderRich(text) {
-  const inline = (t) => t
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*([^*\n]+?)\*/g, '<em>$1</em>');
+function escapeRegex(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
+ * Turn mentions of the platforms offered in this turn into outgoing links.
+ *
+ * Scoped to that turn's shortlist rather than the whole directory, and matched
+ * on word boundaries longest-first, so "Tête-à-Tête" wins over any shorter name
+ * inside it. Runs after escaping and before the emphasis pass, so the anchors
+ * it inserts cannot be mangled by either.
+ */
+function linkify(escaped, links) {
+  if (!links || !links.length) return escaped;
+  const named = links.filter(l => l.name && l.url).sort((a, b) => b.name.length - a.name.length);
+  if (!named.length) return escaped;
+
+  const pattern = new RegExp(
+    `(?<![\\w&#;])(${named.map(l => escapeRegex(l.name)).join('|')})(?![\\w;])`,
+    'g'
+  );
+  const byName = new Map(named.map(l => [l.name, l.url]));
+  return escaped.replace(pattern, (m) => {
+    const url = byName.get(m);
+    if (!url) return m;
+    return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="underline underline-offset-2 font-bold hover:text-rb-blue-shade">${m}</a>`;
+  });
+}
+
+function renderRich(text, links) {
+  const inline = (t) => {
+    const escaped = t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return linkify(escaped, links)
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*([^*\n]+?)\*/g, '<em>$1</em>');
+  };
 
   return text.split('\n').map((line, i) => {
     const heading = line.match(/^#{2,4}\s+(.*)$/);
@@ -68,7 +99,7 @@ function Bubble({ msg }) {
         style={isUser ? { whiteSpace: 'pre-wrap' } : undefined}
       >
         {!isUser && <DimensionChip concept={concept} isWrapUp={msg.isWrapUp} />}
-        {isUser ? msg.content : renderRich(msg.content)}
+        {isUser ? msg.content : renderRich(msg.content, msg.links)}
         {msg.streaming && (
           <span className="inline-block w-2 h-4 bg-dark align-text-bottom animate-pulse ml-0.5" />
         )}
@@ -167,12 +198,14 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
     // Loaded on demand — the directory is ~146KB and only this chip needs it,
     // so it must not sit in the bundle everyone downloads on the landing page.
     let platforms = '';
+    let links = null;
     if (kind === 'platforms') {
-      const { directoryLines } = await import('../data/rebuildDirectory');
+      const { directoryLines, linkablePlatforms } = await import('../data/rebuildDirectory');
       platforms = directoryLines(concept.id, 7);
+      links = linkablePlatforms(concept.id, 7);
     }
     const userPrompt = buildGuideExplorePrompt(concept, platformDescription, kind, question, refs, platforms);
-    await streamTurn(userPrompt, currentMessages, { conceptId: concept.id, isExplore: true });
+    await streamTurn(userPrompt, currentMessages, { conceptId: concept.id, isExplore: true, links });
   }
 
   /** Chips stay on the dimension; only a typed answer advances. */
@@ -193,7 +226,7 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
 
     const label =
       kind === 'references' ? `What are some good references on ${concept.title}?`
-      : kind === 'platforms' ? `Which European platforms are doing something interesting with ${concept.title}?`
+      : kind === 'platforms' ? `Good examples from the Rebuild platforms for ${concept.title}?`
       : `Tell me more about ${concept.title}.`;
     const withUser = [...messages, { role: 'user', content: label }];
     setMessages(withUser);
@@ -399,7 +432,7 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
                 type="button" onClick={() => handleChip('platforms')} disabled={isLoading}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 border-2 border-dark text-xs text-dark hover:bg-dark hover:text-light disabled:opacity-30 transition-colors"
               >
-                <MapPin size={11} /> European platforms doing this
+                <MapPin size={11} /> Good examples from Rebuild platforms
               </button>
               <button
                 type="button" onClick={() => handleChip('question')} disabled={isLoading || awaitingQuestion}
