@@ -274,7 +274,7 @@ export default function LandingView({ onStart, onReadingList }) {
           </div>
 
           {/* Everything the three modes give you */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-14 gap-y-10">
 
             <div>
               <MapPin size={18} className="mb-3 text-dark" />
