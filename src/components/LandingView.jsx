@@ -110,6 +110,7 @@ export default function LandingView({ onStart, onReadingList }) {
   const [apiKey, setApiKey] = useState('');
   const [description, setDescription] = useState('');
   const [showApiKey, setShowApiKey] = useState(false);
+  const [copiedEmail, setCopiedEmail] = useState(false);
   const [error, setError] = useState('');
   const [ollamaStatus, setOllamaStatus] = useState(null);
   const [ollamaModels, setOllamaModels] = useState([]);
@@ -166,6 +167,21 @@ export default function LandingView({ onStart, onReadingList }) {
    * no key. Only offered when a hosted provider exists, so a deployment
    * without one shows nothing rather than a button that 503s.
    */
+  /**
+   * mailto: fails silently for anyone without a configured mail client — no
+   * error, nothing happens. So the address is also shown plainly and can be
+   * copied, which needs no mail client and no backend.
+   */
+  async function copyFeedbackEmail() {
+    try {
+      await navigator.clipboard.writeText(FEEDBACK_EMAIL);
+      setCopiedEmail(true);
+      setTimeout(() => setCopiedEmail(false), 2000);
+    } catch {
+      // Clipboard can be blocked; the address is visible either way.
+    }
+  }
+
   function startGuidedSession() {
     if (!hostedProvider) return;
     onStart({
@@ -766,6 +782,17 @@ export default function LandingView({ onStart, onReadingList }) {
               <MessageSquare size={13} /> Send feedback
             </a>
           </div>
+          <p className="text-xs text-muted mt-3">
+            No mail app? Write to{' '}
+            <button
+              type="button"
+              onClick={copyFeedbackEmail}
+              className="underline underline-offset-2 text-darker hover:text-dark font-bold"
+            >
+              {FEEDBACK_EMAIL}
+            </button>
+            {copiedEmail && <span className="text-rb-green-shade font-bold"> — copied</span>}
+          </p>
         </div>
 
         <p className="mt-8 text-xs text-muted text-center leading-relaxed">
