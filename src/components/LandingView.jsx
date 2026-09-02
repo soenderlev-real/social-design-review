@@ -243,30 +243,25 @@ export default function LandingView({ onStart, onReadingList }) {
 
       {/* Framework — leads the page: the model first, the tool second */}
       <section className="bg-light border-b-2 border-dark">
-        {/* Explicit grid placement so the diagram sits in the right column on
-            desktop but directly under the intro on mobile — otherwise it lands
-            below the whole dimension list, several screens down on a phone. */}
-        <div className="max-w-5xl mx-auto px-6 py-16 grid grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-6 lg:items-start">
-          {/* Title + lede */}
-          <div className="lg:col-start-1 lg:row-start-1">
-            <p className="text-sm text-muted mb-4 uppercase tracking-widest">A Rebuild.net Tool</p>
-            <h1 className="text-3xl md:text-4xl font-normal text-dark mb-6 leading-tight">
-              The Social Design Framework
-            </h1>
-            <p className="text-sm text-darker leading-relaxed">
-              A practical lens for designing and evaluating social platforms around genuine human connection rather than pure engagement metrics. It emerged from the <a href="https://rebuild.net" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-dark">Rebuild.net</a> European social platforms sprint.
-            </p>
-          </div>
+        {/* Header holds the framing only — the model has moved down to sit
+            beside the dimensions it labels. */}
+        <div className="max-w-5xl mx-auto px-6 py-14">
+          <p className="text-sm text-muted mb-4 uppercase tracking-widest">A Rebuild.net Tool</p>
+          <h1 className="text-3xl md:text-4xl font-normal text-dark mb-5 leading-tight max-w-2xl">
+            The Social Design Framework
+          </h1>
+          <p className="text-sm text-darker leading-relaxed max-w-2xl">
+            A practical lens for designing and evaluating social platforms around genuine human connection rather than pure engagement metrics. It emerged from the <a href="https://rebuild.net" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-dark">Rebuild.net</a> European social platforms sprint.
+          </p>
+        </div>
+      </section>
 
-          {/* Social Object — its own row so the diagram can align to it */}
-          <div className="lg:col-start-1 lg:row-start-2">
-            <p className="text-sm text-darker leading-relaxed">
-              At its centre sits the <strong>Social Object</strong> — the shared thing that brings people together. Around it, <strong>Platform Intent</strong> and <strong>Experience Intent</strong> define the alignment between business logic and user value.
-            </p>
-          </div>
+      {/* The dimensions — collapsed by default, so the header stays a header */}
+      <section className="bg-white border-t-2 border-dark">
+        <div className="max-w-5xl mx-auto px-6 py-16 grid grid-cols-1 lg:grid-cols-2 gap-x-14 gap-y-10 lg:items-start">
 
-          {/* Diagram — starts level with the Social Object text */}
-          <div className="lg:col-start-2 lg:row-start-2 lg:row-span-2 lg:sticky lg:top-20">
+          {/* The model, beside the list it labels */}
+          <div className="lg:sticky lg:top-20">
             <button
               type="button"
               onClick={() => setLightboxOpen(true)}
@@ -279,7 +274,6 @@ export default function LandingView({ onStart, onReadingList }) {
               </span>
             </button>
 
-            {/* Sits inside the sticky column, so it travels with the diagram */}
             {hostedProvider && (
               <div className="mt-5">
                 {/* An action, not navigation — kept as a button for keyboard and
@@ -300,19 +294,14 @@ export default function LandingView({ onStart, onReadingList }) {
             )}
           </div>
 
-        </div>
-      </section>
+          <div>
+            <h2 className="text-2xl font-normal text-dark mb-2">The dimensions</h2>
+            <p className="text-sm text-darker leading-relaxed mb-8">
+              Eight core dimensions of social life, and three holistic qualities on the outer ring.
+              Every review and workshop works through all {CONCEPTS.length}.
+            </p>
 
-      {/* The dimensions — collapsed by default, so the header stays a header */}
-      <section className="bg-white border-t-2 border-dark">
-        <div className="max-w-5xl mx-auto px-6 py-16">
-          <h2 className="text-2xl font-normal text-dark mb-2">The dimensions</h2>
-          <p className="text-sm text-darker leading-relaxed max-w-2xl mb-8">
-            Eight core dimensions of social life, and three holistic qualities on the outer ring.
-            Every review and workshop works through all {CONCEPTS.length}.
-          </p>
-
-          <div className="border-t-2 border-dark">
+            <div className="border-t-2 border-dark">
             {DIMENSION_NOTES.map(({ name, desc, meta }) => (
               <button
                 key={name}
@@ -335,9 +324,11 @@ export default function LandingView({ onStart, onReadingList }) {
                 {openDimension === name && (
                   <p className="text-xs text-muted leading-relaxed mt-3 max-w-3xl">{desc}</p>
                 )}
-              </button>
-            ))}
+                </button>
+              ))}
+            </div>
           </div>
+
         </div>
       </section>
 
