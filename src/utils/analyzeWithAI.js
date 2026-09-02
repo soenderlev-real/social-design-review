@@ -91,6 +91,23 @@ function stripHtmlToText(html) {
   return result;
 }
 
+
+/**
+ * Rebuild directory lines per dimension, loaded once per run. Lazily imported
+ * so the ~146KB dataset stays out of the main bundle, and failure is non-fatal:
+ * a review without European comparators is still a review.
+ */
+async function loadEuropeanExamples(concepts) {
+  try {
+    const { directoryLines } = await import('../data/rebuildDirectory');
+    const map = {};
+    concepts.forEach(c => { map[c.id] = directoryLines(c.id, 6); });
+    return map;
+  } catch {
+    return {};
+  }
+}
+
 /**
  * Rate limits are a normal condition here, not an exceptional one.
  *
@@ -148,13 +165,13 @@ async function withRetry(fn, { label, onStatus } = {}) {
  * Analyze a single concept using the selected provider.
  * processedFiles: array of { type: 'image'|'pdf', base64?, mediaType?, text?, name }
  */
-export async function analyzeConcept(provider, concept, platformUrl, platformDescription, siteContent, processedFiles = []) {
+export async function analyzeConcept(provider, concept, platformUrl, platformDescription, siteContent, processedFiles = [], europeanExamples = '') {
   const images   = processedFiles.filter(f => f.type === 'image');
   const pdfs     = processedFiles.filter(f => f.type === 'pdf');
 
   // PDF text + image note (for non-vision providers) always goes into the prompt
   const fileContext = buildFileContext(processedFiles);
-  const userPrompt  = buildConceptPrompt(concept, platformUrl, platformDescription, siteContent, fileContext);
+  const userPrompt  = buildConceptPrompt(concept, platformUrl, platformDescription, siteContent, fileContext, europeanExamples);
 
   // Vision providers get the actual images; others get text-only
   const imagesToSend = provider.supportsVision ? images : [];
@@ -196,13 +213,14 @@ export async function analyzeAll(providerId, apiKey, concepts, platformUrl, plat
   const isLocal = providerId === 'ollama';
   const CONCURRENCY = isLocal ? 1 : 3;
 
+  const euExamples = await loadEuropeanExamples(concepts);
   const results = {};
 
   // Run in parallel batches
   async function runConcept(concept) {
     try {
       const result = await withRetry(
-        () => analyzeConcept(provider, concept, platformUrl, platformDescription, siteContent, processedFiles),
+        () => analyzeConcept(provider, concept, platformUrl, platformDescription, siteContent, processedFiles, euExamples[concept.id]),
         { label: concept.title, onStatus }
       );
       results[concept.id] = { status: 'done', ...result };
@@ -225,9 +243,9 @@ export async function analyzeAll(providerId, apiKey, concepts, platformUrl, plat
 
 // ─── Design mode ────────────────────────────────────────────────────────────
 
-export async function designConcept(provider, concept, platformDescription, processedFiles = []) {
+export async function designConcept(provider, concept, platformDescription, processedFiles = [], europeanExamples = '') {
   const fileContext = buildFileContext(processedFiles);
-  const userPrompt = buildDesignPrompt(concept, platformDescription, fileContext);
+  const userPrompt = buildDesignPrompt(concept, platformDescription, fileContext, europeanExamples);
   const images = provider.supportsVision ? processedFiles.filter(f => f.type === 'image') : [];
   const text = await provider.sendMessage(DESIGN_SYSTEM_PROMPT, userPrompt, images);
   return parseDesignResponse(text);
@@ -243,12 +261,13 @@ export async function designAll(providerId, apiKey, concepts, platformDescriptio
 
   const isLocal = providerId === 'ollama';
   const CONCURRENCY = isLocal ? 1 : 3;
+  const euExamples = await loadEuropeanExamples(concepts);
   const results = {};
 
   async function runConcept(concept) {
     try {
       const result = await withRetry(
-        () => designConcept(provider, concept, platformDescription, processedFiles),
+        () => designConcept(provider, concept, platformDescription, processedFiles, euExamples[concept.id]),
         { label: concept.title, onStatus }
       );
       results[concept.id] = { status: 'done', ...result };

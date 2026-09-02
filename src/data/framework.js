@@ -486,7 +486,11 @@ For each concept you review, provide:
 6. **Interface Notes** (2-4 bullet points): Where this dimension lives in the actual interface — the screen, control, flow step or state carrying the behaviour, what you observed there (quoting real page content where you have it, and saying when you are instead reasoning from general knowledge), and what the corrected screen would look like. Name elements and copy, not intentions.
 7. **European perspective**: One paragraph on how this dimension could better align with European values of participation, commons, and democratic empowerment`;
 
-export function buildConceptPrompt(concept, platformUrl, platformDescription, siteContent, fileContext = '') {
+export function buildConceptPrompt(concept, platformUrl, platformDescription, siteContent, fileContext = '', europeanExamples = '') {
+  const europeanSection = europeanExamples
+    ? `\n## European platforms in this space (Rebuild.net directory)\nReal European platforms mapped by the Rebuild community. Where one of these is a useful comparator for this dimension, name it. Say when you are inferring from a description rather than knowing how it actually behaves, and do not invent entries beyond this list. Prefer these over the usual American examples — a European alternative the reader can actually look at is worth more here than another reference to Facebook.\n${europeanExamples}\n`
+    : '';
+
   let siteSection = '';
   if (siteContent) {
     const truncated = siteContent.length > 4000
@@ -510,7 +514,7 @@ ${concept.darkPatterns.map(p => `- ${p}`).join('\n')}
 
 ## Light patterns to recommend where relevant:
 ${concept.lightPatterns.map(p => `- ${p}`).join('\n')}
-${siteSection}${fileSection}
+${siteSection}${fileSection}${europeanSection}
 ## Platform context provided by the user:
 ${platformDescription || 'No additional description provided. Use your knowledge of this platform.'}
 
@@ -604,7 +608,11 @@ For each dimension, provide:
 4. **Watch Out For** (2-4 bullet points): Dark patterns and traps this type of platform is most likely to fall into — name the EDPB category (Overloading/Skipping/Stirring/Obstructing/Fickle/Left in the Dark) where it applies
 5. **European Perspective**: One paragraph on how this dimension can be designed to embody European values of participation, the commons, and democratic empowerment`;
 
-export function buildDesignPrompt(concept, platformDescription, fileContext = '') {
+export function buildDesignPrompt(concept, platformDescription, fileContext = '', europeanExamples = '') {
+  const europeanSection = europeanExamples
+    ? `\n## European platforms in this space (Rebuild.net directory)\nReal European platforms mapped by the Rebuild community. Where one of these is a useful comparator for this dimension, name it. Say when you are inferring from a description rather than knowing how it actually behaves, and do not invent entries beyond this list. Prefer these over the usual American examples — a European alternative the reader can actually look at is worth more here than another reference to Facebook.\n${europeanExamples}\n`
+    : '';
+
   const fileSection = fileContext
     ? `\n## Uploaded materials (concept docs, wireframes, pitch deck):\n${fileContext}\n`
     : '';
@@ -624,7 +632,7 @@ ${concept.darkPatterns.map(p => `- ${p}`).join('\n')}
 
 ## Light patterns to design toward:
 ${concept.lightPatterns.map(p => `- ${p}`).join('\n')}
-
+${europeanSection}
 You MUST respond using EXACTLY these five section headers, in this order. Do not rename them, do not skip them:
 
 ### Design Considerations
@@ -731,7 +739,7 @@ Write to them as "you". Be specific to what they actually said — a generic sum
  * kind: 'more' | 'references' | 'question'
  * references: entries from the app's own reading list, so sources are real.
  */
-export function buildGuideExplorePrompt(concept, idea, kind, question, references = []) {
+export function buildGuideExplorePrompt(concept, idea, kind, question, references = [], platforms = '') {
   let p = `The person is still on the "${concept.title}" dimension and wants to go deeper before answering. Do NOT move on to another dimension.\n\n`;
 
   if (idea) p += `Their platform or idea:\n"""\n${idea}\n"""\n\n`;
@@ -741,7 +749,13 @@ export function buildGuideExplorePrompt(concept, idea, kind, question, reference
   p += `Patterns to design against: ${concept.darkPatterns.join('; ')}\n`;
   p += `Patterns to design toward: ${concept.lightPatterns.join('; ')}\n\n`;
 
-  if (kind === 'references') {
+  if (kind === 'platforms') {
+    p += `## They asked which European platforms are doing this\n\n`;
+    p += platforms
+      ? `These are real entries from the Rebuild.net directory of European social platforms. Pick three or four that genuinely illuminate this dimension, and for each say in a line or two what it does about ${concept.title} specifically — what to look at, and whether it is a good or cautionary example. Where you do not actually know how a platform handles this dimension, say you are inferring from its description rather than asserting. Do not invent platforms beyond this list.\n\n${platforms}\n`
+      : `No directory entries are available for this dimension. Say so, and name two or three European platforms you are confident exist, flagging that they are your own suggestions.\n`;
+    p += `\nThese are European platforms specifically — that is the point of the list, so do not substitute the usual American examples here.\n`;
+  } else if (kind === 'references') {
     p += `## They asked for references on this dimension\n\n`;
     if (references.length) {
       p += `Use these, from the framework's own reading list. Pick the three or four most useful for someone at their stage, say in one line what each actually gives them, and be honest if one is heavy going. Do not invent sources beyond this list; if something obvious is missing you may name it as "not in the reading list, but worth knowing".\n\n`;

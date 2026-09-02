@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, Loader2, Download, RotateCcw, GraduationCap, Flag, Rocket, BookOpen, HelpCircle, Plus } from 'lucide-react';
+import { Send, Loader2, Download, RotateCcw, GraduationCap, Flag, Rocket, BookOpen, HelpCircle, Plus, MapPin } from 'lucide-react';
 import * as Icons from 'lucide-react';
 import { CONCEPTS, GUIDE_SYSTEM_PROMPT, buildGuidePrompt, buildGuideWrapUpPrompt, buildGuideExplorePrompt } from '../data/framework';
 import { referencesForConcept } from '../data/bibliography';
@@ -164,7 +164,14 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
   async function runExplore(kind, question, currentMessages) {
     const concept = CONCEPTS[stepIndex];
     const refs = kind === 'references' ? referencesForConcept(concept.id) : [];
-    const userPrompt = buildGuideExplorePrompt(concept, platformDescription, kind, question, refs);
+    // Loaded on demand — the directory is ~146KB and only this chip needs it,
+    // so it must not sit in the bundle everyone downloads on the landing page.
+    let platforms = '';
+    if (kind === 'platforms') {
+      const { directoryLines } = await import('../data/rebuildDirectory');
+      platforms = directoryLines(concept.id, 7);
+    }
+    const userPrompt = buildGuideExplorePrompt(concept, platformDescription, kind, question, refs, platforms);
     await streamTurn(userPrompt, currentMessages, { conceptId: concept.id, isExplore: true });
   }
 
@@ -184,8 +191,9 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
       return;
     }
 
-    const label = kind === 'references'
-      ? `What are some good references on ${concept.title}?`
+    const label =
+      kind === 'references' ? `What are some good references on ${concept.title}?`
+      : kind === 'platforms' ? `Which European platforms are doing something interesting with ${concept.title}?`
       : `Tell me more about ${concept.title}.`;
     const withUser = [...messages, { role: 'user', content: label }];
     setMessages(withUser);
@@ -386,6 +394,12 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 border-2 border-dark text-xs text-dark hover:bg-dark hover:text-light disabled:opacity-30 transition-colors"
               >
                 <BookOpen size={11} /> Good references
+              </button>
+              <button
+                type="button" onClick={() => handleChip('platforms')} disabled={isLoading}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 border-2 border-dark text-xs text-dark hover:bg-dark hover:text-light disabled:opacity-30 transition-colors"
+              >
+                <MapPin size={11} /> European platforms doing this
               </button>
               <button
                 type="button" onClick={() => handleChip('question')} disabled={isLoading || awaitingQuestion}
