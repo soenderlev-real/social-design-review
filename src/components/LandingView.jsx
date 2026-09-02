@@ -172,22 +172,6 @@ export default function LandingView({ onStart, onReadingList }) {
             <p className="text-sm text-darker leading-relaxed">
               A practical lens for designing and evaluating social platforms around genuine human connection rather than pure engagement metrics. It emerged from the <a href="https://rebuild.net" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-dark">Rebuild.net</a> European social platforms sprint.
             </p>
-            {hostedProvider && (
-              <button
-                type="button"
-                onClick={startGuidedSession}
-                className="mt-6 inline-flex items-center gap-2 px-5 py-3 border-2 border-dark bg-rb-blue text-dark hover:bg-rb-blue-shade hover:text-light transition-colors text-sm font-bold"
-              >
-                <GraduationCap size={16} />
-                Learn the framework — start a guided session
-                <ArrowRight size={15} />
-              </button>
-            )}
-            {hostedProvider && (
-              <p className="text-xs text-muted mt-2">
-                A conversation, one dimension at a time. No API key needed.
-              </p>
-            )}
           </div>
 
           {/* Social Object — its own row so the diagram can align to it */}
@@ -210,6 +194,24 @@ export default function LandingView({ onStart, onReadingList }) {
                 <Maximize2 size={11} /> Enlarge
               </span>
             </button>
+
+            {/* Sits inside the sticky column, so it travels with the diagram */}
+            {hostedProvider && (
+              <div className="mt-5">
+                <button
+                  type="button"
+                  onClick={startGuidedSession}
+                  className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 border-2 border-dark bg-rb-blue text-dark hover:bg-rb-blue-shade hover:text-light transition-colors text-sm font-bold"
+                >
+                  <GraduationCap size={16} />
+                  Learn the framework — start a guided session
+                  <ArrowRight size={15} />
+                </button>
+                <p className="text-xs text-muted mt-2 text-center">
+                  A conversation, one dimension at a time. No API key needed.
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Dimensions */}
