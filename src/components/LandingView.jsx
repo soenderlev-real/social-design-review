@@ -59,67 +59,48 @@ function Feature({ icon: Icon, title, body, link }) {
   );
 }
 
-const MODES = [
-  {
-    icon: Search,
-    title: 'Platform Review',
-    body: `Score a live platform across all ${CONCEPTS.length} dimensions — dark patterns named, concrete fixes, European perspective.`,
-  },
-  {
-    icon: Lightbulb,
-    title: 'Design Workshop',
-    body: 'Describe an idea and get design guidance per dimension, before any code is written.',
-  },
-  {
-    icon: GraduationCap,
-    title: 'Guided Walkthrough',
-    body: 'Learn the framework as a conversation, one dimension at a time. Works as a team workshop.',
-  },
-];
+/**
+ * What each mode gives you back, shown under the selector once it is chosen.
+ *
+ * These used to be a standalone feature grid further up the page, which
+ * restated the mode cards, the upload step and the provider step in different
+ * words. Shown here they answer the live question instead: having picked this,
+ * what do I get?
+ */
+/**
+ * Feedback link. A mailto rather than a hosted form: the app has no backend to
+ * post to, and a third-party form service would mean routing someone's words
+ * through a company this tool never mentions — which sits badly with a page
+ * that promises keys and PDFs never leave the browser.
+ */
+const FEEDBACK_EMAIL = 'soenderlev@gmail.com';
+const FEEDBACK_MAILTO =
+  `mailto:${FEEDBACK_EMAIL}` +
+  `?subject=${encodeURIComponent('Social Design Review — feedback')}` +
+  `&body=${encodeURIComponent(
+    'What I was doing:\n\n\nWhat worked:\n\n\nWhat did not:\n\n\nWhat the framework is missing:\n\n'
+  )}`;
 
-const FEATURES = [
-  {
-    icon: MapPin,
-    title: 'Rebuild Platforms in Europe',
-    body: `${REBUILD_COUNT} European platforms from the Rebuild.net directory, surfaced per dimension with links.`,
-  },
-  {
-    icon: Rocket,
-    title: 'Prototype in Lovable',
-    body: 'Send a workshop or walkthrough to Lovable as a build brief, in one click.',
-  },
-  {
-    icon: Bot,
-    title: 'Agent .md Export',
-    body: 'Your results as a CLAUDE.md, .cursorrules or Windsurf instruction file.',
-  },
-  {
-    icon: MessageSquare,
-    title: 'AI Chat Panel',
-    body: 'Ask follow-up questions with the whole analysis already loaded.',
-  },
-  {
-    icon: BarChart3,
-    title: 'Radar Chart & Report',
-    body: `A radar chart across all ${CONCEPTS.length} dimensions, plus the full report as Markdown.`,
-  },
-  {
-    icon: Upload,
-    title: 'File Uploads',
-    body: 'Screenshots, wireframes and PDFs — parsed in your browser, never sent to a server.',
-  },
-  {
-    icon: Key,
-    title: 'Bring Your Own API',
-    body: 'Start free on a shared EU-hosted key, or use your own. Ollama runs fully offline.',
-  },
-  {
-    icon: GitFork,
-    title: 'Get Involved',
-    body: 'Fork it — add dimensions, support new providers, adapt it for your community.',
-    link: 'https://github.com/soenderlev-real/social-design-review',
-  },
-];
+const MODE_FEATURES = {
+  review: [
+    { icon: BarChart3,     title: 'Radar chart & report',  body: `A radar across all ${CONCEPTS.length} dimensions, plus the full report as Markdown.` },
+    { icon: MessageSquare, title: 'Chat about the results', body: 'Ask follow-up questions with the whole analysis already loaded.' },
+    { icon: MapPin,        title: 'European comparators',   body: `${REBUILD_COUNT} platforms from the Rebuild.net directory, per dimension, with links.` },
+    { icon: Bot,           title: 'Agent .md export',       body: 'Findings as a CLAUDE.md, .cursorrules or Windsurf instruction file.' },
+  ],
+  design: [
+    { icon: Rocket,        title: 'Prototype in Lovable',   body: 'Send the workshop straight to Lovable as a build brief, in one click.' },
+    { icon: MessageSquare, title: 'Chat about the results', body: 'Ask follow-up questions with the whole workshop already loaded.' },
+    { icon: MapPin,        title: 'European comparators',   body: `${REBUILD_COUNT} platforms from the Rebuild.net directory, per dimension, with links.` },
+    { icon: Bot,           title: 'Agent .md export',       body: 'Guidance as a CLAUDE.md, .cursorrules or Windsurf instruction file.' },
+  ],
+  guide: [
+    { icon: MapPin,        title: 'European examples',      body: `Good examples from the ${REBUILD_COUNT} Rebuild.net platforms, per dimension, with links.` },
+    { icon: BookOpen,      title: 'Go deeper on any dimension', body: 'Ask questions, request references, or linger before moving on.' },
+    { icon: Download,      title: 'Export the session',     body: 'Answers, wrap-up and full transcript as Markdown — a workshop record.' },
+    { icon: Rocket,        title: 'Prototype in Lovable',   body: 'Turn what your team decided into a build brief, in one click.' },
+  ],
+};
 
 export default function LandingView({ onStart, onReadingList }) {
   const [mode, setMode] = useState('review'); // 'review' | 'design'
@@ -329,22 +310,12 @@ export default function LandingView({ onStart, onReadingList }) {
         </div>
       </section>
 
-      {/* Features */}
+      {/* The tool, introduced immediately before the form that runs it */}
       <section className="bg-white">
-        <div className="max-w-5xl mx-auto px-6 py-16">
-          <p className="text-base text-darker leading-relaxed max-w-2xl mb-10">
+        <div className="max-w-5xl mx-auto px-6 pt-16 pb-8">
+          <p className="text-base text-darker leading-relaxed max-w-2xl">
             <strong className="text-dark">Social Design Review</strong> is an AI-powered analysis of social platforms through this lens — built for European platform founders, designers and researchers.
           </p>
-          {/* Three modes — the ways in */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-10 gap-y-10 mb-14">
-            {MODES.map(f => <Feature key={f.title} {...f} />)}
-          </div>
-
-          {/* What the three modes give you */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-14 gap-y-10">
-            {FEATURES.map(f => <Feature key={f.title} {...f} />)}
-          </div>
-
         </div>
       </section>
 
@@ -396,6 +367,14 @@ export default function LandingView({ onStart, onReadingList }) {
                   A guided walkthrough, one dimension at a time, applying each to your own idea. Works as a team workshop.
                 </div>
               </button>
+            </div>
+
+            {/* What this mode gives you — toggles with the selection above */}
+            <div className="px-6 pb-6 -mt-1">
+              <p className="text-xs font-bold uppercase tracking-widest text-muted mb-4">What you get</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-5">
+                {(MODE_FEATURES[mode] || []).map(f => <Feature key={f.title} {...f} />)}
+              </div>
             </div>
           </div>
 
@@ -463,8 +442,8 @@ export default function LandingView({ onStart, onReadingList }) {
                 </h2>
                 <p className="text-xs text-muted">
                   {mode === 'review'
-                    ? 'Screenshots, pitch decks, research docs — helps the AI see beyond the public homepage'
-                    : 'Concept docs, pitch decks, wireframes, mood boards — the AI will use these to tailor the design guidance'}
+                    ? 'Screenshots, pitch decks, research docs — helps the AI see beyond the public homepage. PDFs are parsed in your browser and never sent to a server.'
+                    : 'Concept docs, pitch decks, wireframes, mood boards — used to tailor the guidance. PDFs are parsed in your browser and never sent to a server.'}
                 </p>
               </div>
             </div>
@@ -549,7 +528,7 @@ export default function LandingView({ onStart, onReadingList }) {
               <span className="w-7 h-7 bg-dark text-light flex items-center justify-center text-sm font-bold flex-shrink-0">4</span>
               <div>
                 <h2 className="text-base font-bold text-dark">Choose your LLM</h2>
-                <p className="text-xs text-muted">Use the free shared key, or bring your own — cloud or fully local</p>
+                <p className="text-xs text-muted">Start free on a shared EU-hosted key, or bring your own — Anthropic, OpenAI, Mistral, Gemini, Groq, Together.ai or LLMBase. Your key stays in your browser; Ollama runs fully offline.</p>
               </div>
             </div>
             <div className="px-6 py-6 space-y-6">
@@ -760,6 +739,34 @@ export default function LandingView({ onStart, onReadingList }) {
             {mode === 'review' ? 'Start Review' : mode === 'guide' ? 'Start Walkthrough' : 'Start Design Workshop'} <ArrowRight size={16} />
           </button>
         </form>
+
+        {/* Get involved — the one card from the old grid that was never about
+            a form step, so it keeps a place of its own */}
+        <div className="mt-10 border-2 border-dark bg-rb-blue-tint p-6">
+          <h3 className="font-bold text-sm text-dark mb-2 flex items-center gap-2">
+            <GitFork size={16} className="flex-shrink-0" /> Get involved &amp; send feedback
+          </h3>
+          <p className="text-xs text-darker leading-relaxed mb-4 max-w-2xl">
+            Fork it — add dimensions, support new providers, or adapt the tool for your own research and community.
+            Or just tell us what worked, what did not, and what the framework is missing.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <a
+              href="https://github.com/soenderlev-real/social-design-review"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 border-2 border-dark bg-white text-dark hover:bg-dark hover:text-light transition-colors text-xs font-bold"
+            >
+              <GitFork size={13} /> View on GitHub <ExternalLink size={11} />
+            </a>
+            <a
+              href={FEEDBACK_MAILTO}
+              className="inline-flex items-center gap-2 px-4 py-2 border-2 border-dark bg-white text-dark hover:bg-dark hover:text-light transition-colors text-xs font-bold"
+            >
+              <MessageSquare size={13} /> Send feedback
+            </a>
+          </div>
+        </div>
 
         <p className="mt-8 text-xs text-muted text-center leading-relaxed">
           {CONCEPTS.length} dimensions across the Social Design Framework —<br/>
