@@ -1,4 +1,4 @@
-import { BaseProvider, buildApiError } from './base';
+import { BaseProvider, buildApiError, streamChatCompletions } from './base';
 
 export class OpenAIProvider extends BaseProvider {
   supportsVision = true;
@@ -39,5 +39,31 @@ export class OpenAIProvider extends BaseProvider {
 
     const data = await response.json();
     return data.choices?.[0]?.message?.content || '';
+  }
+
+  async sendMessageStream(systemPrompt, userPrompt, images = [], onChunk) {
+    // Build content array — text first, then images
+    const content = [{ type: 'text', text: userPrompt }];
+
+    for (const img of images) {
+      content.push({
+        type:      'image_url',
+        image_url: { url: `data:${img.mediaType};base64,${img.base64}` },
+      });
+    }
+    return streamChatCompletions({
+      url: 'https://api.openai.com/v1/chat/completions',
+      headers: {
+        'Content-Type':  'application/json',
+        'Authorization': `Bearer ${this.apiKey}`,
+      },
+      body: {model:      this.config.model || 'gpt-4o',
+        max_tokens: 2000,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user',   content },
+        ],},
+      onChunk,
+    });
   }
 }

@@ -80,7 +80,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: { message: 'Invalid JSON body' } });
   }
 
-  const { systemPrompt, userPrompt, images } = body || {};
+  const { systemPrompt, userPrompt, images, stream } = body || {};
   if (typeof systemPrompt !== 'string' || typeof userPrompt !== 'string') {
     return res.status(400).json({ error: { message: 'systemPrompt and userPrompt are required' } });
   }
@@ -116,6 +116,7 @@ export default async function handler(req, res) {
           { role: 'system', content: systemPrompt },
           { role: 'user', content },
         ],
+        ...(stream ? { stream: true } : {}),
       }),
     });
 
@@ -137,6 +138,30 @@ export default async function handler(req, res) {
             ? 'The shared key was rejected. Please use your own API key for now.'
             : (upstreamMessage || `Upstream error ${upstream.status}`);
       return res.status(upstream.status).json({ error: { message } });
+    }
+
+    if (stream) {
+      // Pass Mistral's SSE through untouched — the client parses the same
+      // format it would get calling Mistral directly, so one parser serves both.
+      res.writeHead(200, {
+        'Content-Type': 'text/event-stream; charset=utf-8',
+        'Cache-Control': 'no-cache, no-transform',
+        Connection: 'keep-alive',
+        // Without this some proxies buffer the whole response and the stream
+        // arrives as one lump, which looks exactly like streaming being broken.
+        'X-Accel-Buffering': 'no',
+      });
+      const reader = upstream.body.getReader();
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          res.write(value);
+        }
+      } finally {
+        res.end();
+      }
+      return;
     }
 
     const data = await upstream.json();

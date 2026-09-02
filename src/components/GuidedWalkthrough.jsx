@@ -68,6 +68,9 @@ function Bubble({ msg }) {
       >
         {!isUser && <DimensionChip concept={concept} isWrapUp={msg.isWrapUp} />}
         {isUser ? msg.content : renderRich(msg.content)}
+        {msg.streaming && (
+          <span className="inline-block w-2 h-4 bg-dark align-text-bottom animate-pulse ml-0.5" />
+        )}
       </div>
       {isUser && (
         <div className="flex-shrink-0 w-7 h-7 bg-darker text-light flex items-center justify-center text-xs font-bold border-2 border-dark mt-0.5">
@@ -105,40 +108,70 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
     return createProvider(providerId, apiKey, ollamaConfig || {});
   }
 
-  async function runStep(index, previous, currentMessages) {
+  /**
+   * Run one turn, growing an assistant bubble as text arrives.
+   *
+   * Chunks are accumulated in a ref and flushed on an animation frame rather
+   * than calling setState per token — a fast stream emits hundreds of chunks a
+   * second, and re-rendering the whole transcript that often makes the page
+   * stutter and the input laggy.
+   */
+  async function streamTurn(userPrompt, currentMessages, meta) {
     setIsLoading(true);
     setError('');
+
+    const placeholder = { role: 'assistant', content: '', streaming: true, ...meta };
+    setMessages([...currentMessages, placeholder]);
+
+    let acc = '';
+    let frame = null;
+    const flush = () => {
+      frame = null;
+      setMessages(prev => {
+        const next = [...prev];
+        const last = next.length - 1;
+        if (next[last]?.streaming) next[last] = { ...next[last], content: acc };
+        return next;
+      });
+    };
+
     try {
-      const concept = CONCEPTS[index];
-      const userPrompt = buildGuidePrompt(concept, platformDescription, previous, index === 0);
-      const reply = await provider().sendMessage(GUIDE_SYSTEM_PROMPT, userPrompt);
-      setMessages([...currentMessages, { role: 'assistant', content: reply.trim(), conceptId: concept.id }]);
-      setStepIndex(index);
+      await provider().sendMessageStream(GUIDE_SYSTEM_PROMPT, userPrompt, [], piece => {
+        acc += piece;
+        if (frame === null) frame = requestAnimationFrame(flush);
+      });
+      if (frame !== null) cancelAnimationFrame(frame);
+      setMessages(prev => {
+        const next = [...prev];
+        const last = next.length - 1;
+        if (next[last]?.streaming) next[last] = { ...next[last], content: acc.trim(), streaming: false };
+        return next;
+      });
+      return acc.trim();
     } catch (err) {
+      if (frame !== null) cancelAnimationFrame(frame);
+      // Drop the empty placeholder so a failed turn does not leave a blank bubble
+      setMessages(currentMessages);
       setError(err.message);
+      return null;
     } finally {
       setIsLoading(false);
       inputRef.current?.focus();
     }
   }
 
+  async function runStep(index, previous, currentMessages) {
+    const concept = CONCEPTS[index];
+    setStepIndex(index);
+    const userPrompt = buildGuidePrompt(concept, platformDescription, previous, index === 0);
+    await streamTurn(userPrompt, currentMessages, { conceptId: concept.id });
+  }
+
   async function runExplore(kind, question, currentMessages) {
-    setIsLoading(true);
-    setError('');
-    try {
-      const concept = CONCEPTS[stepIndex];
-      const refs = kind === 'references' ? referencesForConcept(concept.id) : [];
-      const userPrompt = buildGuideExplorePrompt(concept, platformDescription, kind, question, refs);
-      const reply = await provider().sendMessage(GUIDE_SYSTEM_PROMPT, userPrompt);
-      setMessages([...currentMessages, {
-        role: 'assistant', content: reply.trim(), conceptId: concept.id, isExplore: true,
-      }]);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setIsLoading(false);
-      inputRef.current?.focus();
-    }
+    const concept = CONCEPTS[stepIndex];
+    const refs = kind === 'references' ? referencesForConcept(concept.id) : [];
+    const userPrompt = buildGuideExplorePrompt(concept, platformDescription, kind, question, refs);
+    await streamTurn(userPrompt, currentMessages, { conceptId: concept.id, isExplore: true });
   }
 
   /** Chips stay on the dimension; only a typed answer advances. */
@@ -166,20 +199,13 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
   }
 
   async function runWrapUp(collected, currentMessages) {
-    setIsLoading(true);
-    setError('');
-    try {
-      const userPrompt = buildGuideWrapUpPrompt(
-        platformDescription, collected, collected.length, CONCEPTS.length
-      );
-      const reply = await provider().sendMessage(GUIDE_SYSTEM_PROMPT, userPrompt);
-      setMessages([...currentMessages, { role: 'assistant', content: reply.trim(), isWrapUp: true }]);
-      setFinished(true);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setIsLoading(false);
-    }
+    const userPrompt = buildGuideWrapUpPrompt(
+      platformDescription, collected, collected.length, CONCEPTS.length
+    );
+    const text = await streamTurn(userPrompt, currentMessages, { isWrapUp: true });
+    // Only close the session if the wrap-up actually arrived — otherwise the
+    // user would be locked out of a session they could still finish.
+    if (text) setFinished(true);
   }
 
   async function send(text) {
@@ -335,7 +361,7 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
 
           <div className="px-5 py-6 space-y-5 min-h-[300px]">
             {messages.map((m, i) => <Bubble key={i} msg={m} />)}
-            {isLoading && (
+            {isLoading && !messages[messages.length - 1]?.streaming && (
               <div className="flex gap-3 justify-start">
                 <div className="flex-shrink-0 w-7 h-7 bg-dark text-light flex items-center justify-center text-xs font-bold border-2 border-dark">
                   SD

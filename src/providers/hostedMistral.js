@@ -1,4 +1,4 @@
-import { BaseProvider, buildApiError } from './base';
+import { BaseProvider, buildApiError, streamChatCompletions } from './base';
 
 /**
  * Mistral via this deployment's own /api/mistral proxy — no API key required
@@ -32,5 +32,20 @@ export class HostedMistralProvider extends BaseProvider {
 
     const data = await response.json();
     return data.text || '';
+  }
+
+  async sendMessageStream(systemPrompt, userPrompt, images = [], onChunk) {
+    // The proxy forwards Mistral's SSE verbatim, so the same OpenAI-compatible
+    // parser used by the bring-your-own-key providers works unchanged here.
+    return streamChatCompletions({
+      url: '/api/mistral',
+      headers: { 'Content-Type': 'application/json' },
+      body: {
+        systemPrompt,
+        userPrompt,
+        images: images.map(i => ({ base64: i.base64, mediaType: i.mediaType })),
+      },
+      onChunk,
+    });
   }
 }

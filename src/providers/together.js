@@ -1,4 +1,4 @@
-import { BaseProvider, buildApiError } from './base';
+import { BaseProvider, buildApiError, streamChatCompletions } from './base';
 
 export class TogetherProvider extends BaseProvider {
   supportsVision = false; // Together text-only; images are skipped, PDF text is included
@@ -35,5 +35,22 @@ export class TogetherProvider extends BaseProvider {
     const data = await response.json();
     const text = data.choices?.[0]?.message?.content || '';
     return text;
+  }
+
+  async sendMessageStream(systemPrompt, userPrompt, images = [], onChunk) {
+    return streamChatCompletions({
+      url: 'https://api.together.xyz/v1/chat/completions',
+      headers: {
+        'Content-Type':  'application/json',
+        'Authorization': `Bearer ${this.apiKey}`,
+      },
+      body: {model: this.config.model || 'meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo',
+        max_tokens: 2000,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt },
+        ],},
+      onChunk,
+    });
   }
 }

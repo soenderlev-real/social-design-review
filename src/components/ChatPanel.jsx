@@ -102,6 +102,9 @@ function Message({ msg }) {
         style={{ whiteSpace: 'pre-wrap' }}
       >
         {msg.content}
+        {msg.streaming && (
+          <span className="inline-block w-2 h-4 bg-dark align-text-bottom animate-pulse ml-0.5" />
+        )}
       </div>
       {isUser && (
         <div className="flex-shrink-0 w-7 h-7 bg-darker text-light flex items-center justify-center text-xs font-bold border-2 border-dark mt-0.5">
@@ -152,14 +155,41 @@ export default function ChatPanel({ providerId, apiKey, platformUrl, platformDes
     setMessages(newMessages);
     setIsLoading(true);
 
+    setMessages([...newMessages, { role: 'assistant', content: '', streaming: true }]);
+
+    let acc = '';
+    let frame = null;
+    const flush = () => {
+      frame = null;
+      setMessages(prev => {
+        const next = [...prev];
+        const last = next.length - 1;
+        if (next[last]?.streaming) next[last] = { ...next[last], content: acc };
+        return next;
+      });
+    };
+
     try {
       const provider = createProvider(providerId, apiKey, ollamaConfig || {});
       const systemPrompt = buildSystemPrompt(mode, platformUrl, platformDescription, results);
       // Include history in the user prompt since providers use single-turn interface
       const userPrompt = buildUserPrompt(messages, message);
-      const reply = await provider.sendMessage(systemPrompt, userPrompt);
-      setMessages([...newMessages, { role: 'assistant', content: reply.trim() }]);
+      // Batched on an animation frame — a fast stream emits chunks far quicker
+      // than the transcript can usefully re-render.
+      await provider.sendMessageStream(systemPrompt, userPrompt, [], piece => {
+        acc += piece;
+        if (frame === null) frame = requestAnimationFrame(flush);
+      });
+      if (frame !== null) cancelAnimationFrame(frame);
+      setMessages(prev => {
+        const next = [...prev];
+        const last = next.length - 1;
+        if (next[last]?.streaming) next[last] = { content: acc.trim(), role: 'assistant' };
+        return next;
+      });
     } catch (err) {
+      if (frame !== null) cancelAnimationFrame(frame);
+      setMessages(newMessages);   // drop the empty placeholder
       setError(err.message);
     } finally {
       setIsLoading(false);
@@ -216,7 +246,7 @@ export default function ChatPanel({ providerId, apiKey, platformUrl, platformDes
       {messages.length > 0 && (
         <div className="px-5 py-5 space-y-4 max-h-[500px] overflow-y-auto">
           {messages.map((m, i) => <Message key={i} msg={m} />)}
-          {isLoading && (
+          {isLoading && !messages[messages.length - 1]?.streaming && (
             <div className="flex gap-3 justify-start">
               <div className="flex-shrink-0 w-7 h-7 bg-dark text-light flex items-center justify-center text-xs font-bold border-2 border-dark">
                 AI

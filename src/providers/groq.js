@@ -1,4 +1,4 @@
-import { BaseProvider, buildApiError } from './base';
+import { BaseProvider, buildApiError, streamChatCompletions } from './base';
 
 export class GroqProvider extends BaseProvider {
   getName() {
@@ -33,5 +33,22 @@ export class GroqProvider extends BaseProvider {
     const data = await response.json();
     const text = data.choices?.[0]?.message?.content || '';
     return text;
+  }
+
+  async sendMessageStream(systemPrompt, userPrompt, images = [], onChunk) {
+    return streamChatCompletions({
+      url: 'https://api.groq.com/openai/v1/chat/completions',
+      headers: {
+        'Content-Type':  'application/json',
+        'Authorization': `Bearer ${this.apiKey}`,
+      },
+      body: {model: this.config.model || 'mixtral-8x7b-32768',
+        max_tokens: 2000,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt },
+        ],},
+      onChunk,
+    });
   }
 }

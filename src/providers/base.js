@@ -19,6 +19,27 @@ export class BaseProvider {
   }
 
   /**
+   * Stream a reply, calling onChunk with each new piece of text as it arrives.
+   * Resolves with the complete text.
+   *
+   * The default implementation does not stream — it waits for the whole reply
+   * and emits it once. That keeps every provider working: a provider that has
+   * not implemented streaming still behaves exactly as it did before, just
+   * without the incremental rendering.
+   *
+   * @param {string} systemPrompt
+   * @param {string} userPrompt
+   * @param {Array}  images
+   * @param {(chunk: string) => void} onChunk
+   * @returns {Promise<string>}
+   */
+  async sendMessageStream(systemPrompt, userPrompt, images = [], onChunk) {
+    const text = await this.sendMessage(systemPrompt, userPrompt, images);
+    if (text) onChunk?.(text);
+    return text;
+  }
+
+  /**
    * Validate that the API key is correctly formatted (sanity check).
    * @returns {boolean}
    */
@@ -182,4 +203,59 @@ export function parseDesignResponse(text) {
   }
 
   return { ...sections, raw: text };
+}
+
+/**
+ * Read a Server-Sent Events body, handing each `data:` payload to onEvent.
+ *
+ * Chunk boundaries do not respect line boundaries, so a partial line is carried
+ * over to the next read rather than being parsed as JSON and thrown away —
+ * getting this wrong drops tokens silently in the middle of a sentence.
+ */
+export async function readSSE(response, onEvent) {
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+
+    const lines = buffer.split('\n');
+    buffer = lines.pop() ?? '';   // keep the trailing partial line
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed.startsWith('data:')) continue;
+      const payload = trimmed.slice(5).trim();
+      if (!payload || payload === '[DONE]') continue;
+      try {
+        onEvent(JSON.parse(payload));
+      } catch {
+        // A malformed frame is not worth killing the stream over.
+      }
+    }
+  }
+}
+
+/**
+ * Streaming for any OpenAI-compatible /chat/completions endpoint —
+ * OpenAI, Mistral, Groq, Together and LLMBase all share this wire format.
+ */
+export async function streamChatCompletions({ url, headers, body, onChunk }) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ ...body, stream: true }),
+  });
+
+  if (!response.ok) throw await buildApiError(response);
+
+  let full = '';
+  await readSSE(response, evt => {
+    const piece = evt.choices?.[0]?.delta?.content;
+    if (piece) { full += piece; onChunk?.(piece); }
+  });
+  return full;
 }

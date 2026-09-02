@@ -1,4 +1,4 @@
-import { BaseProvider, buildApiError } from './base';
+import { BaseProvider, buildApiError, streamChatCompletions } from './base';
 
 export class LLMBaseProvider extends BaseProvider {
   supportsVision = true; // via vision-capable models in the LLMBase catalog
@@ -44,5 +44,36 @@ export class LLMBaseProvider extends BaseProvider {
 
     const data = await response.json();
     return data.choices?.[0]?.message?.content || '';
+  }
+
+  async sendMessageStream(systemPrompt, userPrompt, images = [], onChunk) {
+    // Switch to a vision-capable model from the catalog when images are attached
+    const model = images.length > 0
+      ? (this.config.model || 'qwen/qwen3-vl-30b-a3b-instruct')
+      : (this.config.model || 'moonshotai/kimi-k3');
+
+    const content = images.length > 0
+      ? [
+          { type: 'text', text: userPrompt },
+          ...images.map(img => ({
+            type: 'image_url',
+            image_url: { url: `data:${img.mediaType};base64,${img.base64}` },
+          })),
+        ]
+      : userPrompt;
+    return streamChatCompletions({
+      url: 'https://api.llmbase.ai/v1/chat/completions',
+      headers: {
+        'Content-Type':  'application/json',
+        'Authorization': `Bearer ${this.apiKey}`,
+      },
+      body: {model,
+        max_tokens: 2000,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user',   content },
+        ],},
+      onChunk,
+    });
   }
 }
