@@ -36,6 +36,22 @@ const RESOURCES = [
   },
 ];
 
+/** Plain-language notes on each dimension, for the accordion below the model. */
+const DIMENSION_NOTES = [
+  { name: 'Social Object', desc: 'The shared thing that gives people a reason to interact — a photo, a repair, a neighbourhood issue. Whether it is rich enough to sustain real sociality, who controls it, and whether it has value outside the platform.' },
+  { name: 'Identity', desc: 'How the platform lets people present themselves — authentically, selectively, or anonymously — and who controls that representation.' },
+  { name: 'Conversations', desc: 'The structures that shape how people talk: threading, reach, moderation, and whether dialogue can go somewhere meaningful.' },
+  { name: 'Sharing', desc: 'What gets shared, with whom, and on whose terms — including defaults around re-sharing, attribution, and visibility.' },
+  { name: 'Presence', desc: 'Whether people can be seen as online, active, or available — and how much control they have over their own visibility.' },
+  { name: 'Relationships', desc: 'How connections form, what they mean, and whether the platform fosters genuine ties or inflates shallow ones.' },
+  { name: 'Reputation', desc: 'How standing is built and displayed — scores, follower counts, badges — and whether these systems serve users or exploit them.' },
+  { name: 'Groups', desc: 'How communities form, govern themselves, and protect their culture as they grow.' },
+  { name: 'Agency', desc: 'The degree to which users can understand, shape, and override what the platform does — including its algorithms and defaults.' },
+  { name: 'Enable', meta: true, desc: 'The foundational conditions for healthy social life: whether the architecture makes constructive participation the default, whether governance is transparent and participatory, and whether the platform as a whole restores edges or removes them.' },
+  { name: 'Grow', meta: true, desc: 'Sustainable value without extraction — shared-value growth, a quality floor rather than a volume target, and low-friction exit treated as a trust strategy rather than a leak.' },
+  { name: 'Protect', meta: true, desc: 'The immune system against threats to safety and trust, judged by procedural justice: voice, neutrality, respect and a trustworthy rationale — not deterrence alone.' },
+];
+
 /** Icon sits on the heading line; one short line of copy beneath. */
 function Feature({ icon: Icon, title, body, link }) {
   return (
@@ -110,6 +126,7 @@ export default function LandingView({ onStart, onReadingList }) {
   const [apiKey, setApiKey] = useState('');
   const [description, setDescription] = useState('');
   const [showApiKey, setShowApiKey] = useState(false);
+  const [openDimension, setOpenDimension] = useState(null);
   const [error, setError] = useState('');
   const [ollamaStatus, setOllamaStatus] = useState(null);
   const [ollamaModels, setOllamaModels] = useState([]);
@@ -283,29 +300,43 @@ export default function LandingView({ onStart, onReadingList }) {
             )}
           </div>
 
-          {/* Dimensions */}
-          <div className="lg:col-start-1 lg:row-start-3">
-            <div className="space-y-2 mb-6">
-              {[
-                { name: 'Identity', desc: 'How the platform lets people present themselves — authentically, selectively, or anonymously — and who controls that representation.' },
-                { name: 'Conversations', desc: 'The structures that shape how people talk: threading, reach, moderation, and whether dialogue can go somewhere meaningful.' },
-                { name: 'Sharing', desc: 'What gets shared, with whom, and on whose terms — including defaults around re-sharing, attribution, and visibility.' },
-                { name: 'Presence', desc: 'Whether people can be seen as online, active, or available — and how much control they have over their own visibility.' },
-                { name: 'Relationships', desc: 'How connections form, what they mean, and whether the platform fosters genuine ties or inflates shallow ones.' },
-                { name: 'Reputation', desc: 'How standing is built and displayed — scores, follower counts, badges — and whether these systems serve users or exploit them.' },
-                { name: 'Groups', desc: 'How communities form, govern themselves, and protect their culture as they grow.' },
-                { name: 'Agency', desc: 'The degree to which users can understand, shape, and override what the platform does — including its algorithms and defaults.' },
-              ].map(({ name, desc }) => (
-                <div key={name} className="flex gap-3 text-xs">
-                  <span className="font-bold text-dark flex-shrink-0 w-24">{name}</span>
-                  <span className="text-muted leading-relaxed">{desc}</span>
-                </div>
-              ))}
-            </div>
+        </div>
+      </section>
 
-            <p className="text-xs text-muted leading-relaxed">
-              The outer ring assesses three holistic qualities: <strong className="text-darker">Enable</strong> (conditions for healthy participation), <strong className="text-darker">Grow</strong> (sustainable value without extraction), and <strong className="text-darker">Protect</strong> (the immune system against threats to safety and trust).
-            </p>
+      {/* The dimensions — collapsed by default, so the header stays a header */}
+      <section className="bg-white border-t-2 border-dark">
+        <div className="max-w-5xl mx-auto px-6 py-16">
+          <h2 className="text-2xl font-normal text-dark mb-2">The dimensions</h2>
+          <p className="text-sm text-darker leading-relaxed max-w-2xl mb-8">
+            Eight core dimensions of social life, and three holistic qualities on the outer ring.
+            Every review and workshop works through all {CONCEPTS.length}.
+          </p>
+
+          <div className="border-t-2 border-dark">
+            {DIMENSION_NOTES.map(({ name, desc, meta }) => (
+              <button
+                key={name}
+                type="button"
+                onClick={() => setOpenDimension(openDimension === name ? null : name)}
+                aria-expanded={openDimension === name}
+                className="w-full text-left border-b-2 border-dark px-1 py-4 hover:bg-light transition-colors"
+              >
+                <div className="flex items-baseline gap-3">
+                  {meta && (
+                    <span className="text-xs font-bold uppercase tracking-widest text-muted flex-shrink-0">
+                      Outer ring
+                    </span>
+                  )}
+                  <span className="font-bold text-sm text-dark flex-1">{name}</span>
+                  <span className="text-muted flex-shrink-0 text-lg leading-none">
+                    {openDimension === name ? '\u2212' : '+'}
+                  </span>
+                </div>
+                {openDimension === name && (
+                  <p className="text-xs text-muted leading-relaxed mt-3 max-w-3xl">{desc}</p>
+                )}
+              </button>
+            ))}
           </div>
         </div>
       </section>
@@ -342,7 +373,7 @@ export default function LandingView({ onStart, onReadingList }) {
                 <Search size={18} className="mb-3" />
                 <div className="font-bold text-sm mb-1">Review a platform</div>
                 <div className={`text-xs leading-relaxed ${mode === 'review' ? 'text-lighter' : 'text-muted'}`}>
-                  Analyse an existing social platform through all 13 framework dimensions and get a scored review.
+                  Analyse an existing social platform through all {CONCEPTS.length} framework dimensions and get a scored review.
                 </div>
               </button>
               <button
