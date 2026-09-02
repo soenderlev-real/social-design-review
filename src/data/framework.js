@@ -723,3 +723,41 @@ Write to them as "you". Be specific to what they actually said — a generic sum
 
   return p;
 }
+
+/**
+ * A turn that stays on the current dimension instead of advancing — the user
+ * wants to go deeper, see sources, or ask something before answering.
+ *
+ * kind: 'more' | 'references' | 'question'
+ * references: entries from the app's own reading list, so sources are real.
+ */
+export function buildGuideExplorePrompt(concept, idea, kind, question, references = []) {
+  let p = `The person is still on the "${concept.title}" dimension and wants to go deeper before answering. Do NOT move on to another dimension.\n\n`;
+
+  if (idea) p += `Their platform or idea:\n"""\n${idea}\n"""\n\n`;
+
+  p += `## The dimension: ${concept.title}\n${concept.shortDesc}\n\n`;
+  p += `Framework context (for you — do not recite it wholesale):\n${concept.promptContext}\n\n`;
+  p += `Patterns to design against: ${concept.darkPatterns.join('; ')}\n`;
+  p += `Patterns to design toward: ${concept.lightPatterns.join('; ')}\n\n`;
+
+  if (kind === 'references') {
+    p += `## They asked for references on this dimension\n\n`;
+    if (references.length) {
+      p += `Use these, from the framework's own reading list. Pick the three or four most useful for someone at their stage, say in one line what each actually gives them, and be honest if one is heavy going. Do not invent sources beyond this list; if something obvious is missing you may name it as "not in the reading list, but worth knowing".\n\n`;
+      references.forEach(r => {
+        p += `- ${r.authors} (${r.year}), *${r.work}* — ${r.note}${r.url ? ` [${r.url}]` : ''}\n`;
+      });
+    } else {
+      p += `No curated references are available for this dimension. Say so plainly and suggest two or three well-known works you are confident actually exist, flagging that they are your suggestion rather than the framework's list.\n`;
+    }
+    p += `\nThis is the one case where a short list is right — a few lines each, not paragraphs.\n`;
+  } else if (kind === 'question') {
+    p += `## Their question about this dimension\n"""\n${question}\n"""\n\nAnswer it directly and concretely. If it falls outside the framework, say so and answer anyway if you usefully can.\n`;
+  } else {
+    p += `## They asked to hear more about this dimension\n\nGo deeper than your first explanation: where this dimension usually goes wrong, a concrete example of a platform handling it well and one handling it badly, and what is genuinely hard about getting it right. Around 150 words.\n`;
+  }
+
+  p += `\nEnd with one short sentence inviting them back to the question when they are ready — not a new question of your own.`;
+  return p;
+}

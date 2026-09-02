@@ -703,3 +703,23 @@ export const BIBLIOGRAPHY = [
 
 export const BIBLIOGRAPHY_NOTE =
   'Link types: DOIs resolve via doi.org; book/author entries point to publisher or overview (Wikipedia / Aeon / SEP) pages, not paywalled PDFs. Many entries were confirmed against a live source; the remainder use canonical DOIs and stable publisher/overview pages, and a few link author or publisher pages not separately verified.';
+
+/**
+ * The reading-list section that matches a framework dimension, so the guided
+ * walkthrough can cite real sources instead of inventing them. The three meta
+ * dimensions share one section.
+ */
+export function referencesForConcept(conceptId, limit = 5) {
+  const sectionId = ['enable-dimension', 'grow-dimension', 'protect-dimension'].includes(conceptId)
+    ? 'meta-dimensions'
+    : conceptId;
+  const section = BIBLIOGRAPHY.find(s => s.id === sectionId);
+  if (!section) return [];
+  return section.entries.slice(0, limit).map(e => ({
+    authors: e.authors,
+    year: e.year,
+    work: e.work,
+    note: e.note,
+    url: e.links?.[0]?.url || null,
+  }));
+}

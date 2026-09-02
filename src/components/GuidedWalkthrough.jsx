@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, Loader2, Download, RotateCcw, GraduationCap, Flag, Rocket } from 'lucide-react';
+import { Send, Loader2, Download, RotateCcw, GraduationCap, Flag, Rocket, BookOpen, HelpCircle, Plus } from 'lucide-react';
 import * as Icons from 'lucide-react';
-import { CONCEPTS, GUIDE_SYSTEM_PROMPT, buildGuidePrompt, buildGuideWrapUpPrompt } from '../data/framework';
+import { CONCEPTS, GUIDE_SYSTEM_PROMPT, buildGuidePrompt, buildGuideWrapUpPrompt, buildGuideExplorePrompt } from '../data/framework';
+import { referencesForConcept } from '../data/bibliography';
 import { createProvider } from '../providers';
 import { buildSessionLovableUrl } from '../utils/lovable';
 
@@ -85,6 +86,7 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError]       = useState('');
   const [finished, setFinished] = useState(false);
+  const [awaitingQuestion, setAwaitingQuestion] = useState(false);
   const bottomRef = useRef(null);
   const inputRef  = useRef(null);
   const startedRef = useRef(false);
@@ -120,6 +122,49 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
     }
   }
 
+  async function runExplore(kind, question, currentMessages) {
+    setIsLoading(true);
+    setError('');
+    try {
+      const concept = CONCEPTS[stepIndex];
+      const refs = kind === 'references' ? referencesForConcept(concept.id) : [];
+      const userPrompt = buildGuideExplorePrompt(concept, platformDescription, kind, question, refs);
+      const reply = await provider().sendMessage(GUIDE_SYSTEM_PROMPT, userPrompt);
+      setMessages([...currentMessages, {
+        role: 'assistant', content: reply.trim(), conceptId: concept.id, isExplore: true,
+      }]);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+      inputRef.current?.focus();
+    }
+  }
+
+  /** Chips stay on the dimension; only a typed answer advances. */
+  function handleChip(kind) {
+    if (isLoading || finished) return;
+    const concept = CONCEPTS[stepIndex];
+
+    if (kind === 'question') {
+      // No API call for the invitation itself — it is the same sentence every time.
+      setAwaitingQuestion(true);
+      setMessages(m => [...m, {
+        role: 'assistant', conceptId: concept.id, isExplore: true,
+        content: `Sure — what would you like to know about ${concept.title}?`,
+      }]);
+      setTimeout(() => inputRef.current?.focus(), 0);
+      return;
+    }
+
+    const label = kind === 'references'
+      ? `What are some good references on ${concept.title}?`
+      : `Tell me more about ${concept.title}.`;
+    const withUser = [...messages, { role: 'user', content: label }];
+    setMessages(withUser);
+    runExplore(kind, null, withUser);
+  }
+
   async function runWrapUp(collected, currentMessages) {
     setIsLoading(true);
     setError('');
@@ -147,7 +192,16 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
 
     // "wrap up" at any point — the user decides when the session ends
     if (WRAP_PATTERNS.test(message)) {
+      setAwaitingQuestion(false);
       await runWrapUp(answers, withUser);
+      return;
+    }
+
+    // They pressed "Ask a question" — this is a question, not their answer,
+    // so it must not be recorded or advance the walkthrough.
+    if (awaitingQuestion) {
+      setAwaitingQuestion(false);
+      await runExplore('question', message, withUser);
       return;
     }
 
@@ -299,14 +353,41 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
             <div ref={bottomRef} />
           </div>
 
+          {!finished && messages.length > 0 && (
+            <div className="border-t-2 border-dark px-5 pt-4 pb-1 flex flex-wrap gap-2">
+              <button
+                type="button" onClick={() => handleChip('more')} disabled={isLoading}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 border-2 border-dark text-xs text-dark hover:bg-dark hover:text-light disabled:opacity-30 transition-colors"
+              >
+                <Plus size={11} /> Tell me more about {CONCEPTS[stepIndex]?.title}
+              </button>
+              <button
+                type="button" onClick={() => handleChip('references')} disabled={isLoading}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 border-2 border-dark text-xs text-dark hover:bg-dark hover:text-light disabled:opacity-30 transition-colors"
+              >
+                <BookOpen size={11} /> Good references
+              </button>
+              <button
+                type="button" onClick={() => handleChip('question')} disabled={isLoading || awaitingQuestion}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 border-2 border-dark text-xs text-dark hover:bg-dark hover:text-light disabled:opacity-30 transition-colors"
+              >
+                <HelpCircle size={11} /> Ask a question
+              </button>
+            </div>
+          )}
+
           {!finished && (
-            <div className="border-t-2 border-dark px-5 py-4 flex gap-3">
+            <div className="border-t-0 px-5 py-4 flex gap-3">
               <textarea
                 ref={inputRef}
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={handleKey}
-                placeholder={isLoading ? 'Thinking…' : 'Your answer — or type "wrap up" to finish early'}
+                placeholder={
+                  isLoading ? 'Thinking…'
+                  : awaitingQuestion ? `Your question about ${CONCEPTS[stepIndex]?.title}…`
+                  : 'Your answer — or type "wrap up" to finish early'
+                }
                 rows={2}
                 disabled={isLoading}
                 className="flex-1 px-4 py-3 border-2 border-dark bg-light text-dark placeholder-muted focus:outline-none focus:bg-white transition-colors text-sm resize-none disabled:opacity-50"
