@@ -100,7 +100,16 @@ function Bubble({ msg }) {
       >
         {!isUser && <DimensionChip concept={concept} isWrapUp={msg.isWrapUp} />}
         {isUser ? msg.content : renderRich(msg.content, msg.links)}
-        {msg.streaming && (
+        {/* The placeholder is marked streaming the moment a turn starts, which
+            suppressed the separate spinner — so the whole wait for the first
+            token showed an empty bubble and a blinking caret, reading as
+            nothing happening. Wait state lives in the bubble itself now. */}
+        {msg.streaming && !msg.content && (
+          <span className="inline-flex items-center gap-2 text-xs text-muted">
+            <Loader2 size={13} className="animate-spin" /> Thinking…
+          </span>
+        )}
+        {msg.streaming && msg.content && (
           <span className="inline-block w-2 h-4 bg-dark align-text-bottom animate-pulse ml-0.5" />
         )}
       </div>
