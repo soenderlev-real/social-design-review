@@ -817,6 +817,12 @@ export function buildReferencePrompt(track, item, idea, previous, isFirst, expan
     p += `They came here having chosen this ${track.unit} specifically, so give it real depth before anything else. Welcome them in one line and mention they can type "wrap up" whenever they want a summary. Then explain it properly: what it means, what it corrects or requires, one platform that handles it well and one that conspicuously does not, and what is genuinely hard about it. Around 200 words — longer than your usual turn, because this is what they came for. Say that the session will carry on through the remaining ${track.unit}s from here. Then ask your question.\n\n`;
   } else if (isFirst) {
     p += `This is the very first turn. Welcome them in one sentence, say you will work through the ${track.items.length} ${track.unit}s one at a time, and mention they can type "wrap up" whenever they want to stop and get a summary. Then introduce the first one below and ask your question.\n\n`;
+  }
+
+  if (track.notice) {
+    // The interface also shows this, so it cannot go unsaid — but the model
+    // should not contradict it or offer compliance conclusions either.
+    p += `Standing constraint for this session: the interface already tells them this is a design conversation and not a compliance assessment, so do not repeat that at length. Never state or imply that their platform does or does not comply, and name a threshold when an obligation turns on one.\n\n`;
   } else if (previous) {
     p += `They have just answered your question about "${previous.title}". Their answer:\n"""\n${previous.answer}\n"""\n\nOpen with one sentence engaging that answer specifically, then move on to the ${track.unit} below.\n\n`;
   }

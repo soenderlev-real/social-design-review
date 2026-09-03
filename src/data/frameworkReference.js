@@ -122,6 +122,15 @@ The translation layer between principle and screen. Design guidance that stops a
   regulatory: {
     label: 'Regulatory framework',
     unit: 'instrument',
+    /**
+     * Rendered by the interface, not left to the model.
+     *
+     * A live run showed the model skipping this: the system prompt asked for it
+     * "once and early", but the turn-level instruction enumerates what the first
+     * turn contains and it followed that instead. A disclaimer that appears only
+     * when the model remembers is not a disclaimer.
+     */
+    notice: 'A design conversation, not a compliance assessment. This explains what EU law asks of design; it cannot tell you whether your platform complies, or whether an obligation applies to you. Take anything load-bearing to a lawyer.',
     framing: `## What this group is
 The EU instruments that turn several of this framework's commitments into legal obligations for platforms serving European users: the Digital Services Act, the AI Act, the GDPR, and the EDPB's deceptive-design guidelines.
 

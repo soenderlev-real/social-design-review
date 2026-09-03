@@ -431,6 +431,13 @@ export default function GuidedWalkthrough({
             </div>
           </div>
 
+          {ref?.notice && (
+            <div className="border-b-2 border-dark bg-rb-orange-tint px-5 py-3 flex items-start gap-2">
+              <Icons.Scale size={14} className="text-rb-orange flex-shrink-0 mt-0.5" />
+              <p className="text-xs text-darker leading-relaxed">{ref.notice}</p>
+            </div>
+          )}
+
           <div className="px-5 py-6 space-y-5 min-h-[300px]">
             {messages.map((m, i) => <Bubble key={i} msg={m} items={ITEMS} />)}
             {isLoading && !messages[messages.length - 1]?.streaming && (
