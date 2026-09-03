@@ -4,6 +4,7 @@ import { PROVIDERS } from '../providers';
 import * as Icons from 'lucide-react';
 import { CONCEPTS } from '../data/framework';
 import { REBUILD_COUNT, REBUILD_COUNTRIES } from '../data/rebuildDirectoryMeta';
+import { FRAMEWORK_REFERENCE } from '../data/frameworkReference';
 import { processFiles, IMAGE_TYPES, PDF_TYPE, MAX_IMAGES, MAX_PDFS } from '../utils/fileProcessing';
 import Lightbox from './Lightbox';
 
@@ -132,6 +133,7 @@ export default function LandingView({ onStart, onReadingList }) {
   const [description, setDescription] = useState('');
   const [showApiKey, setShowApiKey] = useState(false);
   const [openDimension, setOpenDimension] = useState(null);
+  const [openReference, setOpenReference] = useState(null);
   const [error, setError] = useState('');
   const [ollamaStatus, setOllamaStatus] = useState(null);
   const [ollamaModels, setOllamaModels] = useState([]);
@@ -357,6 +359,51 @@ export default function LandingView({ onStart, onReadingList }) {
             </div>
           </div>
 
+        </div>
+      </section>
+
+      {/* Applied on top of the dimensions: the vocabulary and the law */}
+      <section className="bg-white border-t-2 border-dark">
+        <div className="max-w-5xl mx-auto px-6 py-16">
+          <h2 className="text-2xl font-normal text-dark mb-2">Applied across every dimension</h2>
+          <p className="text-sm text-darker leading-relaxed max-w-2xl mb-8">
+            Three lenses the framework brings to all {CONCEPTS.length} dimensions — the design vocabulary it
+            argues for, how that has to land on a screen, and where European law already requires it.
+          </p>
+
+          <div className="border-t-2 border-dark">
+            {FRAMEWORK_REFERENCE.map(({ id, title, lede, items }) => {
+              const open = openReference === id;
+              return (
+                <div key={id} className="border-b-2 border-dark">
+                  <button
+                    type="button"
+                    onClick={() => setOpenReference(open ? null : id)}
+                    aria-expanded={open}
+                    className="w-full text-left px-1 py-4 hover:bg-light transition-colors flex items-center gap-3"
+                  >
+                    <span className="font-bold text-sm text-dark flex-1">{title}</span>
+                    <span className="text-xs text-muted flex-shrink-0">{items.length}</span>
+                    <span className="text-muted flex-shrink-0 text-lg leading-none">{open ? '\u2212' : '+'}</span>
+                  </button>
+
+                  {open && (
+                    <div className="px-1 pb-6 -mt-1">
+                      <p className="text-xs text-darker leading-relaxed max-w-3xl mb-5">{lede}</p>
+                      <dl className="space-y-3 max-w-3xl">
+                        {items.map(({ name, desc }) => (
+                          <div key={name} className="sm:flex sm:gap-4">
+                            <dt className="font-bold text-xs text-dark sm:w-56 sm:flex-shrink-0 mb-1 sm:mb-0">{name}</dt>
+                            <dd className="text-xs text-muted leading-relaxed">{desc}</dd>
+                          </div>
+                        ))}
+                      </dl>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
 
