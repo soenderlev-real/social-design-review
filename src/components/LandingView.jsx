@@ -190,7 +190,7 @@ export default function LandingView({ onStart, onReadingList }) {
    * no key. Only offered when a hosted provider exists, so a deployment
    * without one shows nothing rather than a button that 503s.
    */
-  function startGuidedSession(startConceptId = null) {
+  function startGuidedSession(startConceptId = null, track = 'dimensions') {
     if (!hostedProvider) return;
     onStart({
       mode: 'guide',
@@ -203,6 +203,7 @@ export default function LandingView({ onStart, onReadingList }) {
       // Entering from a dimension starts there, and opens with a fuller
       // explanation instead of the usual brisk introduction.
       startConceptId,
+      track,
     });
   }
 
@@ -398,6 +399,18 @@ export default function LandingView({ onStart, onReadingList }) {
                           </div>
                         ))}
                       </dl>
+
+                      {hostedProvider && (
+                        <button
+                          type="button"
+                          onClick={() => startGuidedSession(null, id)}
+                          className="inline-flex items-center gap-2 mt-6 text-xs font-bold text-dark underline underline-offset-4 decoration-2 hover:text-rb-blue-shade transition-colors"
+                        >
+                          <GraduationCap size={14} className="flex-shrink-0" />
+                          Work through the {title.toLowerCase()} in a guided session
+                          <ArrowRight size={13} className="flex-shrink-0" />
+                        </button>
+                      )}
                     </div>
                   )}
                 </div>

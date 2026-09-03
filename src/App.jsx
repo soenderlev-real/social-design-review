@@ -23,6 +23,7 @@ export default function App() {
     ollamaConfig: undefined,
     processedFiles: [],
     startConceptId: null,
+    track: 'dimensions',
   });
 
   useEffect(() => {
@@ -72,6 +73,7 @@ export default function App() {
             platformDescription={config.platformDescription}
             ollamaConfig={config.ollamaConfig}
             startConceptId={config.startConceptId}
+            track={config.track}
             onBack={handleBackToLanding}
           />
         )}

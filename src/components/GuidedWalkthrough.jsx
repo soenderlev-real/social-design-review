@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import { Send, Loader2, Download, RotateCcw, GraduationCap, Flag, Rocket, BookOpen, HelpCircle, Plus, MapPin } from 'lucide-react';
 import * as Icons from 'lucide-react';
-import { CONCEPTS, GUIDE_SYSTEM_PROMPT, buildGuidePrompt, buildGuideWrapUpPrompt, buildGuideExplorePrompt } from '../data/framework';
+import { CONCEPTS, GUIDE_SYSTEM_PROMPT, buildGuidePrompt, buildGuideWrapUpPrompt, buildGuideExplorePrompt,
+         buildReferenceSystemPrompt, buildReferencePrompt, buildReferenceWrapUpPrompt } from '../data/framework';
+import { referenceTrack } from '../data/frameworkReference';
 import { referencesForConcept } from '../data/bibliography';
 import { createProvider } from '../providers';
 import { buildSessionLovableUrl } from '../utils/lovable';
@@ -82,9 +84,9 @@ function DimensionChip({ concept, isWrapUp }) {
   );
 }
 
-function Bubble({ msg }) {
+function Bubble({ msg, items }) {
   const isUser = msg.role === 'user';
-  const concept = msg.conceptId ? CONCEPTS.find(c => c.id === msg.conceptId) : null;
+  const concept = msg.conceptId ? (items || CONCEPTS).find(c => c.id === msg.conceptId) : null;
   return (
     <div className={`flex gap-3 ${isUser ? 'justify-end' : 'justify-start'}`}>
       {!isUser && (
@@ -122,10 +124,31 @@ function Bubble({ msg }) {
   );
 }
 
-export default function GuidedWalkthrough({ providerId, apiKey, platformDescription, ollamaConfig, startConceptId = null, onBack }) {
-  // Arriving from a dimension in the landing accordion starts there rather
-  // than at the top, and opens with a fuller explanation of it.
-  const startIndex = Math.max(0, CONCEPTS.findIndex(c => c.id === startConceptId));
+export default function GuidedWalkthrough({
+  providerId, apiKey, platformDescription, ollamaConfig,
+  startConceptId = null, track = 'dimensions', onBack,
+}) {
+  // Four tracks share this component: the framework dimensions, and the three
+  // reference groups (finitude principles, UI patterns, EU instruments). Same
+  // loop, different vocabulary and framing — so a new group needs no changes
+  // here, only an entry in frameworkReference.js.
+  const ref = track === 'dimensions' ? null : referenceTrack(track);
+  const ITEMS = ref ? ref.items : CONCEPTS;
+  const SYSTEM = ref ? buildReferenceSystemPrompt(ref) : GUIDE_SYSTEM_PROMPT;
+  const UNIT = ref ? ref.unit : 'dimension';
+  const LABEL = ref ? ref.label : 'Guided walkthrough';
+
+  const buildStep = (item, idea, previous, isFirst, expansive) =>
+    ref ? buildReferencePrompt(ref, item, idea, previous, isFirst, expansive)
+        : buildGuidePrompt(item, idea, previous, isFirst, expansive);
+
+  const buildWrap = (idea, collected, covered, total) =>
+    ref ? buildReferenceWrapUpPrompt(ref, idea, collected, covered, total)
+        : buildGuideWrapUpPrompt(idea, collected, covered, total);
+
+  // Arriving from an item in the landing accordion starts there rather than at
+  // the top, and opens with a fuller explanation of it.
+  const startIndex = Math.max(0, ITEMS.findIndex(c => c.id === startConceptId));
   const [messages, setMessages] = useState([]);
   const [answers, setAnswers]   = useState([]);   // { id, title, answer }
   const [stepIndex, setStepIndex] = useState(startIndex);  // which concept we are ON
@@ -176,7 +199,7 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
     const pacer = createPacer({ onUpdate: paint });
 
     try {
-      await provider().sendMessageStream(GUIDE_SYSTEM_PROMPT, userPrompt, [], piece => pacer.push(piece));
+      await provider().sendMessageStream(SYSTEM, userPrompt, [], piece => pacer.push(piece));
       const full = await pacer.end();   // waits for the paced text to finish rendering
       setMessages(prev => {
         const next = [...prev];
@@ -198,15 +221,15 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
   }
 
   async function runStep(index, previous, currentMessages, expansive = false) {
-    const concept = CONCEPTS[index];
+    const concept = ITEMS[index];
     setStepIndex(index);
     const isFirst = currentMessages.length === 0;
-    const userPrompt = buildGuidePrompt(concept, platformDescription, previous, isFirst, expansive);
+    const userPrompt = buildStep(concept, platformDescription, previous, isFirst, expansive);
     await streamTurn(userPrompt, currentMessages, { conceptId: concept.id });
   }
 
   async function runExplore(kind, question, currentMessages) {
-    const concept = CONCEPTS[stepIndex];
+    const concept = ITEMS[stepIndex];
     const refs = kind === 'references' ? referencesForConcept(concept.id) : [];
     // Loaded on demand — the directory is ~146KB and only this chip needs it,
     // so it must not sit in the bundle everyone downloads on the landing page.
@@ -224,7 +247,7 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
   /** Chips stay on the dimension; only a typed answer advances. */
   function handleChip(kind) {
     if (isLoading || finished) return;
-    const concept = CONCEPTS[stepIndex];
+    const concept = ITEMS[stepIndex];
 
     if (kind === 'question') {
       // No API call for the invitation itself — it is the same sentence every time.
@@ -247,8 +270,8 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
   }
 
   async function runWrapUp(collected, currentMessages) {
-    const userPrompt = buildGuideWrapUpPrompt(
-      platformDescription, collected, collected.length, CONCEPTS.length
+    const userPrompt = buildWrap(
+      platformDescription, collected, collected.length, ITEMS.length
     );
     const text = await streamTurn(userPrompt, currentMessages, { isWrapUp: true });
     // Only close the session if the wrap-up actually arrived — otherwise the
@@ -279,12 +302,12 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
       return;
     }
 
-    const concept = CONCEPTS[stepIndex];
+    const concept = ITEMS[stepIndex];
     const collected = [...answers, { id: concept.id, title: concept.title, answer: message }];
     setAnswers(collected);
 
     const next = stepIndex + 1;
-    if (next >= CONCEPTS.length) {
+    if (next >= ITEMS.length) {
       await runWrapUp(collected, withUser);
     } else {
       await runStep(next, { title: concept.title, answer: message }, withUser);
@@ -298,13 +321,13 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
   function handlePrototypeInLovable() {
     const wrap = messages.find(m => m.isWrapUp);
     const { url } = buildSessionLovableUrl(
-      platformDescription, answers, wrap ? wrap.content : null, CONCEPTS
+      platformDescription, answers, wrap ? wrap.content : null, ITEMS
     );
     window.open(url, '_blank', 'noopener,noreferrer');
   }
 
   function handleExport() {
-    let md = `# Social Design Framework — Guided Session\n\n`;
+    let md = `# Social Design Framework — ${ref ? ref.title : 'Guided'} Session\n\n`;
     md += `**Date:** ${new Date().toLocaleDateString()}\n\n`;
     if (platformDescription) md += `**Platform / idea:**\n\n${platformDescription}\n\n`;
     md += `---\n\n## What we worked through\n\n`;
@@ -327,8 +350,8 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
     URL.revokeObjectURL(url);
   }
 
-  const current = CONCEPTS[stepIndex];
-  const remaining = CONCEPTS.length - startIndex;
+  const current = ITEMS[stepIndex];
+  const remaining = ITEMS.length - startIndex;
   const progress = finished ? 100 : (answers.length / Math.max(1, remaining)) * 100;
 
   return (
@@ -339,7 +362,7 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
           <div className="flex flex-col sm:flex-row sm:items-center gap-3">
             <div className="flex-1 min-w-0">
               <p className="text-xs font-bold uppercase tracking-widest text-muted mb-0.5">
-                Guided walkthrough
+                {LABEL}
               </p>
               <h2 className="text-lg font-bold text-dark truncate flex items-center gap-2">
                 {!finished && current && (() => {
@@ -401,15 +424,15 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
               <GraduationCap size={16} />
             </div>
             <div>
-              <h3 className="font-bold text-dark text-sm">Learning the Social Design Framework</h3>
+              <h3 className="font-bold text-dark text-sm">{ref ? `Working through the ${ref.title.toLowerCase()}` : 'Learning the Social Design Framework'}</h3>
               <p className="text-xs text-muted">
-                One dimension at a time · type <strong className="text-darker">wrap up</strong> whenever you want a summary
+                One {UNIT} at a time · type <strong className="text-darker">wrap up</strong> whenever you want a summary
               </p>
             </div>
           </div>
 
           <div className="px-5 py-6 space-y-5 min-h-[300px]">
-            {messages.map((m, i) => <Bubble key={i} msg={m} />)}
+            {messages.map((m, i) => <Bubble key={i} msg={m} items={ITEMS} />)}
             {isLoading && !messages[messages.length - 1]?.streaming && (
               <div className="flex gap-3 justify-start">
                 <div className="flex-shrink-0 w-7 h-7 bg-dark text-light flex items-center justify-center text-xs font-bold border-2 border-dark">
@@ -434,7 +457,7 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
                 type="button" onClick={() => handleChip('more')} disabled={isLoading}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 border-2 border-dark text-xs text-dark hover:bg-dark hover:text-light disabled:opacity-30 transition-colors"
               >
-                <Plus size={11} /> Tell me more about {CONCEPTS[stepIndex]?.title}
+                <Plus size={11} /> Tell me more about {ITEMS[stepIndex]?.title}
               </button>
               <button
                 type="button" onClick={() => handleChip('references')} disabled={isLoading}
@@ -442,12 +465,16 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
               >
                 <BookOpen size={11} /> Good references
               </button>
+              {/* The directory is mapped per framework dimension, so on a
+                  reference track it would return arbitrary platforms. */}
+              {!ref && (
               <button
                 type="button" onClick={() => handleChip('platforms')} disabled={isLoading}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 border-2 border-dark text-xs text-dark hover:bg-dark hover:text-light disabled:opacity-30 transition-colors"
               >
                 <MapPin size={11} /> Good examples from Rebuild platforms
               </button>
+              )}
               <button
                 type="button" onClick={() => handleChip('question')} disabled={isLoading || awaitingQuestion}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 border-2 border-dark text-xs text-dark hover:bg-dark hover:text-light disabled:opacity-30 transition-colors"
@@ -466,7 +493,7 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
                 onKeyDown={handleKey}
                 placeholder={
                   isLoading ? 'Thinking…'
-                  : awaitingQuestion ? `Your question about ${CONCEPTS[stepIndex]?.title}…`
+                  : awaitingQuestion ? `Your question about ${ITEMS[stepIndex]?.title}…`
                   : 'Your answer — or type "wrap up" to finish early'
                 }
                 rows={2}

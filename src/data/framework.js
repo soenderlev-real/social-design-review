@@ -779,3 +779,77 @@ export function buildGuideExplorePrompt(concept, idea, kind, question, reference
   p += `\nEnd with one short sentence inviting them back to the question when they are ready — not a new question of your own.`;
   return p;
 }
+
+// ─── Reference-group tracks ─────────────────────────────────────────────────
+// One track machine drives the finitude principles, the UI patterns and the
+// regulatory instruments. What differs per group is its framing and wrap-up
+// spec, which live beside the content in frameworkReference.js — so adding a
+// group means editing that file, not this one.
+
+export function buildReferenceSystemPrompt(track) {
+  return `You are a workshop facilitator for the Social Design Framework, developed for the Rebuild.net European social platforms initiative. You are walking someone — or a small team — through the framework's ${track.title.toLowerCase()}, one ${track.unit} at a time.
+
+Your perspective is rooted in European values: democratic participation, the commons, community empowerment, data sovereignty, human dignity.
+
+${track.framing}
+
+## How you facilitate
+- **Teach briefly, then ask.** Two to four sentences in plain language, then exactly ONE question about how it applies to their platform or idea.
+- **Concrete over abstract.** One short real example — a platform doing it, or conspicuously not — beats a definition.
+- **Respond to what they said.** When they have just answered, open with one sentence engaging their specific answer before moving on. Never simply praise.
+- **"I don't know" is a real answer.** Treat it as something to note, and offer a way to think about it rather than pressing.
+- **Never lecture.** Under 150 words per turn. This is a conversation, not a lesson.
+
+## Register
+Warm, direct, curious — a facilitator in a room, not a chatbot. No bullet lists in your replies; short paragraphs. Do not number the ${track.unit}s or announce progress; the interface shows it.
+
+End every turn with your single question, and nothing after it.`;
+}
+
+/** One turn of a reference track. */
+export function buildReferencePrompt(track, item, idea, previous, isFirst, expansive = false) {
+  let p = '';
+
+  if (idea) p += `The person is working on this platform or idea:\n"""\n${idea}\n"""\n\n`;
+  else p += `The person has not described a specific platform. Ask about the idea they are carrying, or invite them to think about a platform they know well.\n\n`;
+
+  if (isFirst && expansive) {
+    p += `They came here having chosen this ${track.unit} specifically, so give it real depth before anything else. Welcome them in one line and mention they can type "wrap up" whenever they want a summary. Then explain it properly: what it means, what it corrects or requires, one platform that handles it well and one that conspicuously does not, and what is genuinely hard about it. Around 200 words — longer than your usual turn, because this is what they came for. Say that the session will carry on through the remaining ${track.unit}s from here. Then ask your question.\n\n`;
+  } else if (isFirst) {
+    p += `This is the very first turn. Welcome them in one sentence, say you will work through the ${track.items.length} ${track.unit}s one at a time, and mention they can type "wrap up" whenever they want to stop and get a summary. Then introduce the first one below and ask your question.\n\n`;
+  } else if (previous) {
+    p += `They have just answered your question about "${previous.title}". Their answer:\n"""\n${previous.answer}\n"""\n\nOpen with one sentence engaging that answer specifically, then move on to the ${track.unit} below.\n\n`;
+  }
+
+  p += `## The ${track.unit} to introduce now: ${item.title}\n`;
+  p += `${item.shortDesc}\n\n`;
+  p += `Context (for you — do not recite it):\n${item.promptContext}\n\n`;
+  p += `The question this usually raises: ${item.keyQuestion}\n\n`;
+  p += `Now: explain it briefly and ask ONE question about how it applies to their platform.`;
+
+  return p;
+}
+
+/** The closing synthesis for a reference track. */
+export function buildReferenceWrapUpPrompt(track, idea, answers, covered, total) {
+  let p = `The session is ending. `;
+  p += covered < total
+    ? `They worked through ${covered} of ${total} ${track.unit}s before asking to wrap up.\n\n`
+    : `They worked through all ${total} ${track.unit}s.\n\n`;
+
+  if (idea) p += `Their platform or idea:\n"""\n${idea}\n"""\n\n`;
+
+  p += `What they said about each:\n\n`;
+  answers.forEach(a => { p += `### ${a.title}\n${a.answer}\n\n`; });
+
+  p += `Write their wrap-up. Use exactly these ${track.wrapUp.length} headers and nothing else:\n\n`;
+  track.wrapUp.forEach(([heading, spec]) => {
+    p += `### ${heading}\n${spec}\n\n`;
+  });
+  if (covered < total) {
+    p += `Where relevant, note which ${track.unit}s they have not yet worked through and what those would ask of them.\n\n`;
+  }
+  p += `Write to them as "you". Be specific to what they actually said — a generic summary is worse than none.`;
+
+  return p;
+}

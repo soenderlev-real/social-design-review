@@ -710,6 +710,19 @@ export const BIBLIOGRAPHY_NOTE =
  * dimensions share one section.
  */
 export function referencesForConcept(conceptId, limit = 5) {
+  // Reference-group tracks carry ids like "finitude:enddesign". Their reading
+  // lives in the lineage sections rather than a per-dimension one.
+  const TRACK_SECTIONS = {
+    'finitude': 'finitude-lineage',
+    'ui-patterns': 'interaction-design',
+    'regulatory': null,          // no curated section — the prompt says so plainly
+  };
+  if (conceptId && conceptId.includes(':')) {
+    const mapped = TRACK_SECTIONS[conceptId.split(':')[0]];
+    if (!mapped) return [];
+    conceptId = mapped;
+  }
+
   const sectionId = ['enable-dimension', 'grow-dimension', 'protect-dimension'].includes(conceptId)
     ? 'meta-dimensions'
     : conceptId;
