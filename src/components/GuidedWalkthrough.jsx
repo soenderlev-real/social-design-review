@@ -113,10 +113,13 @@ function Bubble({ msg }) {
   );
 }
 
-export default function GuidedWalkthrough({ providerId, apiKey, platformDescription, ollamaConfig, onBack }) {
+export default function GuidedWalkthrough({ providerId, apiKey, platformDescription, ollamaConfig, startConceptId = null, onBack }) {
+  // Arriving from a dimension in the landing accordion starts there rather
+  // than at the top, and opens with a fuller explanation of it.
+  const startIndex = Math.max(0, CONCEPTS.findIndex(c => c.id === startConceptId));
   const [messages, setMessages] = useState([]);
   const [answers, setAnswers]   = useState([]);   // { id, title, answer }
-  const [stepIndex, setStepIndex] = useState(0);  // which concept we are ON
+  const [stepIndex, setStepIndex] = useState(startIndex);  // which concept we are ON
   const [input, setInput]       = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError]       = useState('');
@@ -133,7 +136,7 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
   useEffect(() => {
     if (startedRef.current) return;
     startedRef.current = true;
-    runStep(0, null, []);
+    runStep(startIndex, null, [], startConceptId !== null);
   }, []);
 
   function provider() {
@@ -185,10 +188,11 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
     }
   }
 
-  async function runStep(index, previous, currentMessages) {
+  async function runStep(index, previous, currentMessages, expansive = false) {
     const concept = CONCEPTS[index];
     setStepIndex(index);
-    const userPrompt = buildGuidePrompt(concept, platformDescription, previous, index === 0);
+    const isFirst = currentMessages.length === 0;
+    const userPrompt = buildGuidePrompt(concept, platformDescription, previous, isFirst, expansive);
     await streamTurn(userPrompt, currentMessages, { conceptId: concept.id });
   }
 
@@ -315,7 +319,8 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
   }
 
   const current = CONCEPTS[stepIndex];
-  const progress = finished ? 100 : (answers.length / CONCEPTS.length) * 100;
+  const remaining = CONCEPTS.length - startIndex;
+  const progress = finished ? 100 : (answers.length / Math.max(1, remaining)) * 100;
 
   return (
     <div className="animate-fade-in">
@@ -342,7 +347,7 @@ export default function GuidedWalkthrough({ providerId, apiKey, platformDescript
             <div className="flex items-center gap-3 flex-shrink-0">
               <div className="text-center">
                 <div className="text-2xl font-bold text-dark">
-                  {answers.length}<span className="text-muted">/{CONCEPTS.length}</span>
+                  {answers.length}<span className="text-muted">/{remaining}</span>
                 </div>
                 <div className="text-xs text-muted uppercase tracking-widest">Covered</div>
               </div>

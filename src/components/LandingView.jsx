@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Globe, Key, FileText, ArrowRight, ExternalLink, AlertCircle, Check, Upload, X, ImageIcon, FileText as FileTextIcon, Loader2, Search, Lightbulb, Bot, Download, MessageSquare, BarChart3, GitFork, Maximize2, Presentation, Users, Smile, BookOpen, ArrowUpRight, GraduationCap, MapPin, Rocket } from 'lucide-react';
 import { PROVIDERS } from '../providers';
+import * as Icons from 'lucide-react';
 import { CONCEPTS } from '../data/framework';
 import { REBUILD_COUNT, REBUILD_COUNTRIES } from '../data/rebuildDirectoryMeta';
 import { processFiles, IMAGE_TYPES, PDF_TYPE, MAX_IMAGES, MAX_PDFS } from '../utils/fileProcessing';
@@ -36,20 +37,24 @@ const RESOURCES = [
   },
 ];
 
-/** Plain-language notes on each dimension, for the accordion below the model. */
+/**
+ * Plain-language notes for the accordion. Keyed by concept id so the icon comes
+ * from CONCEPTS — the same field the diagram and review cards use, rather than
+ * a second list that could drift from it.
+ */
 const DIMENSION_NOTES = [
-  { name: 'Social Object', desc: 'The shared thing that gives people a reason to interact — a photo, a repair, a neighbourhood issue. Whether it is rich enough to sustain real sociality, who controls it, and whether it has value outside the platform.' },
-  { name: 'Identity', desc: 'How the platform lets people present themselves — authentically, selectively, or anonymously — and who controls that representation.' },
-  { name: 'Conversations', desc: 'The structures that shape how people talk: threading, reach, moderation, and whether dialogue can go somewhere meaningful.' },
-  { name: 'Sharing', desc: 'What gets shared, with whom, and on whose terms — including defaults around re-sharing, attribution, and visibility.' },
-  { name: 'Presence', desc: 'Whether people can be seen as online, active, or available — and how much control they have over their own visibility.' },
-  { name: 'Relationships', desc: 'How connections form, what they mean, and whether the platform fosters genuine ties or inflates shallow ones.' },
-  { name: 'Reputation', desc: 'How standing is built and displayed — scores, follower counts, badges — and whether these systems serve users or exploit them.' },
-  { name: 'Groups', desc: 'How communities form, govern themselves, and protect their culture as they grow.' },
-  { name: 'Agency', desc: 'The degree to which users can understand, shape, and override what the platform does — including its algorithms and defaults.' },
-  { name: 'Enable', meta: true, desc: 'The foundational conditions for healthy social life: whether the architecture makes constructive participation the default, whether governance is transparent and participatory, and whether the platform as a whole restores edges or removes them.' },
-  { name: 'Grow', meta: true, desc: 'Sustainable value without extraction — shared-value growth, a quality floor rather than a volume target, and low-friction exit treated as a trust strategy rather than a leak.' },
-  { name: 'Protect', meta: true, desc: 'The immune system against threats to safety and trust, judged by procedural justice: voice, neutrality, respect and a trustworthy rationale — not deterrence alone.' },
+  { id: 'social-object', name: 'Social Object', desc: 'The shared thing that gives people a reason to interact — a photo, a repair, a neighbourhood issue. Whether it is rich enough to sustain real sociality, who controls it, and whether it has value outside the platform.' },
+  { id: 'identity', name: 'Identity', desc: 'How the platform lets people present themselves — authentically, selectively, or anonymously — and who controls that representation.' },
+  { id: 'conversations', name: 'Conversations', desc: 'The structures that shape how people talk: threading, reach, moderation, and whether dialogue can go somewhere meaningful.' },
+  { id: 'sharing', name: 'Sharing', desc: 'What gets shared, with whom, and on whose terms — including defaults around re-sharing, attribution, and visibility.' },
+  { id: 'presence', name: 'Presence', desc: 'Whether people can be seen as online, active, or available — and how much control they have over their own visibility.' },
+  { id: 'relationships', name: 'Relationships', desc: 'How connections form, what they mean, and whether the platform fosters genuine ties or inflates shallow ones.' },
+  { id: 'reputation', name: 'Reputation', desc: 'How standing is built and displayed — scores, follower counts, badges — and whether these systems serve users or exploit them.' },
+  { id: 'groups', name: 'Groups', desc: 'How communities form, govern themselves, and protect their culture as they grow.' },
+  { id: 'agency', name: 'Agency', desc: 'The degree to which users can understand, shape, and override what the platform does — including its algorithms and defaults.' },
+  { id: 'enable-dimension', name: 'Enable', meta: true, desc: 'The foundational conditions for healthy social life: whether the architecture makes constructive participation the default, whether governance is transparent and participatory, and whether the platform as a whole restores edges or removes them.' },
+  { id: 'grow-dimension', name: 'Grow', meta: true, desc: 'Sustainable value without extraction — shared-value growth, a quality floor rather than a volume target, and low-friction exit treated as a trust strategy rather than a leak.' },
+  { id: 'protect-dimension', name: 'Protect', meta: true, desc: 'The immune system against threats to safety and trust, judged by procedural justice: voice, neutrality, respect and a trustworthy rationale — not deterrence alone.' },
 ];
 
 /** Icon sits on the heading line; one short line of copy beneath. */
@@ -183,7 +188,7 @@ export default function LandingView({ onStart, onReadingList }) {
    * no key. Only offered when a hosted provider exists, so a deployment
    * without one shows nothing rather than a button that 503s.
    */
-  function startGuidedSession() {
+  function startGuidedSession(startConceptId = null) {
     if (!hostedProvider) return;
     onStart({
       mode: 'guide',
@@ -193,6 +198,9 @@ export default function LandingView({ onStart, onReadingList }) {
       platformDescription: '',
       ollamaConfig: undefined,
       processedFiles: [],
+      // Entering from a dimension starts there, and opens with a fuller
+      // explanation instead of the usual brisk introduction.
+      startConceptId,
     });
   }
 
@@ -280,7 +288,7 @@ export default function LandingView({ onStart, onReadingList }) {
                     screen-reader semantics, styled as a link. */}
                 <button
                   type="button"
-                  onClick={startGuidedSession}
+                  onClick={() => startGuidedSession()}
                   className="inline-flex items-center gap-2 text-sm font-bold text-dark underline underline-offset-4 decoration-2 hover:text-rb-blue-shade transition-colors"
                 >
                   <GraduationCap size={16} className="flex-shrink-0" />
@@ -302,30 +310,50 @@ export default function LandingView({ onStart, onReadingList }) {
             </p>
 
             <div className="border-t-2 border-dark">
-            {DIMENSION_NOTES.map(({ name, desc, meta }) => (
-              <button
-                key={name}
-                type="button"
-                onClick={() => setOpenDimension(openDimension === name ? null : name)}
-                aria-expanded={openDimension === name}
-                className="w-full text-left border-b-2 border-dark px-1 py-4 hover:bg-light transition-colors"
-              >
-                <div className="flex items-baseline gap-3">
-                  {meta && (
-                    <span className="text-xs font-bold uppercase tracking-widest text-muted flex-shrink-0">
-                      Outer ring
-                    </span>
+            {DIMENSION_NOTES.map(({ id, name, desc, meta }) => {
+              const concept = CONCEPTS.find(c => c.id === id);
+              const Icon = (concept && Icons[concept.icon]) || Icons.Circle;
+              const open = openDimension === name;
+              return (
+                /* Header and panel are siblings: a button cannot contain the
+                   "explore" button, and nesting them would be invalid markup
+                   and unreachable by keyboard. */
+                <div key={name} className="border-b-2 border-dark">
+                  <button
+                    type="button"
+                    onClick={() => setOpenDimension(open ? null : name)}
+                    aria-expanded={open}
+                    className="w-full text-left px-1 py-4 hover:bg-light transition-colors flex items-center gap-3"
+                  >
+                    <Icon size={16} className="flex-shrink-0 text-dark" />
+                    {meta && (
+                      <span className="text-xs font-bold uppercase tracking-widest text-muted flex-shrink-0">
+                        Outer ring
+                      </span>
+                    )}
+                    <span className="font-bold text-sm text-dark flex-1">{name}</span>
+                    <span className="text-muted flex-shrink-0 text-lg leading-none">{open ? '\u2212' : '+'}</span>
+                  </button>
+
+                  {open && (
+                    <div className="px-1 pb-5 -mt-1">
+                      <p className="text-xs text-muted leading-relaxed max-w-3xl mb-4">{desc}</p>
+                      {hostedProvider && concept && (
+                        <button
+                          type="button"
+                          onClick={() => startGuidedSession(id)}
+                          className="inline-flex items-center gap-2 text-xs font-bold text-dark underline underline-offset-4 decoration-2 hover:text-rb-blue-shade transition-colors"
+                        >
+                          <GraduationCap size={14} className="flex-shrink-0" />
+                          Explore {name} in a guided session
+                          <ArrowRight size={13} className="flex-shrink-0" />
+                        </button>
+                      )}
+                    </div>
                   )}
-                  <span className="font-bold text-sm text-dark flex-1">{name}</span>
-                  <span className="text-muted flex-shrink-0 text-lg leading-none">
-                    {openDimension === name ? '\u2212' : '+'}
-                  </span>
                 </div>
-                {openDimension === name && (
-                  <p className="text-xs text-muted leading-relaxed mt-3 max-w-3xl">{desc}</p>
-                )}
-                </button>
-              ))}
+              );
+            })}
             </div>
           </div>
 

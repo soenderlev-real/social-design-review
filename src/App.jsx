@@ -22,6 +22,7 @@ export default function App() {
     platformDescription: '',
     ollamaConfig: undefined,
     processedFiles: [],
+    startConceptId: null,
   });
 
   useEffect(() => {
@@ -70,6 +71,7 @@ export default function App() {
             apiKey={config.apiKey}
             platformDescription={config.platformDescription}
             ollamaConfig={config.ollamaConfig}
+            startConceptId={config.startConceptId}
             onBack={handleBackToLanding}
           />
         )}

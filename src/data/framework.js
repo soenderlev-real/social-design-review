@@ -674,13 +674,17 @@ End every turn with your single question, and nothing after it.`;
  * One conversational turn: react to the previous answer, teach the next
  * dimension, ask one question about it.
  */
-export function buildGuidePrompt(concept, idea, previous, isFirst) {
+export function buildGuidePrompt(concept, idea, previous, isFirst, expansive = false) {
   let p = '';
 
   if (idea) p += `The person is working on this platform or idea:\n"""\n${idea}\n"""\n\n`;
   else p += `The person has not described a specific platform yet. Ask about the idea they are carrying, or invite them to think about a platform they know well.\n\n`;
 
-  if (isFirst) {
+  if (isFirst && expansive) {
+    // They arrived by clicking this specific dimension, so they want depth on
+    // it — not the standard brisk opening on its way to the next one.
+    p += `They came here having chosen this dimension specifically, so give it real depth before anything else. Welcome them in one line and mention they can type "wrap up" whenever they want a summary. Then explain this dimension properly: what it means, where platforms usually get it wrong, one concrete example of it done well and one done badly, and what is genuinely hard about it. Around 200 words — longer than your usual turn, because this is what they came for. Say that the walkthrough will carry on through the remaining dimensions from here. Then ask your question.\n\n`;
+  } else if (isFirst) {
     p += `This is the very first turn. Welcome them in one sentence, say the framework has ${'' + CONCEPTS.length} dimensions and that you will take them one at a time, and mention they can type "wrap up" whenever they want to stop and get a summary. Then introduce the first dimension below and ask your question.\n\n`;
   } else if (previous) {
     p += `They have just answered your question about "${previous.title}". Their answer:\n"""\n${previous.answer}\n"""\n\nOpen with one sentence engaging that answer specifically, then move on to the dimension below.\n\n`;
