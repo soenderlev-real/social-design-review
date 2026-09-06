@@ -96,9 +96,11 @@ function Bubble({ msg, items }) {
         </div>
       )}
       <div
-        className={`max-w-[85%] px-4 py-3 border-2 text-sm leading-relaxed ${
-          isUser ? 'bg-dark text-light border-dark' : 'bg-white text-dark border-dark'
-        }`}
+        className={
+          isUser
+            ? 'max-w-[80%] px-4 py-3 border-2 border-dark bg-dark text-light text-sm leading-relaxed'
+            : 'flex-1 min-w-0 max-w-[80ch] pt-0.5 pr-1 text-dark text-[15px] leading-[1.7]'
+        }
         style={isUser ? { whiteSpace: 'pre-wrap' } : undefined}
       >
         {!isUser && <DimensionChip concept={concept} isWrapUp={msg.isWrapUp} />}
@@ -435,9 +437,9 @@ export default function GuidedWalkthrough({
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
-        <div className="border-2 border-dark bg-white">
-          <div className="border-b-2 border-dark px-5 py-4 flex items-center gap-3">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+        <div>
+          <div className="border-b-2 border-dark pb-4 flex items-center gap-3">
             <div className="w-8 h-8 bg-dark text-light flex items-center justify-center border-2 border-dark">
               <GraduationCap size={16} />
             </div>
@@ -450,20 +452,20 @@ export default function GuidedWalkthrough({
           </div>
 
           {ref?.notice && (
-            <div className="border-b-2 border-dark bg-rb-orange-tint px-5 py-3 flex items-start gap-2">
+            <div className="border-2 border-rb-orange bg-rb-orange-tint px-4 py-3 mt-5 flex items-start gap-2">
               <Icons.Scale size={14} className="text-rb-orange flex-shrink-0 mt-0.5" />
               <p className="text-xs text-darker leading-relaxed">{ref.notice}</p>
             </div>
           )}
 
-          <div className="px-5 py-6 space-y-5 min-h-[300px]">
+          <div className="py-7 space-y-6 min-h-[300px]">
             {messages.map((m, i) => <Bubble key={i} msg={m} items={ITEMS} />)}
             {isLoading && !messages[messages.length - 1]?.streaming && (
               <div className="flex gap-3 justify-start">
                 <div className="flex-shrink-0 w-7 h-7 bg-dark text-light flex items-center justify-center text-xs font-bold border-2 border-dark">
                   SD
                 </div>
-                <div className="px-4 py-3 border-2 border-dark bg-white">
+                <div className="pt-1">
                   <Loader2 size={14} className="animate-spin text-muted" />
                 </div>
               </div>
@@ -477,7 +479,7 @@ export default function GuidedWalkthrough({
           </div>
 
           {!finished && messages.length > 0 && (
-            <div className="border-t-2 border-dark px-5 pt-4 pb-1 flex flex-wrap gap-2">
+            <div className="border-t-2 border-dark pt-4 pb-1 flex flex-wrap gap-2">
               <button
                 type="button" onClick={() => handleChip('more')} disabled={isLoading}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 border-2 border-dark text-xs text-dark hover:bg-dark hover:text-light disabled:opacity-30 transition-colors"
@@ -510,7 +512,7 @@ export default function GuidedWalkthrough({
           )}
 
           {!finished && (
-            <div className="border-t-0 px-5 py-4 flex gap-3">
+            <div className="py-4 flex gap-3">
               <textarea
                 ref={inputRef}
                 value={input}
@@ -536,7 +538,7 @@ export default function GuidedWalkthrough({
           )}
 
           {finished && (
-            <div className="border-t-2 border-dark px-5 py-4 bg-rb-green-tint flex items-center gap-2 text-sm text-rb-green-shade">
+            <div className="border-2 border-rb-green px-4 py-3 mt-4 bg-rb-green-tint flex items-center gap-2 text-sm text-rb-green-shade">
               <Flag size={14} /> Session complete — export it to keep the wrap-up, or start over with a new idea.
             </div>
           )}
