@@ -378,26 +378,38 @@ export default function GuidedWalkthrough({
     <div className="animate-fade-in">
       {/* Progress bar */}
       <div className="border-b-2 border-dark bg-light sticky top-14 z-40">
-        <div className="max-w-4xl mx-auto px-6 py-4">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-2.5 sm:py-4">
+          {/* Mobile keeps this bar to two lines: the track and the count share
+              one, the item and its actions the other. On desktop the count
+              rejoins the buttons at its full size. */}
+          <div className="flex items-baseline justify-between gap-3 sm:hidden">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted truncate">
+              {LABEL}
+            </p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted flex-shrink-0">
+              {answers.length}/{remaining} covered
+            </p>
+          </div>
+          <div className="flex items-center gap-2 sm:gap-3">
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-bold uppercase tracking-widest text-muted mb-0.5">
+              <p className="hidden sm:block text-xs font-bold uppercase tracking-widest text-muted mb-0.5">
                 {LABEL}
               </p>
-              <h2 className="text-lg font-bold text-dark truncate flex items-center gap-2">
+              <h2 className="text-sm sm:text-lg font-bold text-dark flex items-center gap-2 min-w-0">
                 {!finished && current && (() => {
                   const Icon = Icons[current.icon] || Icons.Circle;
                   return (
-                    <span className="w-6 h-6 border-2 border-dark flex items-center justify-center flex-shrink-0">
-                      <Icon size={13} className="text-dark" />
+                    <span className="w-5 h-5 sm:w-6 sm:h-6 border-2 border-dark flex items-center justify-center flex-shrink-0">
+                      <Icon size={11} className="text-dark sm:hidden" />
+                      <Icon size={13} className="text-dark hidden sm:block" />
                     </span>
                   );
                 })()}
-                {finished ? 'Session complete' : current?.title}
+                <span className="truncate">{finished ? 'Session complete' : current?.title}</span>
               </h2>
             </div>
-            <div className="flex items-center gap-3 flex-shrink-0">
-              <div className="text-center">
+            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+              <div className="hidden sm:block text-center">
                 <div className="text-2xl font-bold text-dark">
                   {answers.length}<span className="text-muted">/{remaining}</span>
                 </div>
@@ -406,32 +418,35 @@ export default function GuidedWalkthrough({
               {answers.length > 0 && (
                 <button
                   onClick={handlePrototypeInLovable}
+                  aria-label="Prototype in Lovable"
                   title="Open Lovable with this session as a build brief — you pick the workspace there"
-                  className="flex items-center gap-2 px-4 py-2 border-2 border-dark text-dark hover:bg-dark hover:text-light transition-colors text-sm font-bold"
+                  className="flex items-center gap-2 px-2 sm:px-4 py-1.5 sm:py-2 border-2 border-dark text-dark hover:bg-dark hover:text-light transition-colors text-sm font-bold"
                 >
-                  <Rocket size={14} /> Prototype
+                  <Rocket size={14} /> <span className="hidden sm:inline">Prototype</span>
                 </button>
               )}
               {answers.length > 0 && (
                 <button
                   onClick={handleExport}
+                  aria-label="Export session"
                   title="Export this session as Markdown"
-                  className="flex items-center gap-2 px-4 py-2 border-2 border-dark text-dark hover:bg-dark hover:text-light transition-colors text-sm font-bold"
+                  className="flex items-center gap-2 px-2 sm:px-4 py-1.5 sm:py-2 border-2 border-dark text-dark hover:bg-dark hover:text-light transition-colors text-sm font-bold"
                 >
-                  <Download size={14} /> Export
+                  <Download size={14} /> <span className="hidden sm:inline">Export</span>
                 </button>
               )}
               {finished && (
                 <button
                   onClick={onBack}
-                  className="flex items-center gap-2 px-4 py-2 bg-dark text-light border-2 border-dark hover:bg-darker transition-colors text-sm font-bold"
+                  aria-label="Start over"
+                  className="flex items-center gap-2 px-2 sm:px-4 py-1.5 sm:py-2 bg-dark text-light border-2 border-dark hover:bg-darker transition-colors text-sm font-bold"
                 >
-                  <RotateCcw size={14} /> Start over
+                  <RotateCcw size={14} /> <span className="hidden sm:inline">Start over</span>
                 </button>
               )}
             </div>
           </div>
-          <div className="h-1 bg-lighter w-full mt-3">
+          <div className="h-1 bg-lighter w-full mt-2 sm:mt-3">
             <div className="h-full bg-dark transition-all duration-500" style={{ width: `${progress}%` }} />
           </div>
         </div>
