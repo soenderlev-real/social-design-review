@@ -859,3 +859,48 @@ export function buildReferenceWrapUpPrompt(track, idea, answers, covered, total)
 
   return p;
 }
+
+/**
+ * Staying on the current item of a reference track instead of advancing.
+ *
+ * The dimension version of this cannot be reused: reference items carry no
+ * dark/light pattern lists, and "dimension" is the wrong noun for a principle,
+ * a UI pattern or a legal instrument.
+ *
+ * kind: 'more' | 'references' | 'question'
+ */
+export function buildReferenceExplorePrompt(track, item, idea, kind, question, references = []) {
+  let p = `The person is still on "${item.title}" and wants to go deeper before answering. Do NOT move on to the next ${track.unit}.\n\n`;
+
+  if (idea) p += `Their platform or idea:\n"""\n${idea}\n"""\n\n`;
+
+  p += `## The ${track.unit}: ${item.title}\n${item.shortDesc}\n\n`;
+  p += `Context (for you — do not recite it wholesale):\n${item.promptContext}\n\n`;
+  p += `The question this usually raises: ${item.keyQuestion}\n\n`;
+
+  if (track.notice) {
+    p += `Standing constraint: never state or imply that their platform does or does not comply, and name the threshold when an obligation turns on one.\n\n`;
+  }
+
+  if (kind === 'references') {
+    p += `## They asked for references on this ${track.unit}\n\n`;
+    if (references.length) {
+      p += `Use these, from the framework's own reading list. Pick the three or four most useful for someone at their stage, say in one line what each actually gives them, and be honest if one is heavy going. Do not invent sources beyond this list; if something obvious is missing you may name it as "not in the reading list, but worth knowing".\n\n`;
+      references.forEach(r => {
+        p += `- ${r.authors} (${r.year}), *${r.work}* — ${r.note}${r.url ? ` [${r.url}]` : ''}\n`;
+      });
+    } else if (track.notice) {
+      p += `No curated reading-list entries cover this. Point them instead at the primary source — the instrument's own text and the official guidance around it — naming the article or recital where you can, and say plainly that you are working from the legislation rather than a curated list.\n`;
+    } else {
+      p += `No curated references are available for this ${track.unit}. Say so plainly and suggest two or three well-known works you are confident actually exist, flagging that they are your suggestion rather than the framework's list.\n`;
+    }
+    p += `\nThis is the one case where a short list is right — a few lines each, not paragraphs.\n`;
+  } else if (kind === 'question') {
+    p += `## Their question about this ${track.unit}\n"""\n${question}\n"""\n\nAnswer it directly and concretely. If it falls outside the framework, say so and answer anyway if you usefully can.\n`;
+  } else {
+    p += `## They asked to hear more about this ${track.unit}\n\nGo deeper than your first explanation: what it actually asks of a design, a concrete example of a platform honouring it and one conspicuously not, and what is genuinely hard about getting it right. Around 150 words.\n`;
+  }
+
+  p += `\nEnd with one short sentence inviting them back to the question when they are ready — not a new question of your own.`;
+  return p;
+}

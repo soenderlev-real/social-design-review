@@ -2,7 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import { Send, Loader2, Download, RotateCcw, GraduationCap, Flag, Rocket, BookOpen, HelpCircle, Plus, MapPin } from 'lucide-react';
 import * as Icons from 'lucide-react';
 import { CONCEPTS, GUIDE_SYSTEM_PROMPT, buildGuidePrompt, buildGuideWrapUpPrompt, buildGuideExplorePrompt,
-         buildReferenceSystemPrompt, buildReferencePrompt, buildReferenceWrapUpPrompt } from '../data/framework';
+         buildReferenceSystemPrompt, buildReferencePrompt, buildReferenceWrapUpPrompt,
+         buildReferenceExplorePrompt } from '../data/framework';
 import { referenceTrack } from '../data/frameworkReference';
 import { referencesForConcept } from '../data/bibliography';
 import { createProvider } from '../providers';
@@ -146,6 +147,10 @@ export default function GuidedWalkthrough({
     ref ? buildReferenceWrapUpPrompt(ref, idea, collected, covered, total)
         : buildGuideWrapUpPrompt(idea, collected, covered, total);
 
+  const buildExplore = (item, idea, kind, question, refs, platforms) =>
+    ref ? buildReferenceExplorePrompt(ref, item, idea, kind, question, refs)
+        : buildGuideExplorePrompt(item, idea, kind, question, refs, platforms);
+
   // Arriving from an item in the landing accordion starts there rather than at
   // the top, and opens with a fuller explanation of it.
   const startIndex = Math.max(0, ITEMS.findIndex(c => c.id === startConceptId));
@@ -230,17 +235,30 @@ export default function GuidedWalkthrough({
 
   async function runExplore(kind, question, currentMessages) {
     const concept = ITEMS[stepIndex];
-    const refs = kind === 'references' ? referencesForConcept(concept.id) : [];
-    // Loaded on demand — the directory is ~146KB and only this chip needs it,
-    // so it must not sit in the bundle everyone downloads on the landing page.
-    let platforms = '';
-    let links = null;
-    if (kind === 'platforms') {
-      const { directoryLines, linkablePlatforms } = await import('../data/rebuildDirectory');
-      platforms = directoryLines(concept.id, 7);
-      links = linkablePlatforms(concept.id, 7);
+    let userPrompt, links = null;
+
+    // Everything before the request is inside the guard too. A prompt that
+    // fails to build throws before streamTurn owns the error, and without this
+    // the turn ends as silence: the user's message on screen, no reply, no
+    // spinner and no error. A stall is harder to report than a failure.
+    try {
+      const refs = kind === 'references' ? referencesForConcept(concept.id) : [];
+      // Loaded on demand — the directory is ~146KB and only this chip needs it,
+      // so it must not sit in the bundle everyone downloads on the landing page.
+      let platforms = '';
+      if (kind === 'platforms') {
+        const { directoryLines, linkablePlatforms } = await import('../data/rebuildDirectory');
+        platforms = directoryLines(concept.id, 7);
+        links = linkablePlatforms(concept.id, 7);
+      }
+      userPrompt = buildExplore(concept, platformDescription, kind, question, refs, platforms);
+    } catch (err) {
+      console.error('Could not build the follow-up turn', err);
+      setError(`Could not open that — ${err.message}`);
+      setIsLoading(false);
+      return;
     }
-    const userPrompt = buildGuideExplorePrompt(concept, platformDescription, kind, question, refs, platforms);
+
     await streamTurn(userPrompt, currentMessages, { conceptId: concept.id, isExplore: true, links });
   }
 
