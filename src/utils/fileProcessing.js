@@ -3,6 +3,8 @@
  * All processing happens in the browser — nothing is uploaded to any server.
  */
 
+import { loadChunk } from './loadChunk';
+
 const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 const PDF_TYPE    = 'application/pdf';
 const MAX_IMAGES  = 6;
@@ -29,8 +31,9 @@ function readImageFile(file) {
  * Extract text from a PDF using PDF.js (runs entirely in the browser).
  */
 async function readPdfFile(file) {
-  // Dynamically import pdfjs-dist so it's code-split
-  const pdfjsLib = await import('pdfjs-dist');
+  // Dynamically import pdfjs-dist so it's code-split. loadChunk turns the
+  // post-deploy "module script failed" into something a reader can act on.
+  const pdfjsLib = await loadChunk(() => import('pdfjs-dist'));
 
   // Use CDN worker to avoid Vite bundling issues with the PDF.js worker
   pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;

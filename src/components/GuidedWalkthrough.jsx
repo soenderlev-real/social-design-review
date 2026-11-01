@@ -9,6 +9,7 @@ import { referencesForConcept } from '../data/bibliography';
 import { createProvider } from '../providers';
 import { buildSessionLovableUrl } from '../utils/lovable';
 import { createPacer } from '../utils/streamPacer';
+import { loadChunk, StaleBuildError } from '../utils/loadChunk';
 
 const WRAP_PATTERNS = /^\s*(wrap[\s-]?up|wrap|summar(y|ise|ize)|finish|done|that'?s enough)\s*[.!]?\s*$/i;
 
@@ -162,6 +163,7 @@ export default function GuidedWalkthrough({
   const [input, setInput]       = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError]       = useState('');
+  const [staleBuild, setStaleBuild] = useState(false);
   const [finished, setFinished] = useState(false);
   const [awaitingQuestion, setAwaitingQuestion] = useState(false);
   const bottomRef = useRef(null);
@@ -249,14 +251,18 @@ export default function GuidedWalkthrough({
       // so it must not sit in the bundle everyone downloads on the landing page.
       let platforms = '';
       if (kind === 'platforms') {
-        const { directoryLines, linkablePlatforms } = await import('../data/rebuildDirectory');
+        const { directoryLines, linkablePlatforms } =
+          await loadChunk(() => import('../data/rebuildDirectory'));
         platforms = directoryLines(concept.id, 7);
         links = linkablePlatforms(concept.id, 7);
       }
       userPrompt = buildExplore(concept, platformDescription, kind, question, refs, platforms);
     } catch (err) {
       console.error('Could not build the follow-up turn', err);
-      setError(`Could not open that — ${err.message}`);
+      // A stale build is not something retrying can fix, so it gets its own
+      // state and its own recovery, rather than another red box.
+      if (err instanceof StaleBuildError) setStaleBuild(true);
+      else setError(`Could not open that — ${err.message}`);
       setIsLoading(false);
       return;
     }
@@ -483,6 +489,26 @@ export default function GuidedWalkthrough({
                 <div className="pt-1">
                   <Loader2 size={14} className="animate-spin text-muted" />
                 </div>
+              </div>
+            )}
+            {staleBuild && (
+              <div className="border-2 border-rb-orange bg-rb-orange-tint px-4 py-3 text-sm text-dark">
+                <p className="mb-3">
+                  This page was loaded before the tool was last updated, so that
+                  part of it is no longer on the server. Reloading fixes it.
+                </p>
+                {answers.length > 0 && (
+                  <p className="mb-3 text-xs text-darker">
+                    Reloading starts a new session — export this one first if you want to keep it.
+                  </p>
+                )}
+                <button
+                  type="button"
+                  onClick={() => window.location.reload()}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 border-2 border-dark bg-dark text-light text-xs font-bold hover:bg-darker transition-colors"
+                >
+                  <RotateCcw size={11} /> Reload
+                </button>
               </div>
             )}
             {error && (
