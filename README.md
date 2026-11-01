@@ -201,6 +201,30 @@ custom connector instead. Note that Claude Desktop reaches custom connectors
 from Anthropic's cloud rather than from your machine, which is fine here but
 will not work for anything on localhost.
 
+### Publishing to the MCP registry
+
+[`server.json`](server.json) is ready for the [official MCP registry](https://modelcontextprotocol.io/registry/quickstart),
+which accepts remote-only servers — no npm package needed. The name is
+namespaced to this domain rather than a GitHub account, which takes HTTP
+authentication: a signed file served from `/.well-known/mcp-registry-auth`.
+No DNS changes, since `public/` already deploys to the site root.
+
+```bash
+brew install mcp-publisher
+
+# Generate the keypair and the proof file. key.pem is gitignored; keep it.
+openssl genpkey -algorithm Ed25519 -out key.pem
+echo "v=MCPv1; k=ed25519; p=$(openssl pkey -in key.pem -pubout -outform DER | tail -c 32 | base64)" \
+  > public/.well-known/mcp-registry-auth
+
+# Deploy so the registry can fetch the proof, then publish.
+git add public/.well-known/mcp-registry-auth && git commit -m "Add MCP registry proof" && git push
+
+mcp-publisher login http --domain socialdesignframework.eu \
+  --private-key "$(openssl pkey -in key.pem -noout -text | grep -A3 'priv:' | tail -n +2 | tr -d ' :\n')"
+mcp-publisher publish
+```
+
 The server lives in [`api/mcp.js`](api/mcp.js) as a single Vercel function. The
 data modules it imports have no dependencies of their own, which is what lets
 them be served unchanged — worth preserving if you edit them.

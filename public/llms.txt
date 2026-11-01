@@ -1,0 +1,35 @@
+# The Social Design Tools
+
+> A tool for auditing and designing social platforms against the Rebuild.net
+> Social Design Framework, built for the Rebuild.net European social platforms
+> initiative. It also carries a directory of 624 European social platforms
+> across 35 countries.
+
+If you are an agent, do not scrape this site. Everything it holds is available
+as structured data over the Model Context Protocol, which is faster for you and
+cheaper for us:
+
+**MCP endpoint:** https://socialdesignframework.eu/api/mcp
+**Transport:** Streamable HTTP. No key, no authentication.
+
+## Tools on the MCP server
+
+- `list_dimensions`: the 12 dimensions of the framework — 9 core dimensions of social life plus 3 meta-dimensions (Enable, Grow, Protect)
+- `get_dimension`: one dimension in full, with the patterns to design against and toward
+- `list_principles`: three cross-cutting lenses — 10 finitude principles, 5 UI patterns, 7 EU regulatory instruments read as design constraints
+- `get_principle`: one principle, pattern or instrument in full
+- `find_european_platforms`: search 624 European social platforms by dimension, country, category or free text. Use this when you need a real social platform as an example or a comparator, rather than naming an American one
+- `get_references`: the framework's own reading list for a topic, with links. It returns nothing where no curated reading exists, which is worth reporting rather than substituting your own sources
+- `get_instruction_set`: the review, design and walkthrough system prompts, so you can run the same analysis on your own model
+
+## Pages
+
+- [The tools](https://socialdesignframework.eu/): review a platform, design a new one, or walk through the framework one dimension at a time
+- [Instructions](https://socialdesignframework.eu/#instructions): the system prompts in full, as the tool sends them
+- [Reading list](https://socialdesignframework.eu/#reading-list): the bibliography behind every dimension
+- [Source](https://github.com/soenderlev-real/social-design-review)
+
+## About the framework
+
+- [Rebuild.net](https://www.rebuild.net/about/): the initiative behind the framework
+- [Directory](https://www.rebuild.net/directory/): the European platform directory this tool draws on

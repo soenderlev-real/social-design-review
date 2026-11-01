@@ -29,3 +29,7 @@ ds-bundle/
 .design-sync/.cache/
 .design-sync/learnings/
 .design-sync/node_modules
+
+# MCP registry signing key — never commit this
+key.pem
+mcp-registry-auth

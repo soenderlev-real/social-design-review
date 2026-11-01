@@ -1,0 +1,6 @@
+# Everything here is public and meant to be read, including by agents.
+User-agent: *
+Allow: /
+
+# Structured data rather than scraped HTML — see /llms.txt for what it offers.
+# MCP endpoint: https://socialdesignframework.eu/api/mcp

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "eu.socialdesignframework/framework",
+  "title": "Social Design Framework",
+  "description": "Audit and design social platforms against the Rebuild.net Social Design Framework, and search a directory of 624 European social platforms across 35 countries.",
+  "version": "1.0.0",
+  "repository": {
+    "url": "https://github.com/soenderlev-real/social-design-review",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://socialdesignframework.eu/api/mcp"
+    }
+  ]
+}

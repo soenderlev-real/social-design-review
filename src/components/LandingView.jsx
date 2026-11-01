@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Globe, Key, FileText, ArrowRight, ExternalLink, AlertCircle, Check, Upload, X, ImageIcon, FileText as FileTextIcon, Loader2, Search, Lightbulb, Bot, Download, MessageSquare, BarChart3, GitFork, Maximize2, Presentation, Users, Smile, BookOpen, ArrowUpRight, GraduationCap, MapPin, Rocket } from 'lucide-react';
+import { Globe, Key, FileText, ArrowRight, ExternalLink, AlertCircle, Check, Upload, X, ImageIcon, FileText as FileTextIcon, Loader2, Search, Lightbulb, Bot, Download, MessageSquare, BarChart3, GitFork, Maximize2, Presentation, Users, Smile, BookOpen, ArrowUpRight, GraduationCap, MapPin, Rocket, Terminal, Copy } from 'lucide-react';
 import { PROVIDERS } from '../providers';
 import * as Icons from 'lucide-react';
 import { CONCEPTS } from '../data/framework';
@@ -37,6 +37,39 @@ const RESOURCES = [
     internal: 'reading-list',
   },
 ];
+
+const MCP_URL = 'https://socialdesignframework.eu/api/mcp';
+
+/** The endpoint, and the one interaction anyone actually wants with it. */
+function McpEndpoint() {
+  const [copied, setCopied] = useState(false);
+
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(MCP_URL);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard access can be refused; the URL is on screen to select by hand.
+      setCopied(false);
+    }
+  }
+
+  return (
+    <div className="flex flex-col sm:flex-row sm:items-stretch gap-2">
+      <code className="flex-1 min-w-0 px-4 py-3 border-2 border-dark bg-light text-xs text-dark break-all">
+        {MCP_URL}
+      </code>
+      <button
+        type="button"
+        onClick={copy}
+        className="flex-shrink-0 inline-flex items-center justify-center gap-1.5 px-4 py-3 border-2 border-dark bg-dark text-light text-xs font-bold hover:bg-darker transition-colors"
+      >
+        {copied ? <><Check size={12} /> Copied</> : <><Copy size={12} /> Copy</>}
+      </button>
+    </div>
+  );
+}
 
 /**
  * Plain-language notes for the accordion. Keyed by concept id so the icon comes
@@ -925,6 +958,21 @@ export default function LandingView({ onStart, onReadingList }) {
                 </a>
               );
             })}
+          </div>
+
+          <div className="mt-10 border-2 border-dark bg-white p-6">
+            <div className="flex items-start gap-3 mb-3">
+              <Terminal size={18} className="text-dark flex-shrink-0 mt-0.5" />
+              <div>
+                <h3 className="font-bold text-sm text-dark mb-1">Use the framework from your own AI tools</h3>
+                <p className="text-xs text-muted leading-relaxed max-w-2xl">
+                  The framework, the finitude and regulatory lenses, and all {REBUILD_COUNT} European
+                  platforms are available over the Model Context Protocol, so Claude, Cursor or any
+                  agent can read them directly. No key needed.
+                </p>
+              </div>
+            </div>
+            <McpEndpoint />
           </div>
         </div>
       </section>
