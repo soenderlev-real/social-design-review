@@ -560,10 +560,39 @@ export const BIBLIOGRAPHY = [
     id: 'meta-dimensions',
     title: 'Meta-Dimensions — Enable · Grow · Protect',
     subtitle: 'The meta layer is holistic; it reuses the sources above rather than adding a separate canon',
+    // `draws` restates, as data, the works each line already names in prose, so
+    // the walkthrough can cite them instead of falling back to invention. Keep
+    // the two in step: an author named here must exist in that section.
     prose: [
-      { label: 'Enable', text: 'Foundational health — community-design evidence and norms: Kraut & Resnick and Rheingold (Groups); constructive defaults informed by Norman (Agency).' },
-      { label: 'Grow', text: 'Value without extraction — non-extractive economics: Benkler (Sharing), Tapscott (Sharing), Searls / intention economy (Platform Intent).' },
-      { label: 'Protect', text: 'The immune system — governance and moderation: Ostrom, Grimmelmann, Gillespie (Groups).' },
+      {
+        label: 'Enable',
+        text: 'Foundational health — community-design evidence and norms: Kraut & Resnick and Rheingold (Groups); constructive defaults informed by Norman (Agency).',
+        draws: [
+          ['groups', 'Kraut & Resnick'],
+          ['groups', 'Rheingold, Howard'],
+          ['agency', 'Norman, Donald'],
+        ],
+      },
+      {
+        label: 'Grow',
+        text: 'Value without extraction — non-extractive economics: Benkler (Sharing), Tapscott (Sharing), Searls / intention economy (Platform Intent).',
+        draws: [
+          ['sharing', 'Benkler, Yochai'],
+          ['sharing', 'Tapscott & Williams'],
+          // Platform Intent is no longer a dimension, but its reading section
+          // remains and is where Searls lives.
+          ['platform-intent', 'Searls, Doc'],
+        ],
+      },
+      {
+        label: 'Protect',
+        text: 'The immune system — governance and moderation: Ostrom, Grimmelmann, Gillespie (Groups).',
+        draws: [
+          ['groups', 'Ostrom, Elinor'],
+          ['groups', 'Grimmelmann, James'],
+          ['groups', 'Gillespie, Tarleton'],
+        ],
+      },
     ],
   },
   {
@@ -709,6 +738,22 @@ export const BIBLIOGRAPHY_NOTE =
  * walkthrough can cite real sources instead of inventing them. The three meta
  * dimensions share one section.
  */
+const META_PROSE_LABEL = {
+  'enable-dimension': 'Enable',
+  'grow-dimension': 'Grow',
+  'protect-dimension': 'Protect',
+};
+
+function asReference(entry) {
+  return {
+    authors: entry.authors,
+    year: entry.year,
+    work: entry.work,
+    note: entry.note,
+    url: entry.links?.[0]?.url || null,
+  };
+}
+
 export function referencesForConcept(conceptId, limit = 5) {
   // Reference-group tracks carry ids like "finitude:enddesign". Their reading
   // lives in the lineage sections rather than a per-dimension one.
@@ -723,18 +768,26 @@ export function referencesForConcept(conceptId, limit = 5) {
     conceptId = mapped;
   }
 
-  const sectionId = ['enable-dimension', 'grow-dimension', 'protect-dimension'].includes(conceptId)
-    ? 'meta-dimensions'
-    : conceptId;
-  const section = BIBLIOGRAPHY.find(s => s.id === sectionId);
-  // A section is not guaranteed to carry entries: meta-dimensions is prose-only
-  // by design. Guarding only the missing-section case threw on it instead.
+  // The meta dimensions have no canon of their own — that is the point of the
+  // layer. But the section's prose names exactly which works each one draws
+  // on, so gather those rather than returning nothing: they are real
+  // references, just shelved under the dimensions they came from.
+  const proseLabel = META_PROSE_LABEL[conceptId];
+  if (proseLabel) {
+    const meta = BIBLIOGRAPHY.find(s => s.id === 'meta-dimensions');
+    const line = meta?.prose?.find(p => p.label === proseLabel);
+    return (line?.draws || []).reduce((out, [sectionId, authors]) => {
+      const entry = BIBLIOGRAPHY.find(s => s.id === sectionId)?.entries
+        ?.find(e => e.authors === authors);
+      // A citation left behind by a rename should drop out of the list, not
+      // take the chip down with it.
+      if (entry) out.push(asReference(entry));
+      return out;
+    }, []).slice(0, limit);
+  }
+
+  const section = BIBLIOGRAPHY.find(s => s.id === conceptId);
+  // A section is not guaranteed to carry entries.
   if (!section?.entries) return [];
-  return section.entries.slice(0, limit).map(e => ({
-    authors: e.authors,
-    year: e.year,
-    work: e.work,
-    note: e.note,
-    url: e.links?.[0]?.url || null,
-  }));
+  return section.entries.slice(0, limit).map(asReference);
 }
