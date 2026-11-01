@@ -152,6 +152,48 @@ npx vercel --prod
 
 ---
 
+## MCP server (for other agents)
+
+The framework is also exposed over the [Model Context Protocol](https://modelcontextprotocol.io),
+so other people's agents can read it directly:
+
+```
+https://socialdesignframework.eu/api/mcp
+```
+
+Streamable HTTP, no key, no authentication. Point any MCP client at it:
+
+```json
+{
+  "mcpServers": {
+    "social-design-framework": {
+      "url": "https://socialdesignframework.eu/api/mcp"
+    }
+  }
+}
+```
+
+Seven tools, all plain lookups against the same static data this app uses:
+
+| Tool | What it gives you |
+| --- | --- |
+| `list_dimensions` | the 12 dimensions, with summaries |
+| `get_dimension` | one dimension in full, with its dark and light patterns |
+| `list_principles` | the finitude, UI-pattern and regulatory groups |
+| `get_principle` | one principle, pattern or EU instrument in full |
+| `find_european_platforms` | search the Rebuild directory by dimension, country, category or text |
+| `get_references` | the framework's own reading list for a topic |
+| `get_instruction_set` | the review, design and walkthrough system prompts |
+
+There is deliberately no tool that runs a review. That would be twelve model
+calls per invocation on a shared key, reachable by anything that can speak
+HTTP. `get_instruction_set` hands over the prompts instead, so an agent runs
+the analysis on its own model and its own bill.
+
+The server lives in [`api/mcp.js`](api/mcp.js) as a single Vercel function. The
+data modules it imports have no dependencies of their own, which is what lets
+them be served unchanged — worth preserving if you edit them.
+
 ## License
 
 Built for the Rebuild.net sprint. Open for adaptation by participating teams.
