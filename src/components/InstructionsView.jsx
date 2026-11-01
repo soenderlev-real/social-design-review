@@ -135,57 +135,7 @@ function Section({ number, title, subtitle, accent = 'bg-dark', children }) {
   );
 }
 
-const UNLOCK_KEY = 'sdr_instructions_unlocked';
-const PASSWORD = 'rebuildrebuild';
-
-function PasswordGate({ onUnlock }) {
-  const [value, setValue] = useState('');
-  const [error, setError] = useState(false);
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    if (value === PASSWORD) {
-      sessionStorage.setItem(UNLOCK_KEY, '1');
-      onUnlock();
-    } else {
-      setError(true);
-    }
-  }
-
-  return (
-    <section className="min-h-[70vh] flex items-center justify-center px-6">
-      <form onSubmit={handleSubmit} className="w-full max-w-xs border-2 border-dark bg-white p-8">
-        <Icons.Lock size={18} className="text-dark mb-4" />
-        <h1 className="font-bold text-dark text-lg mb-1">Instructions</h1>
-        <p className="text-xs text-muted mb-6">This reference page is password protected.</p>
-        <input
-          type="password"
-          value={value}
-          onChange={e => { setValue(e.target.value); setError(false); }}
-          placeholder="Password"
-          autoFocus
-          className="w-full px-4 py-3 border-2 border-dark bg-light text-dark placeholder-muted focus:outline-none focus:bg-white transition-colors text-sm mb-3"
-        />
-        {error && <p className="text-xs text-rb-red mb-3">Incorrect password.</p>}
-        <button type="submit" className="w-full bg-dark text-light border-2 border-dark py-3 font-bold text-sm hover:bg-darker transition-colors">
-          Unlock
-        </button>
-      </form>
-    </section>
-  );
-}
-
 export default function InstructionsView() {
-  const [unlocked, setUnlocked] = useState(() => sessionStorage.getItem(UNLOCK_KEY) === '1');
-
-  if (!unlocked) {
-    return <PasswordGate onUnlock={() => setUnlocked(true)} />;
-  }
-
-  return <InstructionsContent />;
-}
-
-function InstructionsContent() {
   const socialObj = CONCEPTS.find(c => c.id === 'social-object');
   const coreConcepts = CONCEPTS.filter(c =>
     c.dimension === null &&
