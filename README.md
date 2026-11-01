@@ -190,6 +190,17 @@ calls per invocation on a shared key, reachable by anything that can speak
 HTTP. `get_instruction_set` hands over the prompts instead, so an agent runs
 the analysis on its own model and its own bill.
 
+A project-scoped [`.mcp.json`](.mcp.json) is committed at the repo root, so
+anyone who clones this and opens it in Claude Code or Cursor gets the server
+without configuring anything. Claude Code asks you to approve a project-scoped
+server the first time.
+
+Claude Desktop is the exception: it only reads stdio servers from
+`claude_desktop_config.json`, so add this one under Settings → Connectors → Add
+custom connector instead. Note that Claude Desktop reaches custom connectors
+from Anthropic's cloud rather than from your machine, which is fine here but
+will not work for anything on localhost.
+
 The server lives in [`api/mcp.js`](api/mcp.js) as a single Vercel function. The
 data modules it imports have no dependencies of their own, which is what lets
 them be served unchanged — worth preserving if you edit them.

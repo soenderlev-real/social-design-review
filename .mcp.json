@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "social-design-framework": {
+      "type": "http",
+      "url": "https://socialdesignframework.eu/api/mcp"
+    }
+  }
+}
