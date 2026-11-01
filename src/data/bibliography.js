@@ -727,7 +727,9 @@ export function referencesForConcept(conceptId, limit = 5) {
     ? 'meta-dimensions'
     : conceptId;
   const section = BIBLIOGRAPHY.find(s => s.id === sectionId);
-  if (!section) return [];
+  // A section is not guaranteed to carry entries: meta-dimensions is prose-only
+  // by design. Guarding only the missing-section case threw on it instead.
+  if (!section?.entries) return [];
   return section.entries.slice(0, limit).map(e => ({
     authors: e.authors,
     year: e.year,
