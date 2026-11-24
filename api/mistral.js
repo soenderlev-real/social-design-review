@@ -44,6 +44,27 @@ const MAX_IMAGES   = 6;   // matches fileProcessing.js MAX_IMAGES — silently
 const MAX_TOKENS   = 6000;
 
 /**
+ * How hard the model thinks before it writes.
+ *
+ * Reasoning is nearly the entire wait. Measured on this endpoint at the
+ * model's default effort ("high"), two walkthrough replies took 15.9s and
+ * 25.0s to produce their first word, and 0.9s and 0.8s to stream the whole
+ * answer once they started. The reader spends ~95% of the turn watching an
+ * empty bubble while the model deliberates privately.
+ *
+ * This is a workshop tool that people sit in front of together, so the
+ * trade is worth making explicitly: less deliberation, sooner. Mistral Large 4
+ * cannot be told to skip reasoning altogether — it takes low, medium and high,
+ * but not "none" — so "low" is the floor available to us.
+ *
+ * A caller may override it per request. Nothing in the app does today; it is
+ * here so the trade can be retuned, or raised for a single careful answer,
+ * without a redeploy.
+ */
+const REASONING_EFFORT  = 'low';
+const REASONING_EFFORTS = new Set(['low', 'medium', 'high']);
+
+/**
  * In-memory sliding window. Serverless instances are reused under Fluid Compute,
  * so this catches casual abuse, but it is per-instance and NOT authoritative.
  * The real backstop is a monthly spending limit on the Mistral workspace.
@@ -98,7 +119,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: { message: 'Invalid JSON body' } });
   }
 
-  const { systemPrompt, userPrompt, images, stream } = body || {};
+  const { systemPrompt, userPrompt, images, stream, reasoningEffort } = body || {};
   if (typeof systemPrompt !== 'string' || typeof userPrompt !== 'string') {
     return res.status(400).json({ error: { message: 'systemPrompt and userPrompt are required' } });
   }
@@ -130,6 +151,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: imgs.length ? VISION_MODEL : TEXT_MODEL,
         max_tokens: MAX_TOKENS,
+        reasoning_effort: REASONING_EFFORTS.has(reasoningEffort) ? reasoningEffort : REASONING_EFFORT,
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content },
