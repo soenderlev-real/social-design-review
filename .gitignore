@@ -33,3 +33,6 @@ ds-bundle/
 # MCP registry signing key — never commit this
 key.pem
 mcp-registry-auth
+
+# Assets staged for the RB3 Paris board submission
+rb3-board/
