@@ -18,8 +18,19 @@ const CHARS_PER_SECOND = 50;
  * window rather than at the reading pace. Without it, a long reply that arrived
  * in two seconds would keep typing for another twenty, and the person is left
  * watching an animation of something the app already has.
+ *
+ * It is 600ms rather than 1800 because the shape of a reply changed under us.
+ * This was written for a provider that trickled text out over many seconds, so
+ * the tail was a small correction at the end of a long arrival. A reasoning
+ * model is silent while it thinks and then delivers the whole answer in about
+ * a second, which means by the time end() is called nearly all of the text is
+ * already in hand and this window is almost the whole render.
+ *
+ * The wait worth shortening is the silence before the first word — measured at
+ * roughly seven seconds. Spending a further 1.8 seconds typing out text the app
+ * is already holding is not pacing, it is delay.
  */
-const MAX_TAIL_MS = 1800;
+const MAX_TAIL_MS = 600;
 
 /** Largest frame delta honoured, so a throttled tab cannot dump the buffer. */
 const MAX_FRAME_MS = 100;
