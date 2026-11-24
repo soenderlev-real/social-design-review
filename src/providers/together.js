@@ -1,4 +1,5 @@
 import { BaseProvider, buildApiError, streamChatCompletions } from './base';
+import { contentToText } from '../utils/chatContent';
 
 export class TogetherProvider extends BaseProvider {
   supportsVision = false; // Together text-only; images are skipped, PDF text is included
@@ -33,7 +34,7 @@ export class TogetherProvider extends BaseProvider {
     }
 
     const data = await response.json();
-    const text = data.choices?.[0]?.message?.content || '';
+    const text = contentToText(data.choices?.[0]?.message?.content);
     return text;
   }
 

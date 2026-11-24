@@ -1,4 +1,5 @@
 import { BaseProvider, buildApiError, streamChatCompletions } from './base';
+import { contentToText } from '../utils/chatContent';
 
 export class GroqProvider extends BaseProvider {
   getName() {
@@ -31,7 +32,7 @@ export class GroqProvider extends BaseProvider {
     }
 
     const data = await response.json();
-    const text = data.choices?.[0]?.message?.content || '';
+    const text = contentToText(data.choices?.[0]?.message?.content);
     return text;
   }
 

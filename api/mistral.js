@@ -11,6 +11,8 @@
  * front rather than one of the US options.
  */
 
+import { contentToText } from '../src/utils/chatContent.js';
+
 const MISTRAL_URL = 'https://api.mistral.ai/v1/chat/completions';
 
 const TEXT_MODEL   = 'mistral-large-latest';
@@ -23,7 +25,23 @@ const MAX_PER_IP   = 45;
 const MAX_BODY     = 1_000_000;   // ~1MB, enough for prompts plus a couple of images
 const MAX_IMAGES   = 6;   // matches fileProcessing.js MAX_IMAGES — silently
                           // dropping the rest would lose evidence without saying so
-const MAX_TOKENS   = 2000;
+/**
+ * This budget is shared with the model's reasoning, which is why it is no
+ * longer 2000.
+ *
+ * `mistral-large-latest` now resolves to a reasoning model, and reasoning
+ * tokens count towards max_tokens. A measured "tell me more" turn in the
+ * guided walkthrough spent 1656 of its 1877 completion tokens on reasoning —
+ * 88% of the output — leaving the answer 221 tokens and finishing with barely
+ * any headroom under the old cap. A slightly longer deliberation produced an
+ * empty reply: the model reasoned until it hit 2000 and never reached the
+ * answer, so the reader got a blank bubble.
+ *
+ * Raising the ceiling does not make the model reason more or cost more per
+ * turn — the reasoning is generated either way. It only stops the answer being
+ * cut off, or starved entirely, by the thinking that precedes it.
+ */
+const MAX_TOKENS   = 6000;
 
 /**
  * In-memory sliding window. Serverless instances are reused under Fluid Compute,
@@ -165,7 +183,7 @@ export default async function handler(req, res) {
     }
 
     const data = await upstream.json();
-    const text = data.choices?.[0]?.message?.content || '';
+    const text = contentToText(data.choices?.[0]?.message?.content);
     return res.status(200).json({ text });
   } catch (err) {
     return res.status(502).json({ error: { message: 'Could not reach Mistral. Please try again.' } });

@@ -2,6 +2,9 @@
  * Base provider interface for LLM analysis.
  * All providers implement this same interface.
  */
+
+import { contentToText } from '../utils/chatContent';
+
 export class BaseProvider {
   constructor(apiKey, config = {}) {
     this.apiKey = apiKey;
@@ -254,7 +257,7 @@ export async function streamChatCompletions({ url, headers, body, onChunk }) {
 
   let full = '';
   await readSSE(response, evt => {
-    const piece = evt.choices?.[0]?.delta?.content;
+    const piece = contentToText(evt.choices?.[0]?.delta?.content);
     if (piece) { full += piece; onChunk?.(piece); }
   });
   return full;

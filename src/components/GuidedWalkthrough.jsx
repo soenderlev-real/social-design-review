@@ -209,14 +209,25 @@ export default function GuidedWalkthrough({
 
     try {
       await provider().sendMessageStream(SYSTEM, userPrompt, [], piece => pacer.push(piece));
-      const full = await pacer.end();   // waits for the paced text to finish rendering
+      const full = (await pacer.end()).trim();   // waits for the paced text to finish rendering
+
+      // A reply with no text in it is not a reply. A reasoning model can spend
+      // its entire output budget thinking and stop before writing a word — see
+      // the note on MAX_TOKENS in api/mistral.js — and the request succeeds, so
+      // nothing here would otherwise object. Left alone it renders as an empty
+      // bubble, which reads as the app having quietly given up. Say so instead;
+      // the chips stay live, so the turn can simply be asked again.
+      if (!full) {
+        throw new Error('The model spent its whole budget thinking and never got to an answer. Try that again — it usually works on a second attempt.');
+      }
+
       setMessages(prev => {
         const next = [...prev];
         const last = next.length - 1;
-        if (next[last]?.streaming) next[last] = { ...next[last], content: full.trim(), streaming: false };
+        if (next[last]?.streaming) next[last] = { ...next[last], content: full, streaming: false };
         return next;
       });
-      return full.trim();
+      return full;
     } catch (err) {
       pacer.cancel();
       // Drop the empty placeholder so a failed turn does not leave a blank bubble

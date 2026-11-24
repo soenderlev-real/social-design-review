@@ -1,4 +1,5 @@
 import { BaseProvider, buildApiError, streamChatCompletions } from './base';
+import { contentToText } from '../utils/chatContent';
 
 export class OpenAIProvider extends BaseProvider {
   supportsVision = true;
@@ -38,7 +39,7 @@ export class OpenAIProvider extends BaseProvider {
     }
 
     const data = await response.json();
-    return data.choices?.[0]?.message?.content || '';
+    return contentToText(data.choices?.[0]?.message?.content);
   }
 
   async sendMessageStream(systemPrompt, userPrompt, images = [], onChunk) {
